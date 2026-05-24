@@ -248,3 +248,123 @@ def confidence_interval_mean(
     )
 
 
+# =============================================================================
+# Normal distribution fitting
+# =============================================================================
+
+class NormalFit(NamedTuple):
+    """Parameters and goodness-of-fit for a fitted normal distribution."""
+    mu:           float   # estimated mean
+    sigma:        float   # estimated standard deviation (ddof=1)
+    ks_statistic: float   # Kolmogorov--Smirnov test statistic D_N
+    ks_p_value:   float   # asymptotic p-value for H_0: data ~ Normal(mu, sigma)
+
+
+def fit_normal(sample: np.ndarray) -> NormalFit:
+    """Fit a normal distribution to a sample by the method of moments.
+
+    The method-of-moments estimators are:
+
+        mu_hat    = sample mean
+        sigma_hat = sample standard deviation (ddof=1)
+
+    These coincide with the MLEs for the Gaussian family (up to the ddof=1
+    vs ddof=0 distinction in sigma; the difference is O(1/N) and negligible
+    for N >> 1).
+
+    A one-sample Kolmogorov--Smirnov test is performed against the fitted
+    Normal(mu_hat, sigma_hat).  The KS statistic D_N = max_x |F_N(x) - F(x)|
+    measures the largest discrepancy between the empirical CDF F_N and the
+    fitted Gaussian CDF F.  A large p-value is consistent with normality; a
+    small p-value (< 0.05) suggests the data deviate significantly from the
+    fitted Gaussian.
+
+    Note: the KS p-value uses asymptotic tables and can be anti-conservative
+    when the parameters are estimated from the data rather than specified a
+    priori.  For rigorous testing prefer the Lilliefors correction or a
+    bootstrap.
+
+    Parameters
+    ----------
+    sample : ndarray of shape (N,)
+        The 1-D observations.
+
+    Returns
+    -------
+    fit : NormalFit
+        Named tuple with ``mu``, ``sigma``, ``ks_statistic``, and
+        ``ks_p_value``.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> rng = np.random.default_rng(0)
+    >>> fit = fit_normal(rng.normal(3.0, 1.5, 500))
+    >>> abs(fit.mu - 3.0) < 0.2
+    True
+    >>> fit.ks_p_value > 0.05   # should not reject H_0
+    True
+    """
+    x = sample.ravel().astype(np.float64)
+    mu = float(x.mean())
+    sigma = float(x.std(ddof=1))
+    ks_stat, ks_p = stats.kstest(x, "norm", args=(mu, sigma))
+    return NormalFit(
+        mu=mu,
+        sigma=sigma,
+        ks_statistic=float(ks_stat),
+        ks_p_value=float(ks_p),
+    )
+
+
+# =============================================================================
+# Driver
+# =============================================================================
+
+def main() -> None:
+    """Run each statistical function on a synthetic normally-distributed sample."""
+    rng = np.random.default_rng(seed=7)
+    sample = rng.normal(loc=5.0, scale=2.0, size=500)
+
+    # -------------------------------------------------------------------------
+    # 1. Descriptive statistics
+    # -------------------------------------------------------------------------
+    desc = describe(sample)
+    print("Descriptive statistics")
+    print(f"  n      = {desc.n}")
+    print(f"  mean   = {desc.mean:.4f}  (expected 5.0)")
+    print(f"  std    = {desc.std:.4f}   (expected 2.0)")
+    print(f"  min    = {desc.minimum:.4f}")
+    print(f"  median = {desc.median:.4f}")
+    print(f"  max    = {desc.maximum:.4f}")
+
+    # -------------------------------------------------------------------------
+    # 2. Z-score
+    # -------------------------------------------------------------------------
+    z = z_score(sample)
+    print(f"\nZ-score")
+    print(f"  post-transform mean  = {z.mean():.2e}  (expected ~0)")
+    print(f"  post-transform std   = {z.std(ddof=1):.6f}  (expected 1.0)")
+
+    # -------------------------------------------------------------------------
+    # 3. Confidence interval for the mean
+    # -------------------------------------------------------------------------
+    ci_95 = confidence_interval_mean(sample, confidence=0.95)
+    ci_99 = confidence_interval_mean(sample, confidence=0.99)
+    print(f"\nConfidence intervals for the mean")
+    print(f"  95% CI: [{ci_95.lower:.4f}, {ci_95.upper:.4f}]  (centre {ci_95.centre:.4f})")
+    print(f"  99% CI: [{ci_99.lower:.4f}, {ci_99.upper:.4f}]  (centre {ci_99.centre:.4f})")
+
+    # -------------------------------------------------------------------------
+    # 4. Normal distribution fitting
+    # -------------------------------------------------------------------------
+    fit = fit_normal(sample)
+    print(f"\nNormal fit")
+    print(f"  mu_hat    = {fit.mu:.4f}  (true 5.0)")
+    print(f"  sigma_hat = {fit.sigma:.4f}  (true 2.0)")
+    print(f"  KS stat   = {fit.ks_statistic:.4f}")
+    print(f"  KS p-val  = {fit.ks_p_value:.4f}  ({'consistent with normality' if fit.ks_p_value > 0.05 else 'reject normality at 5%'})")
+
+
+if __name__ == "__main__":
+    main()
