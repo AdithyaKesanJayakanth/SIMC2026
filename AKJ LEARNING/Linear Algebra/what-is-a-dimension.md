@@ -29,3 +29,26 @@ That single sample is a **point in 1000-dimensional space**. You cannot draw it.
 > [!note] "High-dimensional data"
 > When people say a dataset is high-dimensional, they just mean each data point is described by a long vector — many features per sample. IR spectra are a classic example.
 
+## The math
+
+If a vector $\mathbf{x} = (x_1, x_2, \dots, x_p)$ has $p$ entries, we say it lives in **$p$-dimensional space**, written $\mathbb{R}^p$.
+
+- $\mathbb{R}$ — the set of all real numbers
+- $\mathbb{R}^p$ — the set of all ordered lists of $p$ real numbers
+- $p$ — **dimensionality** (also called the number of features, variables, or columns)
+
+For an IR spectrum measured at $p = 1000$ wavenumbers, each sample $\mathbf{x} \in \mathbb{R}^{1000}$. The symbol $\in$ just means "is a member of" — your array slot fits inside that space.
+
+> [!warning] Common confusion
+> "Dimension" in everyday speech often means physical dimension (length, width, height). In data science it means **the number of distinct coordinates needed to describe one observation**. A 1000-wavenumber IR spectrum lives in 1000 dimensions, even though physically it's just one little cuvette of liquid.
+
+## Why this matters for PCA on IR spectra
+
+PCA's entire job is **dimensionality reduction**: it takes your $p = 1000$ dimensional data and finds a much smaller number of directions (principal components) that still capture most of the information. Understanding that each sample is a point in a very high-dimensional space makes clear *why* you need PCA — plotting or analyzing 1000-dimensional clouds of points directly is impossible.
+
+## Builds on
+- [[vector]]
+
+## Leads to
+- [[design-matrix]]
+- [[curse-of-dimensionality]]
