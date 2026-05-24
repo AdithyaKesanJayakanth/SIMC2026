@@ -53,3 +53,40 @@ def simulate_population(n: int, rng: np.random.Generator) -> tuple[np.ndarray, n
 
 
 
+def empirical_posterior(has_disease: np.ndarray, tested_positive: np.ndarray) -> float:
+    """Compute P(disease | test+) from the simulated data."""
+
+    positive = 0
+    true_positives = 0
+    for i in range(len(has_disease)):
+        if tested_positive[i]:
+            positive += 1
+            if has_disease[i]:
+                true_positives += 1
+
+    return true_positives / positive
+     
+
+def bayes_posterior(prior: float, sensitivity: float, specificity: float) -> float:
+    """Closed-form Bayes calculation of P(D | T+)."""
+  
+    prob = sensitivity * prior / (sensitivity * prior + (1 - specificity) * (1 - prior))
+    return prob
+
+if __name__ == "__main__":
+    rng = np.random.default_rng(42)
+    has_disease, tested_positive = simulate_population(N_PEOPLE, rng)
+
+    p_empirical = empirical_posterior(has_disease, tested_positive)
+    p_bayes = bayes_posterior(P_DISEASE, SENSITIVITY, SPECIFICITY)
+
+    print(f"Empirical P(D | T+) over {N_PEOPLE:,} people = {p_empirical:.4f}")
+    print(f"Bayes-theorem    P(D | T+)                  = {p_bayes:.4f}")
+    print(f"Absolute error = {abs(p_empirical - p_bayes):.4f}")
+
+    # Stretch: vary the prior P(D) from 0.001 to 0.5 and plot P(D | T+).
+    # When does the test become "useful"?
+
+    # Stretch: vary specificity from 0.90 to 0.999 and plot.
+    # Notice how much more sensitive the posterior is to specificity than to sensitivity
+    # when the base rate is low. THIS is the Bayes lesson.

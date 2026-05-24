@@ -41,3 +41,47 @@ def probability_of_event(rolls: np.ndarray, event_fn) -> float:
     p = arr.mean()
     return p
 
+def is_even(x: int) -> bool:
+    
+    return x % 2 == 0
+
+
+
+if __name__ == "__main__":
+
+    N_ROLLS = 10
+    rolls1 = simulate_die_rolls(N_ROLLS)
+    p_even = probability_of_event(rolls1, is_even)
+    print(f"Empirical P(even) over {N_ROLLS:,} rolls = {p_even:.4f}")
+    print(f"Theoretical P(even) = 0.5")
+    print(f"Absolute error = {abs(p_even - 0.5):.4f}")
+
+
+    # Stretch: vary N from 10 to 100_000 (log-spaced) and plot
+
+    
+
+    #DONE 
+
+    # |empirical - 0.5| vs N to visualize the law of large numbers.
+    N_values = np.logspace(1, 5, num=20, dtype=int)
+    errors = np.array([])
+
+    for N in N_values:
+        rolls = simulate_die_rolls(N)
+        p_even = probability_of_event(rolls, is_even)
+        error = abs(p_even - 0.5)
+        errors = np.append(errors, error)
+
+    print(N_values)
+    print(errors)
+    
+
+    fig , ax = plt.subplots()
+    ax.plot(N_values, errors , marker='o')
+    ax.set_xscale('log')
+    ax.set_xlabel('Number of Rolls (log scale)')
+    ax.set_ylabel('Absolute Error')
+    ax.set_title('Convergence of Empirical P(even) to 0.5')
+    ax.grid(True)
+    plt.show()
