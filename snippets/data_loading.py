@@ -118,3 +118,87 @@ def load_csv(
     return data, headers
 
 
+# =============================================================================
+# NPZ
+# =============================================================================
+
+def load_npz(path: str | Path) -> np.lib.npyio.NpzFile:
+    """Load a NumPy compressed archive (.npz) and return the NpzFile handle.
+
+    An NpzFile object is a lazy dict-like container: individual arrays are
+    only decompressed and loaded into memory when accessed by key.  Callers
+    should inspect ``loaded.files`` to discover the available arrays, then
+    index by name::
+
+        archive = load_npz("sample.npz")
+        print(archive.files)           # ['sample_small', 'sample_larger']
+        X = archive["sample_larger"]   # decompressed only here
+
+    The returned object must be closed (or used as a context manager) to
+    release the underlying ZIP file handle.  For one-off scripts it is safe
+    to leave it open until the process exits; for server-side code, use::
+
+        with load_npz("sample.npz") as archive:
+            X = archive["sample_larger"]
+
+    Parameters
+    ----------
+    path : str or Path
+        Path to the ``.npz`` archive.  NumPy appends ``".npz"`` automatically
+        if the extension is missing.
+
+    Returns
+    -------
+    archive : NpzFile
+        Lazy archive handle; access arrays with ``archive["name"]`` and list
+        available keys with ``archive.files``.
+    """
+    return np.load(Path(path))
+
+
+# =============================================================================
+# TXT
+# =============================================================================
+
+def load_txt(path: str | Path, *, comments: str = "#") -> np.ndarray:
+    """Load a plain-text numeric file written by ``np.savetxt`` into an array.
+
+    ``np.loadtxt`` expects one row of whitespace-delimited floats per line.
+    Lines beginning with the ``comments`` character (default ``"#"``) are
+    silently skipped, which preserves compatibility with files that embed
+    metadata via ``np.savetxt(..., header="alpha beta gamma")``.
+
+    The result is always at least two-dimensional: a file with a single data
+    row returns shape ``(1, N)`` rather than ``(N,)`` to avoid surprise when
+    callers assume matrix semantics.
+
+    Parameters
+    ----------
+    path : str or Path
+        Path to the whitespace-delimited text file.
+    comments : str, optional
+        Character(s) that introduce comment / header lines; default ``"#"``.
+
+    Returns
+    -------
+    data : ndarray of shape (M, N), dtype float64
+        Numeric matrix; single-row files are reshaped to ``(1, N)``.
+
+    Examples
+    --------
+    >>> matrix = load_txt("data/input/matrix.txt")
+    >>> matrix.shape
+    (50, 10)
+    """
+    data = np.loadtxt(Path(path), comments=comments, dtype=np.float64)
+    if data.ndim == 1:
+        # A single-row file produces a 1-D array; restore the row dimension so
+        # callers can always assume shape (M, N) without an extra branch.
+        data = data[np.newaxis, :]
+    return data
+
+
+# =============================================================================
+# JSON
+# =============================================================================
+
