@@ -202,3 +202,115 @@ def load_txt(path: str | Path, *, comments: str = "#") -> np.ndarray:
 # JSON
 # =============================================================================
 
+def load_json(path: str | Path) -> Any:
+    """Load a JSON file and return the parsed Python object.
+
+    JSON is the canonical output format for SIMC structured summaries (e.g.
+    ``task8_summary.json``).  This loader returns whatever Python type the
+    top-level JSON value maps to: a ``dict`` for JSON objects, a ``list`` for
+    JSON arrays, or a scalar for bare primitives.  Callers can therefore
+    round-trip any summary produced by ``json.dump`` without loss.
+
+    The file is read with UTF-8 encoding, which is the JSON RFC-8259 default
+    and matches the encoding used throughout the SIMC pipeline.
+
+    Parameters
+    ----------
+    path : str or Path
+        Path to the ``.json`` file.
+
+    Returns
+    -------
+    payload : dict or list or scalar
+        The parsed JSON value; concrete type depends on the file content.
+
+    Examples
+    --------
+    >>> summary = load_json("data/output/task8/task8_summary.json")
+    >>> summary["students"]
+    10000
+    >>> summary["null_similarity"]["expected_value"]
+    2.556724
+    """
+    with Path(path).open(encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+# =============================================================================
+# Driver
+# =============================================================================
+
+def main() -> None:
+    """Demonstrate each loader with a small synthetic dataset.
+
+    The driver writes temporary files to a system temp directory, loads them
+    back with the loaders above, prints brief diagnostics for each, and
+    removes the temporary files on exit.
+    """
+    import os
+    import tempfile
+
+    rng = np.random.default_rng(seed=0)
+    data_orig = rng.standard_normal((5, 3))
+
+    # -------------------------------------------------------------------------
+    # 1. CSV round-trip
+    # -------------------------------------------------------------------------
+    with tempfile.NamedTemporaryFile(
+        suffix=".csv", mode="w", delete=False, newline="", encoding="utf-8"
+    ) as fh:
+        csv_path = fh.name
+        writer = csv.writer(fh)
+        writer.writerow(["alpha", "beta", "gamma"])
+        writer.writerows(data_orig.tolist())
+
+    data_csv, headers = load_csv(csv_path)
+    print("CSV -- headers:", headers)
+    print("CSV -- shape  :", data_csv.shape)
+    print("CSV -- row 0  :", data_csv[0].round(4))
+    os.unlink(csv_path)
+
+    # -------------------------------------------------------------------------
+    # 2. NPZ round-trip
+    # -------------------------------------------------------------------------
+    with tempfile.NamedTemporaryFile(suffix=".npz", delete=False) as fh:
+        npz_path = fh.name
+    np.savez_compressed(npz_path, matrix=data_orig, labels=np.arange(5))
+    archive = load_npz(npz_path)
+    print("\nNPZ -- keys  :", archive.files)
+    print("NPZ -- shape :", archive["matrix"].shape)
+    archive.close()
+    os.unlink(npz_path)
+
+    # -------------------------------------------------------------------------
+    # 3. TXT round-trip
+    # -------------------------------------------------------------------------
+    with tempfile.NamedTemporaryFile(suffix=".txt", delete=False) as fh:
+        txt_path = fh.name
+    np.savetxt(txt_path, data_orig, header="alpha beta gamma")
+    data_txt = load_txt(txt_path)
+    print("\nTXT -- shape :", data_txt.shape)
+    print("TXT -- row 0 :", data_txt[0].round(4))
+    os.unlink(txt_path)
+
+    # -------------------------------------------------------------------------
+    # 4. JSON round-trip
+    # -------------------------------------------------------------------------
+    payload_out = {
+        "n_rows": int(data_orig.shape[0]),
+        "n_cols": int(data_orig.shape[1]),
+        "grand_mean": float(data_orig.mean()),
+    }
+    with tempfile.NamedTemporaryFile(
+        suffix=".json", mode="w", delete=False, encoding="utf-8"
+    ) as fh:
+        json_path = fh.name
+        json.dump(payload_out, fh, indent=2)
+
+    payload_in = load_json(json_path)
+    print("\nJSON -- payload:", payload_in)
+    os.unlink(json_path)
+
+
+if __name__ == "__main__":
+    main()
