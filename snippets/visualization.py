@@ -186,3 +186,153 @@ def plot_histogram(
     return fig, ax
 
 
+# =============================================================================
+# Scatter plot
+# =============================================================================
+
+def plot_scatter(
+    x: np.ndarray,
+    y: np.ndarray,
+    output_path: str | Path,
+    *,
+    labels: np.ndarray | None = None,
+    title: str = "Scatter Plot",
+    xlabel: str = "x",
+    ylabel: str = "y",
+    alpha: float = 0.7,
+    point_size: float = 20.0,
+) -> tuple[plt.Figure, plt.Axes]:
+    """Plot a 2-D scatter plot, optionally colouring points by a label array.
+
+    When ``labels`` is supplied, each unique integer label receives a distinct
+    colour from the ``"tab10"`` palette and appears in the legend.  When
+    ``labels`` is ``None`` all points are rendered in a single default colour
+    with no legend.
+
+    The function does not perform any dimensionality reduction; the caller is
+    responsible for projecting high-dimensional data to 2-D first (e.g. using
+    PCA or t-SNE) before passing the first two dimensions as ``x`` and ``y``.
+
+    Parameters
+    ----------
+    x, y : ndarray of shape (N,)
+        Horizontal and vertical coordinates of the N points.
+    output_path : str or Path
+        Destination PNG file path.
+    labels : ndarray of shape (N,) of int, optional
+        Integer cluster / class assignment for each point; each unique value
+        gets its own colour.  Negative labels (e.g. ``-1`` for noise in
+        DBSCAN) are coloured grey.
+    title, xlabel, ylabel : str, optional
+        Axes labels.
+    alpha : float, optional
+        Point opacity in [0, 1]; default 0.7.
+    point_size : float, optional
+        Marker area in points²; default 20.
+
+    Returns
+    -------
+    fig : Figure
+    ax  : Axes
+    """
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+    cmap = plt.get_cmap("tab10")
+
+    fig, ax = plt.subplots(figsize=(6, 5))
+    if labels is not None:
+        for k in np.unique(labels):
+            mask = labels == k
+            color = "grey" if k < 0 else cmap(k % 10)
+            label_str = "noise" if k < 0 else str(k)
+            ax.scatter(
+                x[mask], y[mask],
+                color=color, label=label_str,
+                alpha=alpha, s=point_size,
+            )
+        ax.legend(title="Label", markerscale=1.5, fontsize=8)
+    else:
+        ax.scatter(x, y, alpha=alpha, s=point_size)
+
+    ax.set_title(title, fontsize=11)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150)
+    plt.close(fig)
+    return fig, ax
+
+
+# =============================================================================
+# Correlation matrix
+# =============================================================================
+
+def plot_correlation_matrix(
+    data: np.ndarray,
+    output_path: str | Path,
+    *,
+    column_names: list[str] | None = None,
+    title: str = "Correlation Matrix",
+    annotate: bool = True,
+) -> tuple[plt.Figure, plt.Axes]:
+    """Compute and plot the Pearson correlation matrix of a data matrix.
+
+    The correlation matrix R has R[i, j] = Pearson r between column i and
+    column j.  Its diagonal is identically 1 and the matrix is symmetric.  A
+    diverging ``"RdBu_r"`` colourmap centred on 0 is used so positive
+    correlations (red) and negative correlations (blue) stand out against the
+    white zero baseline.
+
+    When ``annotate=True`` (default) each cell is labelled with its r value
+    rounded to two decimal places.  For N > 20 variables this becomes crowded;
+    pass ``annotate=False`` to suppress the text.
+
+    Parameters
+    ----------
+    data : ndarray of shape (M, N) with N >= 2
+        Observation matrix; rows are samples, columns are variables.
+    output_path : str or Path
+        Destination PNG file path.
+    column_names : list of str, optional
+        Variable names for tick labels; defaults to ``["0", "1", ...]``.
+    title : str, optional
+        Axes title.
+    annotate : bool, optional
+        Label each cell with its r value; default ``True``.
+
+    Returns
+    -------
+    fig : Figure
+    ax  : Axes
+    """
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+    # np.corrcoef computes the N × N Pearson correlation matrix when rowvar=False
+    # (treat rows as observations, columns as variables).
+    corr = np.corrcoef(data, rowvar=False)
+    n = corr.shape[0]
+    names = column_names if column_names is not None else [str(i) for i in range(n)]
+
+    fig_side = max(4.0, n * 0.65 + 1.0)
+    fig, ax = plt.subplots(figsize=(fig_side, fig_side * 0.9))
+    im = ax.imshow(corr, vmin=-1.0, vmax=1.0, cmap="RdBu_r", aspect="auto")
+    fig.colorbar(im, ax=ax, shrink=0.8, label="Pearson r")
+
+    if annotate:
+        for i in range(n):
+            for j in range(n):
+                text_color = "white" if abs(corr[i, j]) > 0.7 else "black"
+                ax.text(
+                    j, i, f"{corr[i, j]:.2f}",
+                    ha="center", va="center", fontsize=8, color=text_color,
+                )
+
+    ax.set_xticks(range(n))
+    ax.set_yticks(range(n))
+    ax.set_xticklabels(names, rotation=45, ha="right", fontsize=9)
+    ax.set_yticklabels(names, fontsize=9)
+    ax.set_title(title, fontsize=11)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150)
+    plt.close(fig)
+    return fig, ax
+
+
