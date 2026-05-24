@@ -1,0 +1,92 @@
+% ======================================================================
+%  SIMC 2026 — TEMPLATES GUIDE
+%  Companion document for:
+%    • SIMC2026_Submission_10page.{tex,pdf}    (FINAL submission format)
+%    • SIMC2026_Preliminary_Detailed.{tex,pdf}  (internal working draft)
+%
+%  Team:  K. Vishnu Kumar  ·  Adithya Kesan Jayakanth  ·  Adithya Anand
+%  Date:  26 May 2026
+% ======================================================================
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper, margin=2.0cm, headheight=14pt]{geometry}
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx,array}
+\usepackage{xcolor,colortbl}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+\usepackage{tcolorbox}
+
+\definecolor{simcblue}{HTML}{0B3D5C}
+\definecolor{simcred}{HTML}{B22222}
+\definecolor{simcgreen}{HTML}{1F6B3A}
+\definecolor{simcgrey}{gray}{0.92}
+
+\linespread{1.10}
+\setlength{\parskip}{4pt}
+\setlength{\parindent}{0pt}
+
+\titleformat{\section}{\Large\bfseries\color{simcblue}}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\large\bfseries\color{simcblue}}{\thesubsection}{0.5em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{simcblue}SIMC 2026 · Templates Guide}
+\fancyhead[R]{\small \thepage}
+\fancyfoot[C]{\small Vishnu \textperiodcentered\ Adithya K.J. \textperiodcentered\ Adithya A.}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newtcolorbox{rulebox}{
+  colback=simcred!5, colframe=simcred!70, boxrule=0.6pt,
+  arc=2pt, left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{tipbox}{
+  colback=simcgreen!5, colframe=simcgreen!70, boxrule=0.6pt,
+  arc=2pt, left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{warnbox}{
+  colback=yellow!10, colframe=orange!80, boxrule=0.6pt,
+  arc=2pt, left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+
+\title{\vspace{-1.6cm}\Huge\bfseries\color{simcblue}SIMC 2026 — Templates Guide\\[0.4em]
+\Large How to use the 10-page submission template and the detailed preliminary template}
+\author{K.\ Vishnu Kumar \and Adithya Kesan Jayakanth \and Adithya Anand}
+\date{26 May 2026}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\tableofcontents
+\bigskip
+\hrule
+
+% =====================================================================
+\section{What this folder contains}
+
+\begin{tabularx}{\linewidth}{@{}p{0.42\linewidth}X@{}}
+\toprule
+\textbf{File} & \textbf{Purpose} \\
+\midrule
+\texttt{SIMC2026\_Submission\_10page.tex}     & LaTeX source — the FINAL submission format. \\
+\texttt{SIMC2026\_Submission\_10page.pdf}     & Compiled blank-template PDF for visual reference. \\
+\texttt{SIMC2026\_Preliminary\_Detailed.tex}  & LaTeX source — the working draft with all the depth. \\
+\texttt{SIMC2026\_Preliminary\_Detailed.pdf}  & Compiled blank preliminary PDF for visual reference. \\
+\texttt{SIMC2026\_Templates\_Guide.tex / .pdf}& This guide. \\
+\bottomrule
+\end{tabularx}
+
+\bigskip
+\textbf{All \texttt{.tex} files are plain UTF-8 LaTeX source — open them in any text editor and copy.} Compile with \texttt{pdflatex} (twice for the preliminary template so the table of contents resolves).
+
+% =====================================================================
+
+\end{document}
