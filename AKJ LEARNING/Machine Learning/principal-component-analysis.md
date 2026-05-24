@@ -62,3 +62,41 @@ $$C_{\text{PC basis}} = \begin{pmatrix} \lambda_1 & 0 & \cdots \\ 0 & \lambda_2 
 
 Pick the top $k$ components. [[vector-projection|Project]] every sample onto them. This gives each sample a new, short description. See [[dimensionality-reduction]] for the full projection math.
 
+## Key vocabulary
+
+| Term | Plain English | Math |
+|---|---|---|
+| **Loadings** | The PC directions themselves — which wavelengths "load onto" this component | Eigenvectors $\mathbf{v}_1, \mathbf{v}_2, \dots$ |
+| **Scores** | A sample's coordinates in PC space — its new short description | $z_{ik} = \tilde{\mathbf{x}}_i \cdot \mathbf{v}_k$ |
+| **Explained variance** | How much of total data spread each PC captures | $\lambda_k / \sum_j \lambda_j$ |
+
+Scores are what you run statistics on. Loadings are what you interpret (which wavelengths drive each PC).
+
+> [!warning] Common confusion
+> PCA doesn't "throw away data points" — it keeps ALL samples. It throws away **dimensions** (directions). Each sample still gets described, just with $k$ numbers instead of $p$.
+
+> [!tip] The rotation picture
+> PCA is literally a rotation of your coordinate axes so the new axes align with the directions of maximum variance. No data is distorted — it's a rigid rotation, not a stretch.
+
+> [!example] Toy IR example
+> You have 50 spectra, each with 1000 wavelength intensities. After PCA you find the first 3 PCs explain 95% of variance. Now each spectrum is just 3 numbers (its scores). You've gone from a $50 \times 1000$ matrix to a $50 \times 3$ matrix — same 50 samples, just 3 features instead of 1000.
+
+## Why this matters for PCA on IR spectra
+
+IR spectra have ~1000 wavelength channels but most variation comes from a handful of chemical factors (concentration of compound A, temperature, baseline drift, etc.). PCA extracts these underlying chemical signals as PCs. The loadings show WHICH wavelengths define each chemical factor; the scores show HOW MUCH of each factor each sample contains. This is why PCA is the standard first move in chemometrics.
+
+## Builds on
+- [[covariance-matrix]]
+- [[eigenvectors-of-the-covariance-matrix]]
+- [[power-method]]
+- [[diagonal-covariance-matrix]]
+- [[manifold-hypothesis]]
+- [[mean-and-centering]]
+- [[vector-projection]]
+- [[design-matrix]]
+- [[variance]]
+
+## Leads to
+- [[eigenspectrum]]
+- [[dimensionality-reduction]]
+- [[pca-on-ir-spectra]]
