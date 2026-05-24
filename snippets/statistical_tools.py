@@ -117,3 +117,134 @@ def describe(sample: np.ndarray) -> DescriptiveStats:
 # Z-score
 # =============================================================================
 
+def z_score(sample: np.ndarray, *, ddof: int = 1) -> np.ndarray:
+    """Standardise a sample to zero mean and unit standard deviation.
+
+    Each observation is transformed by
+
+        z_i = (x_i - mean(x)) / std(x, ddof=ddof).
+
+    With ``ddof=1`` (default) the denominator is the unbiased sample standard
+    deviation; with ``ddof=0`` it is the population (MLE) estimator, which is
+    appropriate when ``sample`` is the entire population.
+
+    If the standard deviation is zero (constant input), the function raises a
+    ``ValueError`` rather than silently returning ``nan`` or ``inf``, because
+    a constant sample carries no information that can be meaningfully
+    standardised.
+
+    Parameters
+    ----------
+    sample : ndarray of shape (N,) or any shape
+        Observations to standardise.  Multi-dimensional arrays are flattened
+        to 1-D; the returned array has shape ``(sample.size,)``.
+    ddof : int, optional
+        Delta degrees of freedom for the standard deviation; default 1.
+
+    Returns
+    -------
+    z : ndarray of shape (sample.size,), dtype float64
+        The standardised sample with mean 0 and standard deviation 1.
+
+    Raises
+    ------
+    ValueError
+        If the computed standard deviation is zero.
+
+    Examples
+    --------
+    >>> z = z_score(np.array([2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0]))
+    >>> z.mean()   # doctest: +ELLIPSIS
+    0.0
+    >>> z.std(ddof=1)
+    1.0
+    """
+    x = sample.ravel().astype(np.float64)
+    mu = x.mean()
+    sigma = x.std(ddof=ddof)
+    if sigma == 0.0:
+        raise ValueError(
+            "z_score: sample standard deviation is zero -- cannot standardise a constant sample."
+        )
+    return (x - mu) / sigma
+
+
+# =============================================================================
+# Confidence interval for the mean
+# =============================================================================
+
+class ConfidenceInterval(NamedTuple):
+    """Two-sided confidence interval for the population mean."""
+    lower:            float
+    upper:            float
+    centre:           float   # sample mean = point estimate
+    confidence_level: float
+    n:                int
+
+
+def confidence_interval_mean(
+    sample: np.ndarray,
+    *,
+    confidence: float = 0.95,
+) -> ConfidenceInterval:
+    """Compute the two-sided t-interval for the population mean.
+
+    Uses the Student-t distribution with N-1 degrees of freedom.  This is
+    the exact interval when the population is normally distributed and the
+    variance is unknown.  For N >= 30 the difference from the z-interval
+    (which assumes known variance) is negligible.
+
+    The half-width of the interval is
+
+        h = t_{alpha/2, N-1} * s / sqrt(N),
+
+    where alpha = 1 - confidence, s is the sample standard deviation (ddof=1),
+    and t_{alpha/2, N-1} is the upper alpha/2 quantile of t(N-1).
+
+    Parameters
+    ----------
+    sample : ndarray of shape (N,)
+        The 1-D observations.  Flattened to 1-D if multi-dimensional.
+    confidence : float, optional
+        Coverage probability in (0, 1); default 0.95 for a 95 percent
+        two-sided interval.
+
+    Returns
+    -------
+    ci : ConfidenceInterval
+        Named tuple with ``lower``, ``upper``, ``centre`` (sample mean),
+        ``confidence_level``, and ``n``.
+
+    Raises
+    ------
+    ValueError
+        If the sample has fewer than 2 observations (degrees of freedom = 0).
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> rng = np.random.default_rng(0)
+    >>> ci = confidence_interval_mean(rng.normal(0, 1, 100))
+    >>> ci.lower < 0 < ci.upper   # zero should be inside the 95% CI
+    True
+    """
+    x = sample.ravel().astype(np.float64)
+    n = x.size
+    if n < 2:
+        raise ValueError(
+            "confidence_interval_mean: need at least 2 observations (got {n})."
+        )
+    mean = x.mean()
+    se = x.std(ddof=1) / np.sqrt(n)
+    # scipy.stats.t.interval returns (lower, upper) centred on `loc` with
+    # standard error `scale` for the given coverage level.
+    lower, upper = stats.t.interval(confidence, df=n - 1, loc=mean, scale=se)
+    return ConfidenceInterval(
+        lower=float(lower),
+        upper=float(upper),
+        centre=float(mean),
+        confidence_level=confidence,
+        n=n,
+    )
+
+
