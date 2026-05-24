@@ -78,3 +78,35 @@ Each loading vector $\mathbf{v}_r \in \mathbb{R}^p$ has the same axis as a spect
 > [!warning] Common confusion
 > Loadings are NOT pure-component spectra (except in the ideal noiseless case). They are the mathematical PCA axes, which are a rotation of the chemical axes. If you need actual pure-component spectra, use MCR-ALS (a follow-on method). For SIMC purposes, "loadings point to which wavenumbers matter" is enough.
 
+## Why Beer–Lambert + manifold hypothesis make this exact
+
+Without Beer–Lambert: spectra might lie on a curved manifold, and linear PCA would only give an approximation.
+
+With Beer–Lambert: the manifold is literally a flat $k$-dimensional subspace (linear combinations of $k$ fixed vectors). PCA finds flat subspaces. The fit is exact (up to noise). This is the payoff of the entire chain of notes.
+
+$$\underbrace{\text{Beer–Lambert linearity}}_{\text{chemistry}} \Longrightarrow \underbrace{k\text{-dim linear subspace}}_{\text{geometry}} \Longrightarrow \underbrace{\text{PCA recovers it exactly}}_{\text{linear algebra}}$$
+
+## What to actually do in the competition
+
+> [!tip] Practical SIMC checklist
+> 1. **Center** each wavenumber channel (subtract column means). Always.
+> 2. **Baseline-correct** if spectra show sloping backgrounds (subtract a fitted polynomial before centering).
+> 3. **Scree plot first** — count the elbow. That number is your $k$ (number of components / sources of variation).
+> 4. **Scores scatter** (PC1 vs PC2) — look for clusters, outliers, trends. Label your samples.
+> 5. **Loadings plot** — match large-loading wavenumbers to known functional groups in the functional-group region ($1500$–$4000$ cm⁻¹) to give chemical meaning to your PCs.
+> 6. **Variance explained** — report cumulative $\sum_{r=1}^k \lambda_r / \sum \lambda_r$ to show how much of the data the first $k$ PCs capture.
+> 7. **Reconstruction / denoising** — project to $k$ PCs and project back; the residual is noise.
+
+> [!example] Sanity check
+> If you have spectra of mixtures of 3 known chemicals, you expect the scree plot to show exactly 3 large eigenvalues and then a flat floor. If you see 5, suspect contamination or a chemical reaction creating a new species.
+
+## Builds on
+- [[principal-component-analysis]]
+- [[manifold-hypothesis]]
+- [[ir-spectroscopy]]
+- [[beer-lambert-law]]
+- [[eigenspectrum]]
+- [[dimensionality-reduction]]
+
+## Leads to
+- This is the summit.
