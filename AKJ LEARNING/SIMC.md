@@ -144,3 +144,87 @@ Notes:
 - [[matplotlib-basics]]
 - [[histogram-bins]]
 
+## Learning path
+
+### Dependency graph
+
+```mermaid
+graph TD
+    Tool[Data Viz & Tooling]
+    Prob[Probability]
+    LA[Linear Algebra]
+    Meta[Modeling Methodology]
+
+    Stat[Statistics]
+    Opt[Optimization]
+    Sim[Simulation / Monte Carlo]
+
+    ML[Machine Learning]
+    GT[Game / Decision Theory]
+
+    Graph[Graph Theory & Networks]
+    ODE[Differential Equations]
+
+    Prob --> Stat
+    Prob --> Sim
+    Prob --> GT
+    Prob --> ML
+    LA --> Opt
+    LA --> ML
+    Stat --> ML
+    Opt --> ML
+    Tool --> Sim
+    Tool --> ML
+
+    classDef tier1 fill:#458588,stroke:#83a598,color:#fbf1c7
+    classDef tier2 fill:#d79921,stroke:#fabd2f,color:#282828
+    classDef tier3 fill:#cc241d,stroke:#fb4934,color:#fbf1c7
+    classDef tier4 fill:#689d6a,stroke:#8ec07c,color:#fbf1c7
+
+    class Tool,Prob,LA,Meta tier1
+    class Stat,Opt,Sim tier2
+    class ML,GT tier3
+    class Graph,ODE tier4
+```
+
+### Suggested order
+
+> [!tip] Read top to bottom. Tiers can overlap — anything in a higher tier unlocks everything that depends on it.
+
+**Tier 1 — Foundations (no deps, start here):**
+1. **Data Viz & Tooling** — NumPy/pandas/matplotlib. You need this to *do* anything; sets the tooling floor for every other topic.
+2. **Probability** — gates Statistics, Simulation, ML, Game Theory. Highest-leverage single topic.
+3. **Linear Algebra** — gates Optimization and ML. Parallel-able with Probability.
+4. **Modeling Methodology** — meta-skill (assumptions, validation, sensitivity, report structure). Learn early so it shapes everything else; this is what SIMC graders actually score.
+
+**Tier 2 — Direct extensions:**
+
+5. **Statistics** — needs Probability.
+6. **Optimization** — needs Linear Algebra.
+7. **Simulation / Monte Carlo** — needs Probability + Tooling.
+
+**Tier 3 — Composite / applied:**
+
+8. **Machine Learning** — needs Prob + Stats + LA + Optimization + Tooling. Last because it's the integration layer.
+9. **Game / Decision Theory** — needs Probability.
+
+**Tier 4 — Independent specialties (slot in anytime):**
+
+10. **Graph Theory & Networks** — combinatorial, no real prereqs from this list.
+11. **Differential Equations** — calculus prereq (already covered). Useful if the problem is dynamic/time-evolving.
+
+### Critical path
+
+Shortest route to being SIMC-functional, ignoring breadth:
+
+**Tooling → Probability → Modeling Methodology → Statistics → Simulation**
+
+These five let you attack a huge fraction of past SIMC problems (data → model → simulate → report). Everything else is a multiplier on top.
+
+## Team
+
+Adithya Kesan Jayakanth (AKJ , me) , K Vishnu Kumar , Adithya Anand (Different adithya from me)
+
+## Sources
+
+*Add textbooks, past problems, and reference PDFs to `SOURCES/SIMC/` as they're gathered.*
