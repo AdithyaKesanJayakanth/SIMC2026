@@ -133,5 +133,139 @@
 \subsection{Mathematical foundations}
 \ph{The mathematical objects this challenge sits on — graph theory, statistics, optimisation, dynamical systems, etc. — with the key references.}
 
+\subsection{Comparable challenges and prior champion reports}
+\ph{What did the 2022 and 2024 champion reports do well? What patterns repeat across past SIMC problems? Cite \texttt{SIMC-Report-2022-Champion.pdf} and \texttt{SIMC2\_0\_Champion\_Report\_2024.pdf}.}
+
+\subsection{Implementation libraries surveyed}
+\ph{Short list of candidate Python libraries considered for each major step, with the choice and rationale.}
+
+% =====================================================================
+%  5.  ASSUMPTIONS
+% =====================================================================
+\section{Assumptions}
+\subsection{Modelling assumptions}
+\ph{Stationarity, independence, linearity, Gaussianity, etc. State each, mark its role, and rate confidence.}
+
+\subsection{Data assumptions}
+\ph{Schema, missingness, error structure, time ordering, etc.}
+
+\subsection{Computational assumptions}
+\ph{Numerical precision, convergence tolerances, random seeds, parallelism.}
+
+\subsection{Justification table}
+\begin{tabularx}{\linewidth}{@{}p{0.18\linewidth}p{0.28\linewidth}Xc@{}}
+\toprule
+\textbf{Label} & \textbf{Assumption} & \textbf{Justification} & \textbf{Conf.} \\
+\midrule
+A1 & \ph{...} & \ph{...} & \ph{H/M/L} \\
+A2 & \ph{...} & \ph{...} & \ph{H/M/L} \\
+A3 & \ph{...} & \ph{...} & \ph{H/M/L} \\
+A4 & \ph{...} & \ph{...} & \ph{H/M/L} \\
+\bottomrule
+\end{tabularx}
+
+% =====================================================================
+%  6.  NOTATION & DEFINITIONS
+% =====================================================================
+\section{Notation \& Definitions}
+\subsection{Symbols}
+\begin{tabularx}{\linewidth}{@{}p{0.18\linewidth}X@{}}
+\toprule
+\textbf{Symbol} & \textbf{Meaning} \\
+\midrule
+$n,\, N$       & \ph{sample / population sizes} \\
+$\bm{x}_i$     & \ph{feature vector for unit $i$} \\
+$\bm{y}$       & \ph{response vector} \\
+$S_{ij}$       & \ph{pairwise similarity} \\
+$\alpha$       & \ph{significance threshold} \\
+$\hat{\theta}$ & \ph{parameter estimate} \\
+\bottomrule
+\end{tabularx}
+
+\subsection{Domain definitions}
+\ph{Define every domain term the problem uses (and the team uses) before its first appearance in the analysis sections.}
+
+\subsection{Statistical conventions}
+\ph{Hypothesis test conventions, multiple-comparison corrections (Bonferroni, BH, FWER), confidence interval method, bootstrap conventions.}
+
+% =====================================================================
+%  7.  DATA
+% =====================================================================
+\section{Data}
+\subsection{Source and provenance}
+\ph{Where the data came from, when it was supplied, in what format.}
+
+\subsection{Schema}
+\ph{Column-by-column description with types, ranges, units.}
+
+\subsection{Preprocessing}
+\ph{Cleaning, imputation, normalisation, deduplication — every step that could change a downstream result.}
+
+\subsection{Quality and integrity checks}
+\ph{Row counts, hash, null patterns, outlier inventory.}
+
+\subsection{Exploratory data summaries}
+\ph{Headline summary statistics, key visualisations, anything surprising before modelling started.}
+
+% =====================================================================
+%  8.  METHODOLOGY FRAMEWORK
+% =====================================================================
+\section{Methodology Framework}
+\subsection{Pipeline overview}
+\ph{End-to-end diagram or bullet list: ingest $\to$ preprocess $\to$ model$_k$ $\to$ validate $\to$ report.}
+
+\subsection{Software stack}
+\ph{Python version, key libraries with versions, OS, hardware.}
+
+\subsection{Reproducibility}
+\ph{Random seeds, deterministic operations, how to re-run from the .ipynb in one command.}
+
+\subsection{Performance considerations}
+\ph{Where the bottleneck is, how it was handled (vectorisation, parallelism, sparse representations, etc.).}
+
+% =====================================================================
+%  9–16.  TASKS 1–8  — full treatment per task
+% =====================================================================
+\section{Task 1 \ph{— [title]}}
+\subsection{Objective}\ph{...}
+\subsection{Mathematical formulation}\ph{...}
+\subsection{Derivation}\ph{...}
+\subsection{Algorithm and implementation}\ph{...}
+\subsection{Validation strategy}\ph{...}
+\subsection{Results}\ph{...}
+\subsection{Interpretation}\ph{...}
+\subsection{Discussion (for Q\&A)}\ph{Edge cases, alternative readings, anticipated judge questions.}
+
+\section{Task 2 \ph{— [title]}}
+\subsection{Objective}\ph{...}
+\subsection{Mathematical formulation}\ph{...}
+\subsection{Derivation}\ph{...}
+\subsection{Algorithm and implementation}\ph{...}
+\subsection{Validation strategy}\ph{...}
+\subsection{Results}\ph{...}
+\subsection{Interpretation}\ph{...}
+\subsection{Discussion (for Q\&A)}\ph{...}
+
+\section{Task 3 \ph{— [title]}}
+\subsection{Objective}\ph{...}
+\subsection{Mathematical formulation}\ph{...}
+\subsection{Derivation}\ph{...}
+\subsection{Algorithm and implementation}\ph{...}
+\subsection{Validation strategy}\ph{...}
+\subsection{Results}\ph{...}
+\subsection{Interpretation}\ph{...}
+\subsection{Discussion (for Q\&A)}\ph{...}
+
+\section{Task 4 \ph{— [title]}}
+\subsection{Objective}\ph{...}
+\subsection{Mathematical formulation}\ph{...}
+\subsection{Derivation}\ph{...}
+\subsection{Algorithm and implementation}\ph{...}
+\subsection{Validation strategy}\ph{...}
+\subsection{Results}\ph{...}
+\subsection{Interpretation}\ph{...}
+\subsection{Discussion (for Q\&A)}\ph{...}
+
+\section{Task 5 \ph{— [title]}}
 
 \end{document}
