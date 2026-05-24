@@ -182,5 +182,96 @@ Title block (in-text)             & 0.08 & Title, three authors, school, team ID
 \subsection*{13. References}
 \textbf{What to write.} Numbered list, IEEE-style or similar. Cite only what is actually referenced in the body. Prior SIMC champion reports (2022, 2024) are fair game if the team has read them.
 
+\subsection*{14. AI Usage Log}
+\textbf{What to write.} Three to five lines: name the AI assistants used, name the parts they helped with (literature recall, code skeletons, derivation checking, prose tightening), and name the parts the team did unaided (final modelling decisions, validation numbers, written interpretation).\\
+\textbf{Important.} The full prompt-and-response transcript ships as a \emph{separate} file alongside the report (\texttt{SIMC<ID>\_<schoolAbbr>\_ailog.pdf} in PDF or DOC), as required by the official Instructions to Participants 2026. This in-report section is the index, not the log itself.
+
+% =====================================================================
+\section{Section-by-section content guide (preliminary template)}
+
+The preliminary template (\texttt{SIMC2026\_Preliminary\_Detailed.tex}) has the same skeleton plus everything below. Use it as a project notebook.
+
+\subsection*{Sections present in the preliminary template only}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Literature \& Prior Art} — graph theory / statistics / optimisation background, plus a paragraph on what the 2022 and 2024 champion reports did well.
+\item \textbf{Data section (5 subsections)} — provenance, schema, preprocessing, integrity checks, exploratory summaries.
+\item \textbf{Methodology Framework} — pipeline, software stack, reproducibility, performance.
+\item \textbf{Per-task subsections} — Objective / Formulation / Derivation / Algorithm / Validation / Results / Interpretation / Discussion (for Q\&A).
+\item \textbf{Cross-Task Synthesis} — what the eight tasks together imply that no single task does.
+\item \textbf{Failure mode analysis} — cases where the model gives an absurd answer.
+\item \textbf{Validation \& Verification} — synthetic data tests, cross-method agreement, external benchmarks.
+\item \textbf{Recommendations \& Future Work}.
+\item \textbf{Appendices A–E} — full derivations, pseudocode, data tables, additional figures, code listings, AI-prompt summary.
+\end{itemize}
+
+\begin{tipbox}
+\textbf{Mapping from preliminary to submission.} For every preliminary section, decide before you cut: \emph{is its conclusion already implied by the headline number in the corresponding task block?} If yes, cut it from the 10-page report and keep it for the oral. If no, distil it into one or two sentences in the appropriate 10-page section.
+\end{tipbox}
+
+% =====================================================================
+\section{Oral-presentation reservoir (28 May)}
+
+The preliminary draft IS the rehearsal script. When trimming for the 10-page report, tag the cut paragraphs with one of the four labels below; build the slide deck and Q\&A flashcards from them.
+
+\begin{tabularx}{\linewidth}{@{}p{0.20\linewidth}X@{}}
+\toprule
+\textbf{Tag} & \textbf{Use in the oral} \\
+\midrule
+\texttt{\#derivation} & Show on a slide when a judge asks ``how did you arrive at this?'' \\
+\texttt{\#robustness} & Bring up when a judge probes a borderline assumption. \\
+\texttt{\#alternative} & ``We also considered $\ldots$; here's why we chose the one in the report.'' \\
+\texttt{\#failure}    & Show that the team knows where the model breaks. \\
+\bottomrule
+\end{tabularx}
+
+\textbf{Format reminder.} 15 minutes to present, 20 minutes Q\&A. Plan roughly 1 slide per minute of presentation, plus a Q\&A appendix deck of 8–12 backup slides drawn from the tagged paragraphs above.
+
+% =====================================================================
+\section{Submission checklist (27 May 2026)}
+
+\begin{tipbox}
+\textbf{Before 1400 SGT.} Compile the final 10-page PDF, sanity-check page count, run the spell-check, verify the file name pattern, then upload to Coursemology.
+\end{tipbox}
+
+\begin{enumerate}[leftmargin=*, itemsep=2pt]
+\item PDF is exactly Times New Roman 12pt, single-spaced, no cover page.
+\item Page count $\leq$\,10 including any appendix.
+\item All math and code symbols render correctly (open the PDF on a different machine to check fonts).
+\item Filename matches \texttt{SIMC<ID>\_<schoolAbbr>.pdf}.
+\item Jupyter notebook submitted alongside, runs end-to-end on a clean kernel.
+\item Notebook filename matches \texttt{SIMC<ID>\_<schoolAbbr>.ipynb}.
+\item AI prompt log (if used) attached as PDF/DOC with matching filename.
+\item Inside Coursemology, click \textbf{Submit} \emph{then} \textbf{Finalise all answers} — the report is not actually submitted until ``Finalise''.
+\item Verify the status page shows ``Submitted''.
+\end{enumerate}
+
+% =====================================================================
+\section{Compiling the templates}
+
+From a terminal in this folder:
+
+\begin{verbatim}
+pdflatex SIMC2026_Submission_10page.tex
+pdflatex SIMC2026_Preliminary_Detailed.tex
+pdflatex SIMC2026_Preliminary_Detailed.tex   % twice — resolves TOC
+pdflatex SIMC2026_Templates_Guide.tex
+pdflatex SIMC2026_Templates_Guide.tex
+\end{verbatim}
+
+MiKTeX will auto-install any missing packages on first run. If a judge's machine renders the submitted PDF differently, the issue is almost always font embedding — re-export with \texttt{pdflatex} (\emph{not} a Word ``Save as PDF'') to guarantee fonts are embedded.
+
+% =====================================================================
+\section{Common pitfalls to avoid}
+
+\begin{warnbox}
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+\item \textbf{Using a cover page.} The instructions explicitly forbid one — it counts as a wasted page.
+\item \textbf{Forgetting that appendices count toward 10.} The 10-page cap is total.
+\item \textbf{Writing the report in Word.} Maths typesets badly, font embedding is fragile, and reproducible page-count is hard. Stick with LaTeX.
+\item \textbf{Submitting the preliminary file by mistake.} It has the watermark ``NOT FOR SUBMISSION'' on its title page exactly for this reason.
+\item \textbf{Leaving placeholder \texttt{\textbackslash ph\{\ldots\}} text in the final PDF.} A grep for \texttt{ph\{} in the compiled .tex catches all of them. The grey italic style also makes them visible in the PDF.
+\item \textbf{Bringing exploratory work into the oral that contradicts the 10-page report.} Either fix the report or drop the contradicting bit from the talk. Judges read both.
+\end{itemize}
+\end{warnbox}
 
 \end{document}
