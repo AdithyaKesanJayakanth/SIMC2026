@@ -336,3 +336,153 @@ def plot_correlation_matrix(
     return fig, ax
 
 
+# =============================================================================
+# Clustering plot
+# =============================================================================
+
+def plot_clustering(
+    data: np.ndarray,
+    labels: np.ndarray,
+    output_path: str | Path,
+    *,
+    title: str = "Clustering Plot",
+    xlabel: str = "Component 1",
+    ylabel: str = "Component 2",
+    show_centroids: bool = True,
+) -> tuple[plt.Figure, plt.Axes]:
+    """Visualise cluster assignments in 2-D using the first two columns of data.
+
+    Each cluster is rendered as a filled scatter layer.  When
+    ``show_centroids=True`` (default) an ``"x"`` marker is placed at the
+    column-mean of each cluster so the reader can see both the extent and the
+    centre of each group.  This is useful for verifying KMeans results without
+    having to import the centroids separately.
+
+    If ``data`` has more than two columns only columns 0 and 1 are plotted.
+    For high-dimensional data the caller should project to 2-D with PCA or
+    t-SNE before calling this function.
+
+    Parameters
+    ----------
+    data : ndarray of shape (M, D) with D >= 2
+        Point coordinates; only columns 0 and 1 are used.
+    labels : ndarray of shape (M,) of int
+        Cluster label for each point.  Negative labels are coloured grey
+        (convention used by DBSCAN for noise points).
+    output_path : str or Path
+        Destination PNG file path.
+    title, xlabel, ylabel : str, optional
+        Axes labels.
+    show_centroids : bool, optional
+        Overlay an ``"x"`` marker at each cluster centroid; default ``True``.
+
+    Returns
+    -------
+    fig : Figure
+    ax  : Axes
+    """
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+    x, y = data[:, 0], data[:, 1]
+    cmap = plt.get_cmap("tab10")
+    unique_labels = np.unique(labels)
+
+    fig, ax = plt.subplots(figsize=(6, 5))
+    for k in unique_labels:
+        mask = labels == k
+        color = "grey" if k < 0 else cmap(k % 10)
+        label_str = "noise" if k < 0 else f"Cluster {k}"
+        ax.scatter(x[mask], y[mask], color=color, label=label_str, alpha=0.6, s=20)
+        if show_centroids and k >= 0:
+            cx, cy = x[mask].mean(), y[mask].mean()
+            ax.scatter(
+                cx, cy,
+                color=color, marker="x", s=120, linewidths=2.5, zorder=5,
+            )
+
+    ax.legend(title="Cluster", markerscale=1.4, fontsize=8)
+    ax.set_title(title, fontsize=11)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150)
+    plt.close(fig)
+    return fig, ax
+
+
+# =============================================================================
+# Driver
+# =============================================================================
+
+def main() -> None:
+    """Generate all five plots from synthetic Gaussian data and save to disk.
+
+    Output is written to ``data/output/snippets/`` relative to the current
+    working directory.  Run from the repository root so that the path mirrors
+    the convention used throughout the SIMC pipeline.
+    """
+    out = Path("data/output/snippets")
+    out.mkdir(parents=True, exist_ok=True)
+
+    rng = np.random.default_rng(seed=42)
+
+    # A 4-column data matrix: first two columns are correlated, last two are
+    # independent noise.  This makes the correlation matrix non-trivial.
+    base = rng.standard_normal((200, 2))
+    noise = rng.standard_normal((200, 2)) * 0.3
+    data = np.hstack([base, base[:, ::-1] * 0.8 + noise])
+
+    # Binary labels for the scatter / clustering plots.
+    labels = (rng.random(200) > 0.5).astype(int)
+
+    # -------------------------------------------------------------------------
+    # 1. Heatmap of the 4 × 4 Gram (X^T X) matrix -- a nice symmetric example.
+    # -------------------------------------------------------------------------
+    gram = data.T @ data / data.shape[0]
+    plot_heatmap(
+        gram, out / "heatmap.png",
+        title="Gram Matrix (X\u1d40X / M)",
+        xlabel="Feature", ylabel="Feature",
+        cmap="magma", annotate=True,
+    )
+
+    # -------------------------------------------------------------------------
+    # 2. Histogram of the first column.
+    # -------------------------------------------------------------------------
+    plot_histogram(
+        data[:, 0], out / "histogram.png",
+        title="Column 0 -- Marginal Distribution",
+        xlabel="Value", density=True,
+    )
+
+    # -------------------------------------------------------------------------
+    # 3. Scatter plot of the first two columns, coloured by binary label.
+    # -------------------------------------------------------------------------
+    plot_scatter(
+        data[:, 0], data[:, 1], out / "scatter.png",
+        labels=labels,
+        title="Scatter: Column 0 vs Column 1",
+        xlabel="Column 0", ylabel="Column 1",
+    )
+
+    # -------------------------------------------------------------------------
+    # 4. Correlation matrix of all four columns.
+    # -------------------------------------------------------------------------
+    plot_correlation_matrix(
+        data, out / "correlation_matrix.png",
+        column_names=["A", "B", "C", "D"],
+        title="Pearson Correlation Matrix",
+    )
+
+    # -------------------------------------------------------------------------
+    # 5. Clustering plot using the same binary labels.
+    # -------------------------------------------------------------------------
+    plot_clustering(
+        data, labels, out / "clustering.png",
+        title="Clustering: Binary Labels",
+    )
+
+    print("All plots written to", out)
+
+
+if __name__ == "__main__":
+    main()
