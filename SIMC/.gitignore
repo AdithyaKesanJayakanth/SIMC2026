@@ -1,0 +1,12 @@
+# Python build artifacts
+__pycache__/
+*.pyc
+
+# Private ground-truth values (answers to challenges)
+ground_truth.py
+
+# macOS
+.DS_Store
+
+# Session transcrips
+transcript.txt
