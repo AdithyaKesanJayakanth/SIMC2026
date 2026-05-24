@@ -243,3 +243,244 @@ if my_list:    # True if non-empty AND not None
 > [!warning] Falsy values in Python
 > `False`, `None`, `0`, `0.0`, `""`, `[]`, `{}`, `()`, `set()` are ALL falsy. ==Watch out: `if x:` does NOT mean "if x is not None" — it ALSO triggers on 0 and empty string.== Use `if x is not None:` when that matters (e.g., distinguishing "user passed 0" from "user passed nothing").
 
+## Operators
+
+Mostly the same, but note these:
+
+| Java | Python | Notes |
+|------|--------|-------|
+| `/` (int division if both ints) | `/` (always float), `//` (floor division) | ==`5 / 2 == 2.5` in Python, not `2`== |
+| `%` | `%` | Same — modulo |
+| `Math.pow(x, n)` | `x ** n` | Native exponent operator |
+| `^` | `^` | Bitwise XOR in both. For logical XOR in Python, use `!=` on bools |
+| `&&` `\|\|` `!` | `and` `or` `not` | |
+| `==` (reference equality for objects) | `==` (value equality), `is` (identity) | ==Different meaning!== |
+| `.equals()` | `==` | |
+
+> [!warning] `==` vs `is`
+> `==` checks value equality. `is` checks if two names point to the literal same object in memory. ==Use `is` only for `None`, `True`, `False`, and identity checks.== For everything else use `==`. `"abc" is "abc"` may be True due to interning, but you should never rely on it.
+
+## Functions
+
+```java
+public static int add(int a, int b) {
+    return a + b;
+}
+```
+
+```python
+def add(a, b):                       # no return type, no parameter types required
+    return a + b
+
+def add(a: int, b: int) -> int:      # with type hints — optional, documentation only
+    return a + b
+```
+
+See [[type-hints]] for the full type hint reference.
+
+### Default arguments
+
+```python
+def greet(name, greeting="Hello"):
+    return f"{greeting}, {name}!"
+
+greet("Alice")                   # "Hello, Alice!"
+greet("Alice", "Hi")             # "Hi, Alice!"
+greet("Alice", greeting="Hey")   # keyword argument — explicit name
+```
+
+> [!info] No method overloading in Python
+> Java lets you define multiple methods with the same name and different signatures. Python doesn't. Use default arguments and keyword arguments instead. If you really need polymorphism on argument type, branch inside the function.
+
+### Multiple return values
+
+```java
+// Java forces you to make a wrapper class or use an array/Pair.
+```
+
+```python
+def min_max(nums):
+    return min(nums), max(nums)    # returns a tuple
+
+lo, hi = min_max([3, 1, 4, 1, 5])  # tuple unpacking on the caller side
+```
+
+### Lambdas
+
+```java
+(x, y) -> x + y
+nums.stream().map(x -> x * 2)
+```
+
+```python
+lambda x, y: x + y
+map(lambda x: x * 2, nums)     # but you'd usually write a list comprehension instead
+```
+
+> [!tip] Lambdas in Python are weak by design
+> Python's `lambda` is single-expression only — no statements, no multiline. ==If you want a "real" function, just use `def`.== This is intentional: it nudges you toward named functions, which are easier to debug.
+
+## List comprehensions (the most-used Python idiom)
+
+Side by side with Java for-loops and streams:
+
+```java
+List<Integer> doubled = new ArrayList<>();
+for (int x : nums) {
+    doubled.add(x * 2);
+}
+// Or with streams:
+List<Integer> doubled = nums.stream().map(x -> x * 2).collect(Collectors.toList());
+```
+
+```python
+doubled = [x * 2 for x in nums]
+```
+
+With filter:
+
+```python
+evens = [x for x in nums if x % 2 == 0]
+```
+
+With both:
+
+```python
+squared_evens = [x ** 2 for x in nums if x % 2 == 0]
+```
+
+Nested:
+
+```python
+pairs = [(i, j) for i in range(3) for j in range(3) if i != j]
+```
+
+Dict and set comprehensions exist too:
+
+```python
+squares = {x: x ** 2 for x in range(5)}    # dict comprehension
+unique_lengths = {len(w) for w in words}   # set comprehension
+```
+
+> [!tip] Read list comprehensions left-to-right as a sentence
+> `[x * 2 for x in nums if x > 0]` reads: "==give me `x * 2`, for each `x` in `nums`, if `x > 0`==". The structure is: `[expression for variable in iterable if condition]`. Once you internalize this you'll never write a manual `append` loop again.
+
+## None vs null
+
+| Java | Python |
+|------|--------|
+| `null` | `None` |
+| `x == null` | `x is None` |
+| `x != null` | `x is not None` |
+
+> [!warning] Use `is`, not `==`, for None comparison
+> ==`x is None` is faster and idiomatic.== `x == None` works but is considered wrong style and most linters will flag it.
+
+## Exceptions
+
+```java
+try {
+    riskyOperation();
+} catch (IOException e) {
+    System.err.println(e.getMessage());
+} finally {
+    cleanup();
+}
+```
+
+```python
+try:
+    risky_operation()
+except IOError as e:        # 'except' not 'catch', 'as' not parameter
+    print(e)
+finally:
+    cleanup()
+```
+
+To raise:
+
+```python
+raise ValueError("bad input")    # 'raise' not 'throw'
+```
+
+Brief on purpose — exception handling depth is a separate note. Just know the keyword swaps: `try`/`except`/`finally`/`raise` instead of `try`/`catch`/`finally`/`throw`.
+
+## Imports
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
+```
+
+```python
+import math                              # whole module — use as math.sqrt(2)
+from math import sqrt, pi                # specific names — use as sqrt(2)
+import numpy as np                       # rename for convenience
+from collections import defaultdict      # specific name from submodule
+```
+
+> [!info] No `*` imports in production
+> `from math import *` works but pollutes your namespace and makes it impossible to tell where a name came from. Stick to explicit imports.
+
+## The entry point pattern
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello");
+    }
+}
+```
+
+```python
+def main():
+    print("Hello")
+
+if __name__ == "__main__":
+    main()
+```
+
+> [!info] Why `if __name__ == "__main__"`?
+> Python runs files top to bottom. The `if __name__ == "__main__":` guard means "only run this if the file is being run directly, not if it's being imported as a module." ==Standard Python convention — put your `main()` call inside this block== so the file can be both a script and an importable module.
+
+## Naming conventions
+
+| Item | Java | Python |
+|------|------|--------|
+| Variable | `camelCase` | `snake_case` |
+| Constant | `UPPER_CASE` | `UPPER_CASE` |
+| Function | `camelCase()` | `snake_case()` |
+| Class | `PascalCase` | `PascalCase` |
+| Module / package | `lowercase` | `lowercase` (no underscores ideally) |
+| Private | `private` keyword | leading underscore `_name` (convention only) |
+
+> [!warning] Python has no real "private"
+> The leading underscore (`_name`) is a CONVENTION meaning "treat as private, I might change this." Nothing in the language stops you from accessing it. Python trusts you to respect the convention — "we're all consenting adults here" is the unofficial motto.
+
+## Common standard library swaps
+
+| Java | Python |
+|------|--------|
+| `Math.sqrt(x)` | `math.sqrt(x)` or `x ** 0.5` |
+| `Math.abs(x)` | `abs(x)` (builtin, no import) |
+| `Math.max(a, b)` | `max(a, b)` (also `max(iterable)`) |
+| `Math.PI` | `math.pi` |
+| `Integer.parseInt(s)` | `int(s)` |
+| `Double.parseDouble(s)` | `float(s)` |
+| `Integer.toString(n)` | `str(n)` |
+| `Scanner` for input | `input("prompt: ")` |
+| `Random` | `random.randint(a, b)`, `random.random()`, `random.choice(seq)` |
+| `Collections.sort(list)` | `list.sort()` (in place) or `sorted(list)` (new list) |
+| `Arrays.asList(...)` | `list(...)` or literal `[...]` |
+
+## Why this matters for SIMC
+
+SIMC problems are short scripts — Java's verbosity actively hurts you on a 90-minute clock. The bigger trap is bringing Java MENTAL MODELS to Python: writing verbose loops instead of comprehensions, explicit `null` checks instead of truthiness, faking overloading instead of using keyword args. ==Internalize the idioms early== so you stop fighting the language and your code stays readable for teammates skimming it under time pressure.
+
+## Sources
+
+- [Python tutorial — official](https://docs.python.org/3/tutorial/)
+- [PEP 8 — Style Guide for Python Code](https://peps.python.org/pep-0008/)
+- [PEP 257 — Docstring Conventions](https://peps.python.org/pep-0257/)
+- [Python for Java Programmers (Anand Chitipothu)](https://anandology.com/python-practice-book/)

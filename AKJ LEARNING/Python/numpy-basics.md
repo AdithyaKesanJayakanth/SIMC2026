@@ -125,3 +125,166 @@ mat[0:2, 1:]  # 2x2 submatrix
 > print(arr)  # array([  1, 999,   3,   4,   5]) — original mutated!
 > ```
 
+## Boolean masking (THE killer pattern)
+
+This is the move you'll reach for constantly in simulations.
+
+Element-wise comparison creates a ==boolean array== — same shape as the input, `True` where the condition holds:
+
+```python
+arr = np.array([1, 5, 3, 8, 2, 9])
+arr > 4              # array([False,  True, False,  True, False,  True])
+arr == 5             # array([False,  True, False, False, False, False])
+arr % 2 == 0         # array([False, False, False,  True,  True, False])
+```
+
+Use boolean arrays to ==filter==:
+
+```python
+arr[arr > 4]         # array([5, 8, 9]) — only elements > 4
+```
+
+Or to ==count / compute fractions==:
+
+```python
+(arr > 4).sum()      # 3 — number of True values
+(arr > 4).mean()     # 0.5 — fraction of True values
+```
+
+> [!tip] Boolean mean = empirical probability
+> ==`(condition).mean()` returns the fraction of `True` values in a boolean array.== This is THE pattern for empirical probability — turn a condition into a boolean array, take the mean, and you have $\hat{P}$ for that event. If $X_i$ are i.i.d. samples and you want $\hat{P}(X > t)$:
+> $$\hat{P}(X > t) = \frac{1}{n}\sum_{i=1}^{n} \mathbb{1}[X_i > t] = \texttt{(samples > t).mean()}$$
+
+Example — fraction of uniform floats above 0.5:
+
+```python
+rng = np.random.default_rng(seed=0)
+samples = rng.random(size=100_000)   # 100k floats in [0, 1)
+print((samples > 0.5).mean())        # ≈ 0.5
+```
+
+## Element-wise operations (vectorization)
+
+All standard arithmetic operators apply element-wise:
+
+```python
+arr + 10        # adds 10 to every element
+arr - 1         # subtracts 1
+arr * 2         # doubles
+arr / 4         # divides (always returns floats)
+arr // 2        # floor division (integer division)
+arr ** 2        # squares
+arr % 3         # modulo
+
+arr1 + arr2     # element-wise (requires compatible shapes)
+arr1 * arr2     # element-wise multiplication (NOT matrix multiplication — that's @)
+```
+
+NumPy math functions apply element-wise too:
+
+```python
+np.sqrt(arr)
+np.exp(arr)
+np.log(arr)
+np.sin(arr)
+np.abs(arr)
+np.round(arr, decimals=2)
+```
+
+Comparisons return boolean arrays (see above): `arr > 5`, `arr == 0`, `arr1 < arr2`.
+
+## Reductions
+
+Reductions collapse an array to a single value (or a smaller array along an axis):
+
+```python
+arr.sum()        # total
+arr.mean()       # average
+arr.std()        # standard deviation
+arr.var()        # variance
+arr.min()        # smallest
+arr.max()        # largest
+arr.argmin()     # INDEX of smallest
+arr.argmax()     # INDEX of largest
+
+# For boolean arrays:
+bools.any()      # True if any element is True
+bools.all()      # True if all elements are True
+```
+
+Per-axis reductions on 2D arrays:
+
+```python
+mat = np.array([[1, 2, 3], [4, 5, 6]])
+
+mat.sum()              # 21 — sum of all elements
+mat.sum(axis=0)        # array([5, 7, 9]) — sum down each column
+mat.sum(axis=1)        # array([6, 15]) — sum across each row
+```
+
+> [!info] `axis=0` vs `axis=1` mnemonic
+> `axis=0` is the axis that ==goes away== — `sum(axis=0)` collapses the row dimension, leaving one value per column. Same for `mean`, `max`, etc.
+
+## Random numbers
+
+The `np.random` module is what you'll use for simulations. ==Always use the modern `default_rng` API== — better statistical properties, reproducible with a seed, thread-safe.
+
+```python
+rng = np.random.default_rng(seed=42)   # create a generator (seed for reproducibility)
+
+rng.integers(low, high, size=n)        # n random ints in [low, high) — high is EXCLUSIVE
+rng.random(size=n)                      # n random floats in [0, 1)
+rng.choice(a, size=n, replace=False)   # n choices from array a
+rng.normal(loc=0, scale=1, size=n)     # n samples from Normal(mean=0, std=1)
+rng.uniform(low=0, high=1, size=n)     # n samples from Uniform(low, high)
+```
+
+Example — flipping 1000 coins and counting heads:
+
+```python
+rng = np.random.default_rng(seed=1)
+flips = rng.integers(0, 2, size=1000)   # 0 or 1, 1000 times
+fraction_heads = (flips == 1).mean()
+print(fraction_heads)                    # ≈ 0.5
+```
+
+> [!info] Old API vs new API
+> You'll see `np.random.randint(low, high, size=n)` in older tutorials and Stack Overflow answers. It still works, but `rng = np.random.default_rng(seed); rng.integers(...)` is the modern preferred form. Use it from the start so seeding is reproducible.
+
+> [!warning] `high` is EXCLUSIVE
+> Both `rng.integers(1, 7)` and `np.random.randint(1, 7)` give values in `{1, 2, 3, 4, 5, 6}`, NOT 1..7. Classic off-by-one trap. To roll a 6-sided die, use `(1, 7)` — not `(1, 6)`.
+
+## Common mistakes
+
+> [!warning] Off-by-one with `integers` / `randint`
+> The `high` argument is ==exclusive==. To sample from $\{1, 2, \ldots, k\}$, use `rng.integers(1, k+1, size=n)`.
+
+> [!warning] Integer vs float division
+> `arr / 2` always returns floats (even if both operands are ints). Use `arr // 2` for integer (floor) division. This bit me coming from Java where `int / int = int`.
+
+> [!warning] Mutation vs reassignment
+> `arr += 1` modifies in place; `arr = arr + 1` creates a new array and rebinds the name. The first is faster and memory-efficient, but if another variable also references the original array, it will see the change too. Be deliberate.
+
+> [!warning] Shape mismatch on arithmetic
+> `np.array([1, 2, 3]) + np.array([1, 2])` raises `ValueError`. ==Broadcasting== (separate note for later) handles SOME shape mismatches automatically — e.g., adding a scalar to an array, or adding a 1D array to each row of a 2D array — but not arbitrary ones. When in doubt, print `.shape` on both sides.
+
+> [!warning] Slices are views, not copies
+> (Repeating because it bites everyone.) `sub = arr[1:4]; sub[0] = 999` mutates `arr`. Use `arr[1:4].copy()` if you need independence.
+
+> [!warning] `==` returns an array, not a bool
+> `arr == 5` is a boolean array, not a single `True`/`False`. Don't use it directly in an `if`: `if arr == 5:` raises `ValueError`. Use `if (arr == 5).any():` or `if (arr == 5).all():` depending on intent.
+
+> [!tip] Type annotations for NumPy functions
+> When writing function signatures that take or return arrays, annotate as `np.ndarray` (not just `array`, which Python doesn't know about). For the full pattern — including how to be more specific with shape/dtype — see [[type-hints]].
+
+## Why this matters for SIMC
+
+NumPy is the floor for every modeling, simulation, and data-handling task in SIMC. Probability simulations (Monte Carlo dice/coin/card experiments), linear algebra (matrix ops in transition matrices, regression), statistical inference (vectorized aggregations across thousands of trials), and any ML model fitting — all of it runs on ndarrays. Get fluent here and every downstream topic (`scipy.stats`, `pandas`, `sklearn`) becomes incrementally easier rather than a fresh language to learn.
+
+Your current exercise (`SIMC/CODINGPRAC/01_sample_spaces.py`) is the simplest possible application: sample → condition → mean. That same three-step pattern scales from die rolls to bootstrap confidence intervals to MCMC. Internalize it now.
+
+## Sources
+
+- [NumPy: the absolute basics for beginners](https://numpy.org/doc/stable/user/absolute_beginners.html) — official tutorial, gentle pace
+- [NumPy quickstart](https://numpy.org/doc/stable/user/quickstart.html) — faster tour for users with programming background
+- [NumPy random sampling docs](https://numpy.org/doc/stable/reference/random/index.html) — full `default_rng` API reference
