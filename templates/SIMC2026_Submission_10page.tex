@@ -1,0 +1,99 @@
+% ======================================================================
+%  SIMC 2026  —  10-PAGE SUBMISSION REPORT TEMPLATE  (Task-first format)
+%  Endeavour Track  ·  Singapore International Mathematical and
+%  Computational Modelling Challenge
+%
+%  HARD FORMAT RULES  (Instructions to Participants 2026, p. 12):
+%    • 12 pt Times New Roman, single line spacing, English, A4
+%    • NO cover page
+%    • ≤ 10 pages INCLUDING annexes / appendices
+%    • all math and code shown clearly
+%    • filename:  SIMC<ID>_<schoolAbbr>.pdf
+%    • deadline:  27 May 2026, 1500 SGT
+%
+%  Team:  K. Vishnu Kumar  ·  Adithya Kesan Jayakanth  ·  Adithya Anand
+%  Date:  26 May 2026
+% ======================================================================
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[a4paper, margin=1.9cm, headheight=14pt, headsep=8pt, footskip=14pt]{geometry}
+\usepackage{mathptmx}                  % Times for text + math
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx,array}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+\usepackage{microtype}
+
+% --- Single-line spacing, tight section spacing -----------------------
+\linespread{1.0}
+\titlespacing*{\section}{0pt}{0.7\baselineskip}{0.2\baselineskip}
+\titlespacing*{\subsection}{0pt}{0.45\baselineskip}{0.1\baselineskip}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+
+\setlength{\parskip}{3pt}
+\setlength{\parindent}{0pt}
+
+% --- Header / footer --------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize SIMC 2026 · Endeavour Track}
+\fancyhead[R]{\footnotesize Page \thepage{} of 10}
+\fancyfoot[C]{\footnotesize Team [INSERT TEAM ID]}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% --- Placeholder + plot-box helpers -----------------------------------
+\definecolor{phgray}{gray}{0.45}
+\newcommand{\ph}[1]{\textit{\textcolor{phgray}{#1}}}
+% Math-mode-safe placeholder: use inside \[ \] or $ $
+\newcommand{\phm}[1]{\text{\itshape\color{phgray}#1}}
+
+% Reserved figure box.  Usage:  \plotbox[height]{placeholder caption text}
+\newcommand{\plotbox}[2][3.4cm]{%
+  \begin{center}%
+    \fbox{\begin{minipage}[c][#1][c]{0.66\linewidth}\centering%
+      \ph{#2}%
+    \end{minipage}}%
+  \end{center}%
+}
+
+% Per-task captioning so the user can drop \includegraphics in place
+\captionsetup[figure]{labelfont=bf, font=small, skip=2pt}
+
+% Compact answer + label macros
+\newcommand{\answerlabel}{\textbf{Answer.~}}
+\newcommand{\approachlabel}{\textbf{Approach.~}}
+\newcommand{\interplabel}{\textbf{Interpretation.~}}
+
+\begin{document}
+
+% ======================================================================
+%  IN-TEXT TITLE BLOCK  (no cover page)
+% ======================================================================
+\begin{center}
+{\Large\bfseries [INSERT REPORT TITLE]\par}
+\vspace{0.15em}
+{\normalsize K.\ Vishnu Kumar \ \textperiodcentered\ Adithya Kesan Jayakanth \ \textperiodcentered\ Adithya Anand\par}
+\vspace{0.05em}
+{\small [School Name] \ \textperiodcentered\ Team ID: [INSERT TEAM ID] \ \textperiodcentered\ 26 May 2026\par}
+\end{center}
+\noindent\rule{\linewidth}{0.4pt}
+
+% ======================================================================
+%  1.  EXECUTIVE SUMMARY  (paragraph only, ~6–7 lines, no bullet list)
+% ======================================================================
+\section{Executive Summary}
+\ph{One tight paragraph (six to eight lines). Name the problem, the team's overall modelling approach, and the single most important number / decision the report defends. State whether the eight prescribed tasks are solved in full and whether any exploratory finding changes the headline answer. Do not enumerate task-by-task here — that is what Sections 3--10 are for. Do not restate the prompt verbatim; the judges already know it.}
+
+% ======================================================================
+%  2.  ASSUMPTIONS & NOTATION  (one short section, two compact tables)
+% ======================================================================
+
+\end{document}
