@@ -332,3 +332,167 @@ def detect_anomalies(
     )
 
 
+# =============================================================================
+# Monte Carlo engine
+# =============================================================================
+
+class MonteCarloResult(NamedTuple):
+    """Summary of a Monte Carlo simulation."""
+    results:  np.ndarray   # shape (R,) -- all scalar outcomes
+    mean:     float        # E[f(X)] estimate = (1/R) sum f(X_r)
+    std:      float        # standard deviation of the outcomes (ddof=1)
+    lower_ci: float        # 2.5th percentile of outcomes (95% empirical CI)
+    upper_ci: float        # 97.5th percentile of outcomes
+
+
+def monte_carlo_simulate(
+    experiment: Callable[[np.random.Generator], float],
+    n_repeats: int,
+    *,
+    seed: int = 0,
+) -> MonteCarloResult:
+    """Run a scalar experiment R times and summarise the distribution of outcomes.
+
+    The Monte Carlo estimator approximates E[f(X)] by the sample mean of R
+    independent realisations of the random variable f(X):
+
+        mu_hat_R = (1/R) sum_{r=1}^{R} f(X_r)  -->  E[f(X)]  as R -> inf.
+
+    The standard error of the estimate is sigma_f / sqrt(R), so increasing
+    precision by a factor of 2 requires four times as many repetitions.  A
+    rough rule of thumb: R = 10,000 gives two significant figures; R = 1,000,000
+    gives three.
+
+    The caller provides a Python callable ``experiment(rng) -> float`` that
+    accepts a NumPy Generator and returns a single scalar outcome.  Ownership
+    of the Generator stays with the engine so that successive calls draw from
+    the same stream and each repeat is independent and reproducible.
+
+    Parameters
+    ----------
+    experiment : callable (numpy.random.Generator) -> float
+        A function accepting a NumPy Generator and returning a scalar outcome.
+        The Generator must be the sole source of randomness inside the function
+        so the engine can guarantee reproducibility.
+    n_repeats : int
+        Number of independent repetitions R.
+    seed : int, optional
+        Master seed for the random Generator; default 0.
+
+    Returns
+    -------
+    result : MonteCarloResult
+        Named tuple with:
+        - ``results``  -- shape (R,), all raw outcomes.
+        - ``mean``     -- Monte Carlo estimate of E[f(X)].
+        - ``std``      -- sample standard deviation of the outcomes (ddof=1).
+        - ``lower_ci`` -- 2.5th percentile (lower bound of 95% empirical CI).
+        - ``upper_ci`` -- 97.5th percentile (upper bound of 95% empirical CI).
+
+    Examples
+    --------
+    Estimate pi via the classical dart-board method (quarter-circle in the
+    unit square):
+
+    >>> def estimate_pi(rng):
+    ...     xy = rng.random((10_000, 2))
+    ...     return 4.0 * ((xy**2).sum(axis=1) <= 1.0).mean()
+    >>> result = monte_carlo_simulate(estimate_pi, n_repeats=500, seed=0)
+    >>> abs(result.mean - 3.14159) < 0.05
+    True
+    """
+    rng = np.random.default_rng(seed)
+    outcomes = np.array([experiment(rng) for _ in range(n_repeats)], dtype=float)
+    return MonteCarloResult(
+        results=outcomes,
+        mean=float(outcomes.mean()),
+        std=float(outcomes.std(ddof=1)),
+        lower_ci=float(np.percentile(outcomes, 2.5)),
+        upper_ci=float(np.percentile(outcomes, 97.5)),
+    )
+
+
+# =============================================================================
+# Driver
+# =============================================================================
+
+def main() -> None:
+    """Demonstrate each function on synthetic data.
+
+    Three well-separated Gaussian blobs are generated so that KMeans and PCA
+    have non-trivial structure to discover.  Ten obvious outliers are appended
+    for the anomaly detector.  The Monte Carlo section estimates pi via the
+    dart-board method and demonstrates the 1/sqrt(R) convergence of the error.
+    """
+    rng = np.random.default_rng(seed=99)
+
+    # Three Gaussian blobs in 2-D, 150 points each.
+    data = np.vstack([
+        rng.normal([0.0, 0.0], 0.5, size=(150, 2)),
+        rng.normal([5.0, 0.0], 0.5, size=(150, 2)),
+        rng.normal([2.5, 4.0], 0.5, size=(150, 2)),
+    ])  # shape (450, 2)
+
+    # -------------------------------------------------------------------------
+    # 1. KMeans
+    # -------------------------------------------------------------------------
+    km = fit_kmeans(data, n_clusters=3)
+    print("KMeans")
+    print(f"  inertia              = {km.inertia:.2f}")
+    print(f"  label distribution   = {np.bincount(km.labels)}")
+    print(f"  centroid[0]          = {km.centroids[0].round(3)}")
+
+    # -------------------------------------------------------------------------
+    # 2. PCA
+    # -------------------------------------------------------------------------
+    pca = fit_pca(data, n_components=2)
+    print("\nPCA")
+    print(f"  explained var ratio  = {pca.explained_variance_ratio.round(4)}")
+    print(f"  total variance explained = {pca.explained_variance_ratio.sum():.4f}")
+    print(f"  PC1 direction        = {pca.components[0].round(4)}")
+
+    # -------------------------------------------------------------------------
+    # 3. k-Nearest Neighbours
+    # -------------------------------------------------------------------------
+    # Query the 5 nearest neighbours for two hand-picked query points.
+    queries = np.array([[0.0, 0.0], [5.0, 0.0]])
+    knn = knn_search(data, queries, k=5)
+    print("\nk-Nearest Neighbours (k=5)")
+    for q_idx, q in enumerate(queries):
+        print(f"  query {q}: distances = {knn.distances[q_idx].round(3)}")
+
+    # -------------------------------------------------------------------------
+    # 4. Anomaly detection
+    # -------------------------------------------------------------------------
+    # Inject 10 points far from the main blobs.
+    outliers = rng.uniform(-15, 15, size=(10, 2))
+    data_with_outliers = np.vstack([data, outliers])
+    anomaly = detect_anomalies(data_with_outliers, contamination=0.02)
+    n_flagged = anomaly.is_anomaly.sum()
+    injected_flagged = anomaly.is_anomaly[450:].sum()
+    print("\nAnomaly detection (contamination=0.02)")
+    print(f"  total flagged        = {n_flagged}")
+    print(f"  injected outliers flagged = {injected_flagged} / 10")
+
+    # -------------------------------------------------------------------------
+    # 5. Monte Carlo -- estimate pi via the quarter-circle dart-board method
+    # -------------------------------------------------------------------------
+    # A dart landing uniformly in [0,1)^2 falls inside the quarter-circle of
+    # radius 1 centred at the origin with probability pi/4. Averaging over N
+    # darts and multiplying by 4 gives an estimate of pi.
+    def estimate_pi(generator: np.random.Generator) -> float:
+        n_darts = 10_000
+        xy = generator.random((n_darts, 2))
+        inside = (xy ** 2).sum(axis=1) <= 1.0
+        return 4.0 * inside.mean()
+
+    mc = monte_carlo_simulate(estimate_pi, n_repeats=300, seed=42)
+    print("\nMonte Carlo -- pi estimate (300 repeats x 10,000 darts each)")
+    print(f"  estimate             = {mc.mean:.5f}  (true pi = {np.pi:.5f})")
+    print(f"  standard deviation   = {mc.std:.5f}")
+    print(f"  95% empirical CI     = [{mc.lower_ci:.5f}, {mc.upper_ci:.5f}]")
+    print(f"  error                = {abs(mc.mean - np.pi):.5f}")
+
+
+if __name__ == "__main__":
+    main()
