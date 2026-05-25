@@ -61,3 +61,66 @@ tags:
 12. [[frobenius-norm]]
 13. [[floating-point-precision]] ← why "agree to $10^{-16}$" is the gold standard
 
+## 🟥 Path C → understand **Q3** (cleaning, PCA & clustering of spectra)
+
+*(assumes Paths A + B)*
+
+**Phase 1 — probability → statistics bridge**
+1. [[sample-spaces-events-axioms]]
+2. [[random-variable]]
+3. [[expectation]]
+4. [[variance]]
+5. [[mean-and-centering]]
+6. [[covariance]]
+7. [[covariance-matrix]]
+8. [[diagonal-covariance-matrix]]
+
+**Phase 2 — the spectral core (PCA)**
+9. [[design-matrix]]
+10. [[trace]]
+11. [[trace-equals-sum-of-eigenvalues]] ← Q3(b): $\operatorname{tr}C\approx7.90$ as a check
+12. [[eigenspectrum]]
+13. [[eigenvectors-of-the-covariance-matrix]] ← keystone
+14. [[principal-component-analysis]]
+15. [[explained-variance-ratio]] ← why the "95% rule" is misleading
+16. [[elbow-method]] ← $k^*=8$
+17. [[participation-ratio]] ← **Q3(c)**: the *robust* intrinsic dimension $d_{\text{eff}}\approx8.7$
+18. [[dimensionality-reduction]]
+
+**Phase 3 — geometry, similarity, clustering**
+19. [[vector-projection]]
+20. [[cosine-similarity]] ← Q3(d): $v_1$ is a *contrast* direction (0.92 vs 0.67)
+21. [[leader-clustering]] ← Q3(e): 25 clusters
+22. [[gram-matrix]] ← Q3(f): the cheap route, same answer
+23. [[eckart-young-theorem]] ← Q3(h)/§4: why keeping 8 components is *optimal*
+
+**Phase 4 — why high dimensions are strange**
+24. [[curse-of-dimensionality]]
+25. [[surface-to-volume-ratio-high-dimensions]]
+26. [[distance-concentration-high-dimensions]]
+27. [[curse-of-sampling]]
+28. [[manifold-hypothesis]]
+
+**Phase 5 — uncertainty (the bootstrap)**
+29. [[sampling-distribution-and-standard-error]]
+30. [[bootstrap-resampling]] ← Q3(c): why the elbow is unstable but $d_{\text{eff}}$ holds
+31. [[confidence-interval]] ← the $[7.6,10.0]$ interval
+
+**Phase 6 — the chemistry payoff**
+32. [[ir-spectroscopy]]
+33. [[beer-lambert-law]]
+34. [[pca-on-ir-spectra]] ← **the summit**
+
+## ⭐ Beyond the report — the gap we should close
+
+> [!warning] The one weakness our own ADVERSARY subagent flagged
+> Q3(c) *asserts* a "multiplicative noise boundary" for the elbow but never derives a noise model. These two notes are the missing theory — be ready to defend this in the oral.
+> 1. [[random-matrix-theory-intro]] — even pure noise has a predictable eigenvalue band
+> 2. [[marchenko-pastur]] — the law that says exactly where the noise floor ends ($\lambda_\pm=\sigma^2(1\pm\sqrt\gamma)^2$)
+
+## 🐍 Tooling track (read alongside anything)
+
+[[python-for-java-devs]] · [[type-hints]] · [[numpy-basics]] · [[matplotlib-basics]] · [[histogram-bins]]
+
+---
+
