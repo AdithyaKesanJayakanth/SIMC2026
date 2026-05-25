@@ -84,3 +84,58 @@ $$A_k = \sum_{i=1}^{k} \sigma_i\,\mathbf{u}_i\mathbf{v}_i^\top$$
 > [!example] Tiny shape check
 > A $50 \times 1000$ spectral matrix has rank at most 50 (you can't have more independent directions than samples). So its reduced SVD gives at most **50 non-zero singular values**, even though there are 1000 wavenumbers. Almost all the "1000-dimensionality" is illusory — exactly the [[manifold-hypothesis|low-dimensional structure]] PCA exploits.
 
+## In code (NumPy)
+
+```python
+import numpy as np
+
+# X_centered is the n x p centered design matrix (mean already subtracted)
+# full_matrices=False gives the reduced/thin SVD — what you almost always want
+U, s, Vt = np.linalg.svd(X_centered, full_matrices=False)
+
+# s   -> 1D array of singular values, already sorted largest-first
+# Vt  -> rows are the right singular vectors (principal component directions)
+# U   -> columns are the left singular vectors
+
+# --- PCA straight from the SVD, no covariance matrix needed ---
+n = X_centered.shape[0]
+eigenvalues = s**2 / (n - 1)          # variance captured by each PC
+loadings    = Vt.T                    # columns = principal components (the v_k)
+scores      = U * s                   # each sample's coordinates in PC space (= X_centered @ Vt.T)
+
+explained_variance_ratio = eigenvalues / eigenvalues.sum()
+```
+
+> [!note] Why `numpy.linalg.svd` returns `Vt`, not `V`
+> NumPy hands back $V^\top$ already transposed (note the name `Vt`). To recover the principal-component directions as columns, transpose it back: `Vt.T`. Forgetting this transpose is the #1 SVD-in-NumPy bug.
+
+## SVD route vs. eigen route to PCA
+
+Two ways to reach the same principal components:
+
+| | Eigen route | SVD route |
+|---|---|---|
+| Build covariance matrix? | Yes — $C = \tfrac{1}{n-1}\tilde X^\top \tilde X$ | No — SVD $\tilde X$ directly |
+| Engine | [[power-method]] / `np.linalg.eigh` on $C$ | `np.linalg.svd` on $\tilde X$ |
+| PCs come from | eigenvectors of $C$ | right singular vectors $V$ |
+| Variances come from | eigenvalues $\lambda_k$ | $\sigma_k^2/(n-1)$ |
+| Numerical accuracy | worse (squaring $\tilde X$ squares the condition number) | better — the standard choice |
+
+Both give identical answers in exact arithmetic. SVD wins in practice because forming $\tilde X^\top \tilde X$ throws away precision; this is why `sklearn.decomposition.PCA` runs an SVD internally, not an eigendecomposition.
+
+## Why this matters for PCA on IR spectra
+
+PCA *is* an SVD of the centered spectral [[design-matrix]]. The right singular vectors $\mathbf{v}_k$ are the principal components (the loadings — which wavenumbers define each chemical factor); the singular values squared give the variance each component explains, feeding the [[eigenspectrum]] scree plot; and $U\Sigma$ gives the scores you actually run statistics on. Because Beer–Lambert makes IR absorbance linear in concentration, the chemistry lives in a handful of singular values — truncating the rest is a principled, Eckart–Young-optimal denoising of your spectra. When SIMC judges ask "how did you compute the PCA," the honest and correct answer is: *a truncated SVD of the centered data matrix.*
+
+## Builds on
+- [[matrix]]
+- [[eigenvectors-and-eigenvalues]]
+- [[eigenvectors-of-the-covariance-matrix]]
+- [[design-matrix]]
+- [[covariance-matrix]]
+- [[vector-norm-and-distance]]
+
+## Leads to
+- [[principal-component-analysis]]
+- [[dimensionality-reduction]]
+- [[eigenspectrum]]
