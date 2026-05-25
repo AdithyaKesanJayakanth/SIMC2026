@@ -29,3 +29,50 @@ print(x.mean())          # ≈ 3.5  (the true E[X])
 # E[X] = (1+2+3+4+5+6)/6 = 3.5
 ```
 
+## The math
+
+The expectation is the **probability-weighted average** of all values.
+
+**Discrete:**
+
+$$E[X] = \sum_{x} x \, P(X = x)$$
+
+**Continuous:**
+
+$$E[X] = \int_{-\infty}^{\infty} x \, f(x) \, dx$$
+
+**Linearity** (the most-used identity):
+
+$$E[aX + bY] = a\,E[X] + b\,E[Y]$$
+
+- $x$ — a specific value the random variable can take
+- $P(X=x)$ — probability of that value (discrete case)
+- $f(x)$ — probability density (continuous case)
+- $a, b$ — constants
+
+> [!example] Tiny concrete example
+> Die roll, $X \in \{1,2,3,4,5,6\}$, each with probability $\frac{1}{6}$.
+>
+> $$E[X] = \frac{1}{6}(1+2+3+4+5+6) = \frac{21}{6} = 3.5$$
+>
+> Note: 3.5 is not a value the die can show. Expectation is a theoretical average, not a possible outcome.
+
+> [!warning] Common confusion
+> $E[g(X)] \ne g(E[X])$ in general (Jensen's inequality). For example, $E[X^2] \ne (E[X])^2$ — the gap between these two quantities is exactly the [[variance]]: $\mathrm{Var}(X) = E[X^2] - (E[X])^2$.
+
+## Why this matters for the report
+
+The participation ratio in Q3(c) is defined as:
+
+$$d_{\text{eff}} = \frac{\left(\sum_i \lambda_i\right)^2}{\sum_i \lambda_i^2}$$
+
+Both the numerator and denominator are sums (averages, up to scaling) over the eigenvalue distribution — they are expectations if you treat the empirical eigenvalue distribution as a discrete probability distribution. This is exactly the "probability-weighted average" idea.
+
+More directly, the standard error formula $\sigma/\sqrt{n}$ — which underlies the bootstrap CI $[7.6, 10.0]$ in Q3(c) — comes from the expectation and variance of a sample mean. Without understanding expectation, the CI has no foundation.
+
+## Builds on
+- [[random-variable]]
+
+## Leads to
+- [[variance]]
+- [[sampling-distribution-and-standard-error]]
