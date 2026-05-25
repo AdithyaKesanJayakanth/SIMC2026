@@ -318,5 +318,98 @@ The reverse direction is identical: if $\mathbb{X}\mathbb{X}^\top\vec u = \lambd
 
 \paragraph{Forward reference to Q3.} The covariance matrix from Q3 is $\mathbb{C} = \mathbb{X}^\top\mathbb{X}/\tilde N$ (feature--feature, $M\times M$) and the Gram matrix is $\mathbb{G} = \mathbb{X}\mathbb{X}^\top/\tilde N$ (sample--sample, $N\times N$). The shared-nonzero-spectrum result just proved is \emph{why} PCA can be done in either space and recover the same principal components; the choice between them in Q3 is exactly the cost argument that 2e demands you justify.
 
+\section*{2e) Power Method for SVD: a complete worked example [4 points]}
+
+\paragraph{Goal.} (i) Write language-agnostic \textbf{pseudocode} that takes an arbitrary $N\times M$ matrix $\mathbb{X}$ and returns $\sigma_1, \vec v_1, \vec u_1$ using only the Power Method and matrix--vector products; justify the choice between $\mathbb{X}^\top\mathbb{X}$ and $\mathbb{X}\mathbb{X}^\top$ on cost grounds. (ii) Apply the algorithm \emph{by hand} (no computer) to a small $\mathbb{X}$ and verify $\mathbb{X}\vec v_1 = \sigma_1\vec u_1$ and $\mathbb{X}^\top\vec u_1 = \sigma_1\vec v_1$.
+
+\paragraph{Part (i) --- pseudocode [2 points].} Two things earn the marks here: the algorithm itself, and the design choice of which symmetric matrix to feed it. Read the constraint first, then the cost argument, then the listing.
+
+\begin{warn}
+\textbf{Hard constraint.} The problem's box on this part says: \emph{``pseudocode only --- no Python, no other programming language.''} Use plain mathematical notation ($\mathbb{X}^\top\vec y$, $\lVert\vec y\rVert$, ``while $\dots$ repeat''), \textbf{not} Python syntax such as \texttt{@}, \texttt{np.\allowbreak linalg.\allowbreak norm}, or \texttt{for k \allowbreak in \allowbreak range(K)}.
+\end{warn}
+
+\emph{Design choice (where the cost-argument mark lives).} The Power Method needs a symmetric input.
+\begin{itemize}[leftmargin=*]
+\item Apply it to $\mathbb{X}^\top\mathbb{X}$ ($M\times M$): forming the matrix once costs $O(NM^2)$ flops and $M^2$ storage.
+\item Apply it to $\mathbb{X}\mathbb{X}^\top$ ($N\times N$): same analysis with $N\leftrightarrow M$.
+\end{itemize}
+Pick the \textbf{smaller} side: $\mathbb{X}^\top\mathbb{X}$ when $M \le N$, $\mathbb{X}\mathbb{X}^\top$ when $N < M$. For Q3 ($N=1000$, $M=3041$) the Gram matrix is $1000\times 1000$ versus the $3041\times 3041$ covariance --- nine times cheaper to store.
+
+\emph{Further trick: don't materialise the product.} You never need to form $\mathbb{X}^\top\mathbb{X}$ explicitly: each Power-Method step needs only $(\mathbb{X}^\top\mathbb{X})\vec v$, which you can compute as $\mathbb{X}^\top(\mathbb{X}\vec v)$ in two matrix--vector products of cost $O(NM)$ each, with no $M\times M$ storage. For very thin tall matrices the saving is enormous and is worth a one-line mention in the report.
+
+\medskip
+\noindent\textbf{Algorithm (pseudocode).} Inputs: matrix $\mathbb{X}\in\mathbb{R}^{N\times M}$; tolerance $\mathrm{tol}>0$; iteration cap $K$. Outputs: $\sigma_1, \vec v_1, \vec u_1$.
+
+\begin{enumerate}[label=\textbf{\arabic*.},leftmargin=*]
+\item \textbf{Choose the smaller side.} If $M \le N$, work in $\mathbb{R}^M$ and apply $\mathbb{A} := \mathbb{X}^\top\mathbb{X}$ implicitly via $\vec y \mapsto \mathbb{X}^\top(\mathbb{X}\vec y)$. Otherwise work in $\mathbb{R}^N$ and apply $\mathbb{A} := \mathbb{X}\mathbb{X}^\top$ implicitly via $\vec y \mapsto \mathbb{X}(\mathbb{X}^\top\vec y)$.
+\item \textbf{Initialise.} Draw a random nonzero $\vec v_0$ in the chosen space; normalise: $\vec v_0 \leftarrow \vec v_0 / \lVert\vec v_0\rVert$.
+\item \textbf{Power iteration.} For $k = 0, 1, 2, \dots, K-1$:
+\begin{enumerate}[label=(\alph*),leftmargin=*]
+\item Compute $\vec w := \mathbb{A}\vec v_k$ via two matrix--vector products (never the explicit product matrix).
+\item Normalise: $\vec v_{k+1} := \vec w / \lVert\vec w\rVert$.
+\item If $1 - |\vec v_{k+1}\cdot\vec v_k| < \mathrm{tol}$, break (angle convergence; insensitive to a $\pm$ sign flip between steps).
+\end{enumerate}
+\item \textbf{Read off the singular value} via the Rayleigh quotient: $\sigma_1^2 := \vec v_{k+1}^{\,\top}\,\mathbb{A}\vec v_{k+1}$, then $\sigma_1 := \sqrt{\sigma_1^2}$.
+\item \textbf{Companion vector via one matrix--vector product.} If iterated in $\mathbb{R}^M$, set $\vec v_1 := \vec v_{k+1}$ and $\vec u_1 := \mathbb{X}\vec v_1/\sigma_1$. If iterated in $\mathbb{R}^N$, set $\vec u_1 := \vec v_{k+1}$ and $\vec v_1 := \mathbb{X}^\top\vec u_1/\sigma_1$.
+\item \textbf{Return} $(\sigma_1, \vec v_1, \vec u_1)$.
+\end{enumerate}
+
+\paragraph{Part (ii) --- hand calculation [2 points].} Apply the algorithm to
+\[
+\mathbb{X} \;=\; \begin{pmatrix} 1 & 0 \\ 0 & 1 \\ 1 & 1 \end{pmatrix} \quad (N=3,\ M=2).
+\]
+Since $M=2<N=3$, iterate on $\mathbb{X}^\top\mathbb{X}\in\mathbb{R}^{2\times 2}$. Form it explicitly (small enough by hand):
+\[
+\mathbb{X}^\top \;=\; \begin{pmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \end{pmatrix},
+\qquad
+\mathbb{X}^\top\mathbb{X} \;=\; \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix}.
+\]
+\emph{Eigenvalues.} $\det(\mathbb{X}^\top\mathbb{X} - \lambda I) = (2-\lambda)^2 - 1 = 0 \Rightarrow \lambda \in \{3,\,1\}$. Dominant $\lambda_1 = 3$, so $\sigma_1 = \sqrt{3}$.
+
+\emph{Dominant eigenvector} $\vec v_1$. From $(\mathbb{X}^\top\mathbb{X} - 3I)\vec v = \vec 0$,
+\[
+\begin{pmatrix} -1 & 1 \\ 1 & -1 \end{pmatrix}\begin{pmatrix} a \\ b \end{pmatrix} = \vec 0 \;\Longrightarrow\; b = a, \quad \vec v_1 \;=\; \frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ 1 \end{pmatrix}.
+\]
+(A genuine Power-Method run would iterate $\vec v_k \mapsto \mathbb{X}^\top(\mathbb{X}\vec v_k)/\lVert\cdot\rVert$ from a random unit start and lock onto this direction; $M=2$ is small enough to solve the characteristic polynomial directly, which the problem explicitly permits for the hand step.)
+
+\emph{Companion left singular vector} $\vec u_1$.
+\[
+\vec u_1 \;=\; \frac{\mathbb{X}\vec v_1}{\sigma_1} \;=\; \frac{1}{\sqrt{3}}\cdot\frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ 1 \\ 2 \end{pmatrix} \;=\; \frac{1}{\sqrt{6}}\begin{pmatrix} 1 \\ 1 \\ 2 \end{pmatrix}.
+\]
+
+\begin{sanity}
+\textbf{Verification of} $\mathbb{X}\vec v_1 = \sigma_1\vec u_1$.
+\[
+\mathbb{X}\vec v_1 = \frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ 1 \\ 2 \end{pmatrix},
+\qquad
+\sigma_1\vec u_1 = \sqrt{3}\cdot \frac{1}{\sqrt{6}}\begin{pmatrix} 1 \\ 1 \\ 2 \end{pmatrix} = \frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ 1 \\ 2 \end{pmatrix}. \quad\checkmark
+\]
+\textbf{Verification of} $\mathbb{X}^\top\vec u_1 = \sigma_1\vec v_1$.
+\[
+\mathbb{X}^\top\vec u_1 = \frac{1}{\sqrt{6}}\begin{pmatrix} 1+0+2 \\ 0+1+2 \end{pmatrix} = \frac{3}{\sqrt{6}}\begin{pmatrix} 1 \\ 1 \end{pmatrix},
+\qquad
+\sigma_1\vec v_1 = \frac{\sqrt{3}}{\sqrt{2}}\begin{pmatrix} 1 \\ 1 \end{pmatrix} = \frac{3}{\sqrt{6}}\begin{pmatrix} 1 \\ 1 \end{pmatrix}. \quad\checkmark
+\]
+$\mathbb{X}$ stretches $\vec v_1$ by $\sigma_1=\sqrt{3}$ into the direction $\vec u_1$, and $\mathbb{X}^\top$ does the reverse.
+\end{sanity}
+
+\begin{warn}
+\textbf{Pitfall.} It is tempting to obtain $\vec u_1$ by eigendecomposing $\mathbb{X}\mathbb{X}^\top$ independently. Both approaches yield an eigenvector of $\mathbb{X}\mathbb{X}^\top$ with eigenvalue $\sigma_1^2$, but the second can return $-\vec u_1$ instead of $+\vec u_1$, in which case the verification $\mathbb{X}\vec v_1 = \sigma_1\vec u_1$ will appear to fail by a sign. Use $\vec u_1 := \mathbb{X}\vec v_1/\sigma_1$ to pin the sign automatically.
+\end{warn}
+
+\paragraph{What goes in the report.} For the 10-page submission, 2e should be terse: the pseudocode listing (boxed), a one-line cost justification, then the hand calculation as five labelled equations (form $\mathbb{X}^\top\mathbb{X} \to$ eigenvalues $\to \vec v_1 \to \vec u_1 \to$ both verifications). Do not narrate Power-Method iterations themselves; the marks here are for the algorithm, the cost justification, and the verifications, not for showing several iterations converge to the same answer.
+
+\section*{Summary: how Q1 leads into Q2 and Q3}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Q1's lesson} is that the long-time behaviour of a linear system is read off from the eigenvector with the largest eigenvalue. The other eigenvectors describe transient deviations that geometrically decay.
+    \item \textbf{Q2 generalises this} into the \emph{Power Method}: when the dominant eigenvalue is unique, iterating any vector by the matrix converges to that eigenvector. Q2 also asks you to make the convergence rate quantitative (it is the spectral gap $|\lambda_2/\lambda_1|$ from Q1), and to extend the idea to rectangular matrices via SVD.
+    \item \textbf{Q3 applies the same machinery to a real $1000\times 3041$ infrared spectroscopy dataset}: the dominant eigenvectors of the covariance matrix are the directions of greatest spectroscopic variation, which separate the unknown samples into clusters. Q1's Markov example is the toy that makes this principle visible; Q3 is where it pays off.
+\end{itemize}
+
+\vfill
+\hrule
+\smallskip
+\noindent\textit{End of guide. The actual report should be much terser than this document --- aim for a few clean lines per part. This guide is meant to make the underlying ideas obvious, not to be a template for length.}
 
 \end{document}
