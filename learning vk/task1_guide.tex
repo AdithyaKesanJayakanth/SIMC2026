@@ -1,0 +1,88 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage{mathptmx}                 % Times New Roman
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue!50!black, urlcolor=blue!50!black}
+
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection)}{0.5em}{}
+
+\newtcolorbox{insight}{
+  colback=blue!4, colframe=blue!40!black, boxrule=0.5pt,
+  left=8pt, right=8pt, top=4pt, bottom=4pt,
+  before skip=8pt, after skip=8pt
+}
+\newtcolorbox{warn}{
+  colback=red!4, colframe=red!50!black, boxrule=0.5pt,
+  left=8pt, right=8pt, top=4pt, bottom=4pt,
+  before skip=8pt, after skip=8pt
+}
+\newtcolorbox{sanity}{
+  colback=green!4, colframe=green!40!black, boxrule=0.5pt,
+  left=8pt, right=8pt, top=4pt, bottom=4pt,
+  before skip=8pt, after skip=8pt
+}
+
+\newcommand{\M}{\mathbb{M}}
+\newcommand{\vnu}{\vec{\nu}}
+\newcommand{\vP}{\vec{P}}
+\renewcommand{\d}{\,\mathrm{d}}
+
+\title{\bfseries SIMCC 2026 --- Learning Guide for Questions 1 \& 2\\ \large Markov Matrices, the Power Method, and SVD}
+\author{Walkthrough of parts 1a -- 1h and 2d, 2e}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{How to read this guide}
+
+This is a study companion, not a model answer. For each sub-task you get: (i)~what the question is really asking, (ii)~the mathematical derivation step by step, (iii)~the conceptual insight that earns interpretation marks, and (iv)~common pitfalls. The actual report should be \emph{much shorter}: aim for a few clean lines per part, not pages. The full report is capped at 10 pages and Question 3 should get the lion's share of space.
+
+\section*{Setup recap}
+
+Two competing species with fractional populations $p_1(t), p_2(t) \in [0,1]$, evolved by
+\[
+\begin{pmatrix} p_1(t+1) \\ p_2(t+1) \end{pmatrix}
+= \underbrace{\begin{pmatrix} 1-\epsilon & 0 \\ \epsilon & 1 \end{pmatrix}}_{\M}
+\begin{pmatrix} p_1(t) \\ p_2(t) \end{pmatrix}, \qquad 0 < \epsilon < 1.
+\tag{1}
+\]
+In plain English: at each generation, a fraction $\epsilon$ of type-1 organisms convert into type-2 organisms, and conversions only go one way (no type-2 ever turns back into type-1).
+
+\begin{insight}
+\textbf{Two structural facts about }$\M$ \textbf{that drive the entire question:}
+\begin{enumerate}[label=(\arabic*),leftmargin=*]
+    \item Each \emph{column} of $\M$ sums to $1$: column 1 is $(1-\epsilon) + \epsilon = 1$, column 2 is $0 + 1 = 1$. This is the defining property of a (column-stochastic) Markov matrix, and it is what makes total population conserved (part 1a).
+    \item $\M$ is \emph{lower triangular}. The eigenvalues of any triangular matrix are exactly its diagonal entries, so before computing anything we already know they will be $\{1,\, 1-\epsilon\}$ (part 1b). The derivation is still expected, but the answer should not surprise you.
+\end{enumerate}
+\end{insight}
+
+\section*{1a) Conservation [1 point]}
+
+\paragraph{Goal.} Show that $p_1(t) + p_2(t)$ does not change with $t$.
+
+\paragraph{Proof (direct algebra).} From the recursion,
+\[
+p_1(t+1) + p_2(t+1) \;=\; (1-\epsilon)\,p_1(t) \;+\; \bigl[\epsilon\, p_1(t) + p_2(t)\bigr] \;=\; p_1(t) + p_2(t).
+\]
+So the sum is the same one generation later. By induction on $t$, it is the same at every generation:
+\[
+p_1(t) + p_2(t) \;=\; p_1(0) + p_2(0) \quad \text{for all } t \ge 0.
+\]
+
+\paragraph{Why it works (cleaner argument).} For any column-stochastic matrix $\M$, the row vector $\vec{1}^{\top} = (1,1)$ satisfies $\vec{1}^{\top}\M = \vec{1}^{\top}$, because $\vec{1}^{\top}\M$ just sums the columns. Hence
+\[
+p_1(t+1) + p_2(t+1) \;=\; \vec{1}^{\top}\vP(t+1) \;=\; \vec{1}^{\top}\M\,\vP(t) \;=\; \vec{1}^{\top}\vP(t) \;=\; p_1(t) + p_2(t).
+\]
+This is the same statement, but it makes the role of the column-sum-1 property visible. In the report, either argument is fine; the second is slightly more general and shorter.
+
+
+\end{document}
