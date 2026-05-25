@@ -21,3 +21,40 @@ There are two separate mechanisms that cause this:
 > [!example] Analogy
 > Imagine measuring how loud two songs are, adding one random instrument at a time. Each instrument adds a little noise to both songs. Eventually both songs are so dominated by random noise that you can't tell which was originally louder. The signal is drowned; only the noise remains.
 
+## The math
+
+**Distance accumulates like $\sqrt{p}$:**
+
+If the difference in each coordinate between two points is a random variable with mean 0 and variance $\sigma^2$, the expected squared Euclidean distance is:
+
+$$\mathbb{E}\left[\|\mathbf{x} - \mathbf{y}\|^2\right] = \sum_{j=1}^{p} \mathbb{E}[(x_j - y_j)^2] = p\sigma^2$$
+
+So the expected distance scales as $\|\mathbf{x} - \mathbf{y}\| \sim \sigma\sqrt{p}$.
+
+(See [[vector-norm-and-distance]] for the Euclidean norm definition.)
+
+**Relative contrast → 0:**
+
+Let $d_{\max}$ and $d_{\min}$ be the largest and smallest pairwise distances among $n$ points. A classic result (Beyer et al., 1999) shows:
+
+$$\frac{d_{\max} - d_{\min}}{d_{\min}} \xrightarrow{p \to \infty} 0$$
+
+All distances become indistinguishable.
+
+**Noise has many directions to hide in:**
+
+The real signal in IR data lives on a low-$k$ dimensional manifold inside $\mathbb{R}^p$. Random noise can shove a point in any of the $p$ directions. There are $p - k$ "noise directions" and only $k$ "signal directions." When $p \gg k$ (e.g., $p = 1000$, $k = 3$), almost all perturbations are pure noise. The signal-to-noise ratio effectively shrinks as $p$ grows.
+
+> [!warning] Common confusion
+> This doesn't mean all distances become *equal* in a strict sense — it means the *relative spread* of distances collapses. Nearest-neighbour algorithms still return *an* answer, but that answer is statistically meaningless because every point is approximately equidistant from the query point.
+
+## Why this matters for PCA on IR spectra
+
+IR spectra are ~1000-D vectors. Any classifier or clustering algorithm that relies on Euclidean distances (k-NN, k-means, Mahalanobis distance) will fail if applied directly to raw spectra: all spectra will appear nearly equidistant. PCA first projects onto the ~5–20 directions where real chemical variance lives, collapsing the $\approx 980$–995 noisy dimensions. In the reduced space, distances are meaningful again.
+
+## Builds on
+- [[curse-of-dimensionality]]
+- [[vector-norm-and-distance]]
+
+## Leads to
+- [[manifold-hypothesis]]
