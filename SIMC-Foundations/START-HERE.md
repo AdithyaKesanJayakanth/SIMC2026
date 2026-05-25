@@ -124,3 +124,79 @@ tags:
 
 ---
 
+## Master dependency graph
+
+```mermaid
+graph TD
+    subgraph FOUND["Alphabet"]
+        Vec[vectors & matrices]
+        Ops[dot product · norms · projection]
+    end
+    subgraph EIG["Eigen-engine"]
+        Char[determinant & char. equation]
+        Eig[eigenvectors & eigenvalues]
+        Diag[diagonalization & matrix powers]
+        Orth[orthonormal basis]
+    end
+    subgraph Q1["→ Q1  Markov"]
+        Markov[markov / stochastic / absorbing]
+        Long[steady state · products vs powers]
+    end
+    subgraph Q2["→ Q2  Power method & SVD"]
+        Sym[symmetric · PSD]
+        Pow[power method · spectral gap]
+        SVD[singular values · SVD · duality]
+    end
+    subgraph PROB["Probability → Statistics"]
+        Prob[random variable · expectation]
+        Stat[variance · covariance · centering]
+        Boot[sampling · bootstrap · CI]
+    end
+    subgraph Q3["→ Q3  PCA on spectra"]
+        PCA[covariance matrix · eigenspectrum · PCA]
+        Dim[explained variance · elbow · participation ratio]
+        Clust[cosine sim · leader clustering · Gram]
+        Chem[IR spectroscopy · Beer–Lambert]
+    end
+    RMT[Random Matrix Theory · Marchenko–Pastur]
+
+    Vec --> Ops --> EIG
+    Char --> Eig --> Diag
+    Orth --> Diag
+    Eig --> Orth
+    Diag --> Markov --> Long
+    Eig --> Sym --> Pow --> SVD
+    Ops --> Sym
+    Prob --> Stat --> PCA
+    Stat --> Boot
+    Diag --> PCA --> Dim
+    SVD --> PCA
+    SVD --> Clust
+    Ops --> Clust
+    PCA --> Chem
+    Boot --> Dim
+    Dim --> RMT
+    PCA --> RMT
+
+    classDef t1 fill:#458588,stroke:#83a598,color:#fbf1c7
+    classDef t2 fill:#d79921,stroke:#fabd2f,color:#282828
+    classDef t3 fill:#cc241d,stroke:#fb4934,color:#fbf1c7
+    classDef t4 fill:#689d6a,stroke:#8ec07c,color:#fbf1c7
+    class Vec,Ops,Char,Eig,Diag,Orth t1
+    class Markov,Long,Sym,Pow,SVD t2
+    class Prob,Stat,Boot,PCA,Dim,Clust,Chem t3
+    class RMT t4
+```
+
+---
+
+## Full index by folder
+
+- **Linear Algebra** — vector · what-is-a-dimension · matrix · design-matrix · dot-product · vector-norm-and-distance · matrix-vector-multiplication · vector-projection · transpose · trace · determinant-and-characteristic-equation · triangular-matrix-eigenvalues · symmetric-matrix · orthonormal-basis · eigenvectors-and-eigenvalues · eigenbasis-and-change-of-basis · diagonalization · matrix-powers-via-eigendecomposition · positive-semi-definite · power-method · rayleigh-quotient · spectral-gap · convergence-rate-power-method · degenerate-eigenvalues · singular-values · svd · xtx-xxt-duality · gram-matrix · frobenius-norm · floating-point-precision
+- **Markov & Dynamics** — markov-matrix · column-stochastic-matrix · absorbing-state · steady-state-and-long-run-behavior · geometric-decay · infinite-products-and-convergence
+- **Probability** — sample-spaces-events-axioms · conditional-probability · bayes-theorem · random-variable · expectation
+- **Statistics** — mean-and-centering · variance · covariance · covariance-matrix · diagonal-covariance-matrix · trace-equals-sum-of-eigenvalues · explained-variance-ratio · elbow-method · participation-ratio · sampling-distribution-and-standard-error · bootstrap-resampling · confidence-interval
+- **Machine Learning** — principal-component-analysis · eigenvectors-of-the-covariance-matrix · eigenspectrum · dimensionality-reduction · cosine-similarity · leader-clustering · eckart-young-theorem · curse-of-dimensionality · surface-to-volume-ratio-high-dimensions · distance-concentration-high-dimensions · curse-of-sampling · manifold-hypothesis
+- **Spectroscopy** — ir-spectroscopy · beer-lambert-law · pca-on-ir-spectra
+- **Random Matrix Theory** — random-matrix-theory-intro · marchenko-pastur
+- **Python** — python-for-java-devs · type-hints · numpy-basics · matplotlib-basics · histogram-bins
