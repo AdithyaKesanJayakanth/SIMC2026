@@ -22,3 +22,38 @@ Each eigenvector is a direction, and its paired eigenvalue $\lambda$ is a number
 
 Think of it like finding the natural coordinate system that the data itself prefers, instead of the arbitrary x/y/z axes the instrument recorded.
 
+## The math
+
+Let $\mathbf{C}$ be the $p \times p$ [[covariance-matrix]] of a centered dataset with $p$ features.
+
+By the **Spectral Theorem**, because $\mathbf{C}$ is symmetric, it has a complete set of real, orthogonal eigenvectors $\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_p$ with real eigenvalues $\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_p \geq 0$.
+
+Each pair satisfies the defining equation (see [[eigenvectors-and-eigenvalues]]):
+$$\mathbf{C}\,\mathbf{v}_i = \lambda_i\,\mathbf{v}_i$$
+
+**Key identity — eigenvalue = variance along eigenvector:**
+
+If you project every data point onto $\mathbf{v}_i$ (getting a scalar score per point), the [[variance]] of those scores is exactly $\lambda_i$.
+
+$$\text{Var}(\text{scores along } \mathbf{v}_i) = \lambda_i$$
+
+**Total variance is preserved:**
+$$\sum_{i=1}^{p} \lambda_i = \text{trace}(\mathbf{C}) = \sum_{j=1}^{p} \text{Var}(x_j)$$
+
+Nothing is lost; the variance is just redistributed into these new axes.
+
+> [!warning] Common confusion
+> The eigenvectors are directions (unit vectors), not data points. They live in feature space, not sample space. One eigenvector has $p$ components (one per wavenumber), not $n$ components (one per sample).
+
+## Why this matters for PCA on IR spectra
+
+An IR spectrum has ~1000 wavenumbers, giving a 1000-D covariance matrix with 1000 eigenvectors. But if the samples only vary due to a handful of chemical concentrations, almost all the variance is packed into the first few eigenvectors. Those are the axes worth keeping. The eigenvectors with tiny eigenvalues capture noise you can safely discard — this is the core logic of [[principal-component-analysis]] applied to IR data.
+
+## Builds on
+- [[eigenvectors-and-eigenvalues]]
+- [[covariance-matrix]]
+- [[variance]]
+
+## Leads to
+- [[principal-component-analysis]]
+- [[eigenspectrum]]
