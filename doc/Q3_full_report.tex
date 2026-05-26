@@ -1,0 +1,88 @@
+% Comprehensive, accessible report for SIMC 2026 Question 3 (parts a-h).
+% Compile with XeLaTeX (uses the system Times New Roman font), TWO passes for the
+% table of contents and cross-references.  Run from the repository root:
+%   xelatex -output-directory=doc doc/Q3_full_report.tex   (x2)
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=2.3cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.4em}
+
+\graphicspath{{doc/FINAL/figs/}{FINAL/figs/}{figs/}}
+\setlength{\parskip}{3pt}
+\renewcommand{\arraystretch}{1.15}
+
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Xt}{\widetilde{X}}
+\newcommand{\xt}{\widetilde{x}}
+\newcommand{\Nt}{\widetilde{N}}
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\newcommand{\T}{^{\mathsf{T}}}
+
+\theoremstyle{definition}\newtheorem{definition}{Definition}[section]
+\theoremstyle{plain}\newtheorem{proposition}{Proposition}[section]
+\theoremstyle{remark}\newtheorem{remark}{Remark}[section]
+
+\title{\bfseries Question 3 --- A Complete Report\\[4pt]
+\large Cleaning, Principal Component Analysis, and Clustering\\ of a High-Dimensional Spectroscopic Dataset}
+\author{SIMC 2026 Endeavour Challenge \quad (Parts a--h)}
+\date{May 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}\noindent
+This report works through the whole of Question 3 in detail and from the ground up. We are
+given a table of $1000$ infrared spectra, each recorded at $3401$ frequencies, and asked to
+clean it, analyse it, and ultimately recover how many distinct food samples it contains. Along
+the way we meet --- and carefully define --- the row norm, mean-centering, variance, the
+covariance and Gram matrices, eigenvalues and eigenvectors, Principal Component Analysis (PCA),
+the singular value decomposition, cosine similarity, and clustering. The headline results are:
+$40$ blank vials and $36$ anomalous high-norm vials are removed (leaving $924$ clean spectra);
+the data is strongly low-dimensional, with a dominance ratio $\lambda_1/\lambda_2\approx3.53$
+and a clear ``elbow'' at $k^\star=8$ signal directions; the leading principal direction is an
+interpretable contrast between molecular bands; and clustering --- carried out two independent
+ways that we prove must agree --- shows the genuine vials fall into well-separated groups of
+about $37$ repeats each, giving a final count of \textbf{26 unique food samples}.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ======================================================================
+\section{Introduction and roadmap}\label{sec:intro}
+
+Imagine a blind taste test. A thousand small vials are filled with fermented, caffeinated
+drinks --- kombucha, cocoa drinks, coffee liqueurs, Chinese tea --- and an instrument shines
+infrared light of many different frequencies through each one, recording how strongly the
+liquid absorbs at each frequency. The result is a long list of numbers per vial, a
+\emph{spectrum}, which acts as a chemical fingerprint. The labels saying which vial held which
+drink have been lost, and our job is to use linear algebra to reconstruct the structure of the
+experiment: which measurements are corrupt, which frequencies carry information, what the
+dominant patterns of variation are, and --- finally --- how many genuinely different drinks
+were tested.
+
+The mathematics needed is introduced as we go, so no prior linear algebra is assumed. The
+report is organised as follows. Section~\ref{sec:background} defines every tool we will use.
+Section~\ref{sec:data} describes the dataset and a subtlety about how it is stored. Then each
+part of Question 3 has its own section: cleaning (\S\ref{sec:3a}), variance and the covariance
+matrix (\S\ref{sec:3b}), the eigenspectrum and PCA (\S\ref{sec:3c}), the leading eigenvector
+(\S\ref{sec:3d}), clustering in two different spaces (\S\ref{sec:3e}--\ref{sec:3f}), the
+comparison of those two approaches (\S\ref{sec:3g}), and the final count of unique samples
+(\S\ref{sec:3h}). Section~\ref{sec:conclusion} ties the threads together, and the appendices
+give a glossary and a table of all key numbers.
+
+% ======================================================================
+
+\end{document}
