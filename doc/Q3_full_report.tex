@@ -183,5 +183,20 @@ When clusters are well separated, both give the same count over a wide range of 
 $\varepsilon$.
 
 % ======================================================================
+\section{The dataset and its orientation}\label{sec:data}
+The data is supplied as the file \texttt{mystery\_matrix1.npy}. Loading it gives an array of
+shape $(3401,1000)$.
+
+\begin{remark}[Two subtleties worth stating up front]
+First, the problem text quotes $M=3041$ features, but the file genuinely has $3401$ columns ---
+the same digits transposed. We trust the data and use $3401$. Second, the array is stored
+\emph{transposed} relative to the ``samples-as-rows'' convention: its length-$1000$ axis is the
+samples. We therefore transpose it once, so that each row is one vial and each column one
+frequency, and we identify the sample axis as the one of length $1000$ (matching the $1000$
+vials of the experiment). All values are non-negative and lie in $[0,\,0.85]$, with no
+NaN/infinite entries.
+\end{remark}
+
+% ======================================================================
 
 \end{document}
