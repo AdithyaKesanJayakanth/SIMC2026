@@ -122,5 +122,66 @@ handwritten notes and the raw data. Each tag has a matching entry in \texttt{cha
 \end{itemize}
 
 % =====================================================================
+\section*{Notation and conventions}
+\addcontentsline{toc}{section}{Notation and conventions}
+
+\begin{tabular}{@{}p{0.20\linewidth}p{0.74\linewidth}@{}}
+$\Mx,\ \Xb$ & matrices (bold uppercase). \\
+$\vv,\uu,\xx,\pp$ & column vectors (bold lowercase). \\
+$\Xb\T$ & transpose of $\Xb$, $(\Xb\T)_{ij}=\Xb_{ji}$. \\
+$\lambda_i,\ \vv_i$ & eigenvalue / eigenvector pair, ordered $|\lambda_1|\ge|\lambda_2|\ge\cdots$. \\
+$\sigma_i$ & singular value, $\sigma_i=\sqrt{\lambda_i}$. \\
+$\norm{\xx}$ & Euclidean norm, $\norm{\xx}=\sqrt{\xx\T\xx}$. \\
+$\Xb,\Xt$ & (Q3) design matrix (rows = samples), and its mean-centred form $\Xt_{ij}=\Xb_{ij}-\bar\Xb_j$. \\
+$\Cc,\Gg$ & (Q3) covariance $\Cc=\tfrac1\Nt\Xt\T\Xt$ ($M\times M$); Gram $\Gg=\tfrac1\Nt\Xt\Xt\T$ ($\Nt\times\Nt$). \\
+$\nuv_k$ & (Q3) $k$-th principal direction (eigenvector of $\Cc$); $\Nt$ = number of cleaned samples. \\
+\end{tabular}
+
+A set of vectors is \emph{orthonormal} if $\vv_i\T\vv_j=0$ for $i\ne j$ and
+$\vv_i\T\vv_i=1$. We use the \textbf{spectral theorem} as a given: every real
+symmetric matrix has real eigenvalues and an orthonormal basis of real
+eigenvectors.
+
+% =====================================================================
+% =====================================================================
+\section{Linear Algebra of Markov Matrices}
+
+\textbf{Setup.} Two organism types have fractional populations
+$p_1(t),p_2(t)$, evolving by $\pp(t+1)=\Mx\,\pp(t)$ with
+\[
+\pp(t)=\begin{pmatrix}p_1(t)\\ p_2(t)\end{pmatrix},
+\qquad
+\Mx=\begin{pmatrix}1-\varepsilon & 0\\[2pt] \varepsilon & 1\end{pmatrix},
+\qquad \varepsilon\in(0,1)\ \text{fixed.}
+\]
+Componentwise this is
+\begin{equation}\label{eq:update}
+p_1(t+1)=(1-\varepsilon)\,p_1(t),\qquad
+p_2(t+1)=\varepsilon\,p_1(t)+p_2(t).
+\end{equation}
+Each column of $\Mx$ sums to $1$ (it is \emph{column-stochastic}); a fraction
+$\varepsilon$ of type-1 converts to type-2 each generation.
+
+% ---------------------------------------------------------------------
+\subsection{(a) Conservation}
+
+\begin{claim}
+$p_1(t)+p_2(t)$ is constant in $t$.
+\end{claim}
+\begin{proof}
+Let $S(t)=p_1(t)+p_2(t)$. Adding the two equations in \eqref{eq:update},
+\[
+S(t+1)=p_1(t+1)+p_2(t+1)=(1-\varepsilon)p_1(t)+\bigl(\varepsilon\,p_1(t)+p_2(t)\bigr)
+       = p_1(t)+p_2(t)=S(t).
+\]
+So $S(t+1)=S(t)$ for every $t$. By induction $S(t)=S(0)=p_1(0)+p_2(0)$, a
+constant independent of $t$. \end{proof}
+
+\textit{Equivalent one-line argument.} Because every column of $\Mx$ sums to
+$1$, the row vector $\mathbf{1}\T=(1,1)$ satisfies $\mathbf{1}\T\Mx=\mathbf{1}\T$,
+hence $\mathbf{1}\T\pp(t+1)=\mathbf{1}\T\Mx\,\pp(t)=\mathbf{1}\T\pp(t)$, i.e.\
+$S(t+1)=S(t)$.
+
+% ---------------------------------------------------------------------
 
 \end{document}
