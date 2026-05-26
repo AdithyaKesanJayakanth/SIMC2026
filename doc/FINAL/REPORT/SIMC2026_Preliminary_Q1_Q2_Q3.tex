@@ -281,5 +281,62 @@ $1-\varepsilon$, validating parts (d) and (e).}\label{fig:t1f}
 \end{figure}
 
 % ---------------------------------------------------------------------
+\subsection{(g) Time-varying conversion rate}
+
+Now $\varepsilon(t)=\varepsilon_0\,e^{-t/t_0}$ with $\varepsilon_0,t_0>0$, so the
+update matrix changes each step:
+$\Mx(t)=\bigl(\begin{smallmatrix}1-\varepsilon(t) & 0\\ \varepsilon(t) & 1\end{smallmatrix}\bigr)$.
+
+\fix{the notes wrote $\pp(t)=1^{t}c_1+\bigl(1-\varepsilon(t)\bigr)^{t}c_2$, which is
+not correct for a time-varying rate.} The key observation is that the
+eigenvectors $\vv_1=(0,1)\T$ and $\vv_2=(1,-1)\T$ \emph{do not depend on
+$\varepsilon$}, so they are shared by \emph{every} matrix $\Mx(t)$:
+\[
+\Mx(t)\,\vv_1=1\cdot\vv_1,\qquad \Mx(t)\,\vv_2=\bigl(1-\varepsilon(t)\bigr)\vv_2 .
+\]
+The state is the ordered product $\pp(t)=\Mx(t-1)\Mx(t-2)\cdots\Mx(0)\,\pp(0)$.
+Acting on $\pp(0)=c_1\vv_1+c_2\vv_2$, the $\vv_1$ mode is multiplied by $1$ at
+every step, while the $\vv_2$ mode picks up one factor $\bigl(1-\varepsilon(s)\bigr)$
+per step. Therefore
+\[
+\boxed{\ \pp(t)=c_1\,\vv_1+c_2\Bigl[\textstyle\prod_{s=0}^{t-1}\bigl(1-\varepsilon_0 e^{-s/t_0}\bigr)\Bigr]\vv_2.\ }
+\]
+So the constant-rate factor $(1-\varepsilon)^{t}$ of part (d) is replaced by the
+\textbf{product} $\prod_{s=0}^{t-1}\bigl(1-\varepsilon(s)\bigr)$, not by
+$\bigl(1-\varepsilon(t)\bigr)^{t}$.
+
+\extra{qualitative consequence (beyond the notes).} Since
+$\sum_{s\ge0}\varepsilon_0 e^{-s/t_0}<\infty$, the infinite product converges to a
+\emph{strictly positive} limit $\Pi_\infty=\prod_{s=0}^{\infty}\bigl(1-\varepsilon_0 e^{-s/t_0}\bigr)$.
+Unlike the constant-$\varepsilon$ case, the $\vv_2$ transient does \emph{not}
+decay to zero: the conversion ``switches off'' as $\varepsilon(t)\to0$, freezing a
+residual amount $c_2\Pi_\infty$ in the $\vv_2$ direction. The system therefore
+settles at $\pp(\infty)=c_1\vv_1+c_2\Pi_\infty\vv_2$, i.e.\ type-1 is
+\emph{not} fully depleted.
+
+% ---------------------------------------------------------------------
+\subsection{(h) Validate again}
+
+\miss{flagged as not-attempted in the 26 May notes;} \verified{now implemented in
+\texttt{src/task1/task1.ipynb}.} The corrected \emph{product} formula for part (g) is
+validated the same way as (f): we iterate $\pp(t+1)=\Mx(t)\pp(t)$ with
+$\varepsilon(t)=\varepsilon_0 e^{-t/t_0}$ ($\varepsilon_0=0.5,\ t_0=10$) and compare
+against $c_1\vv_1+c_2\prod_{s<t}(1-\varepsilon(s))\,\vv_2$. The tracks again agree to
+machine precision, and --- unlike the constant-rate case --- the $\vv_2$ transient
+\emph{freezes} at a strictly positive residual $c_2\Pi_\infty$ rather than decaying to
+zero, confirming the qualitative claim of part (g): type-1 is not fully depleted.
+Figure~\ref{fig:t1h} overlays the decaying-rate trajectory (solid) on the constant-rate
+reference (faded) to make the frozen residual visible.
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.86\linewidth]{task1h_trajectories.png}
+\caption{(1h) Time-varying $\varepsilon(t)=\varepsilon_0 e^{-t/t_0}$ (solid) vs constant
+$\varepsilon$ (faded). The conversion ``switches off'' as $\varepsilon(t)\to0$, so $p_1$
+settles at a positive plateau $c_2\Pi_\infty>0$ instead of draining to zero --- validating
+the product formula and the residual claim of part (g).}\label{fig:t1h}
+\end{figure}
+
+% =====================================================================
+% =====================================================================
 
 \end{document}
