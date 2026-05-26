@@ -281,5 +281,51 @@ leading principal-component plane.}\label{fig:clean}
 \end{figure}
 
 % ======================================================================
+\section{Part (b): variance and the covariance matrix}\label{sec:3b}
+With clean data we ask which of the $3401$ frequencies actually distinguish the samples.
+
+We first \textbf{mean-center}, subtracting each feature's average so that the analysis describes
+how samples \emph{differ} rather than the large average spectrum they all share. (Intuition:
+in a class where everyone is about $140$\,cm tall, what is informative is who is taller or
+shorter than average, not the $140$ everyone shares.) Call the result $\Xt$.
+
+\begin{proposition}\label{prop:diag}
+$C=\tfrac1{\Nt}\Xt\T\Xt$ is symmetric, and its diagonal entries are the per-feature variances:
+$C_{jj}=\tfrac1{\Nt}\sum_k\Xt_{kj}^2=\Var_j$.
+\end{proposition}
+\begin{proof}
+$C\T=\tfrac1{\Nt}(\Xt\T\Xt)\T=\tfrac1{\Nt}\Xt\T\Xt=C$. Setting $i=j$ in the definition gives
+$C_{jj}=\tfrac1{\Nt}\sum_k\Xt_{kj}^2$, which, as the columns are mean-centred, is precisely the
+variance of feature $j$.
+\end{proof}
+
+A practical consequence: to answer part (b) we need only the diagonal of $C$, so we compute the
+variances directly (one operation) and never form the full $3401\times3401$ matrix. We divide
+by $\Nt$ (the population variance, NumPy's default), which matches the definition of $C$.
+
+\begin{proposition}[Total variance is conserved]\label{prop:trace}
+The \textbf{trace} $\tr(C)=\sum_jC_{jj}$ is the total variance and is invariant under any
+orthogonal change of basis $C\mapsto Q\T C Q$; in particular $\tr(C)=\sum_i\lambda_i$.
+\end{proposition}
+\begin{proof}
+$\tr(Q\T C Q)=\tr(CQQ\T)=\tr(C)$ by cyclicity of the trace and $QQ\T=I$. Diagonalising
+$C=Q\Lambda Q\T$ gives $\tr(C)=\tr(\Lambda)=\sum_i\lambda_i$.
+\end{proof}
+
+Empirically $\tr(C)\approx7.90$, which we will re-check against the eigenvalues in
+\S\ref{sec:3c}. Figure~\ref{fig:var} plots $C_{jj}$ against the frequency index: the variance is
+sharply concentrated in a few narrow bands --- the molecular absorption regions where vials
+differ most --- while most frequencies are flat. The single most variable frequency is
+$j^\star=910$, with $C_{j^\star j^\star}\approx0.0199$. The lesson is that only a handful of
+frequencies carry information: the data is effectively \emph{low-dimensional}, exactly the
+structure PCA exploits next.
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.82\linewidth]{q3b_variance.png}
+\caption{Per-feature variance $C_{jj}$. Variance concentrates in narrow molecular bands; the
+red line marks the maximal-variance feature $j^\star=910$.}\label{fig:var}
+\end{figure}
+
+% ======================================================================
 
 \end{document}
