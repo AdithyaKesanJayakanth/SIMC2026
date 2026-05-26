@@ -148,5 +148,40 @@ semi-definite (PSD)}: for every vector $w$, $w\T C w\ge0$ (because, as we show l
 a sum of squares). A PSD matrix has all eigenvalues $\ge0$, so each eigenvalue is a genuine,
 non-negative variance.
 
+\subsection{Principal Component Analysis (PCA) in one paragraph}
+\textbf{PCA} is simply the eigendecomposition of the covariance matrix. Its eigenvectors are
+the \emph{principal directions} of the data --- the axes along which the samples vary most ---
+and the corresponding eigenvalues say how much variance lies along each. Keeping only the few
+largest directions compresses the data while preserving almost all of its structure.
+
+\subsection{The singular value decomposition and the Gram matrix}
+Every matrix factors as $\Xt=U\Sigma V\T$ (its \textbf{singular value decomposition}, SVD),
+where $U$ and $V$ have orthonormal columns and $\Sigma$ is diagonal with the non-negative
+\emph{singular values} $\sigma_i$. The columns of $V$ are the eigenvectors of
+$\Xt\T\Xt$ (feature space) and the columns of $U$ are the eigenvectors of the
+\textbf{Gram matrix} $G=\tfrac1{\Nt}\Xt\Xt\T\in\R^{\Nt\times\Nt}$ (sample space); both have
+eigenvalues $\sigma_i^2/\Nt$. The Gram entry $G_{ij}$ is the similarity (dot product) between
+samples $i$ and $j$. This shared-eigenvalue link (Question 2d) is the reason the two clustering
+routes in \S\ref{sec:3e}--\ref{sec:3f} must agree.
+
+\subsection{Cosine similarity}
+To compare the \emph{shape} of two vectors regardless of their length we use
+\textbf{cosine similarity},
+\[
+  \cos(a,b)=\frac{a\cdot b}{\norm{a}\,\norm{b}}\in[-1,1],
+\]
+the cosine of the angle between them: $+1$ for identical direction, $0$ for perpendicular,
+$-1$ for opposite.
+
+\subsection{Clustering}
+A \textbf{cluster} is a group of points that lie close together and are well separated from
+other groups. We count clusters with two simple, library-free methods: \emph{leader
+clustering} (walk through the points, opening a new cluster centre whenever a point is farther
+than a radius $r$ from all existing centres) and \emph{single-linkage connected components}
+(join two points if they are within a distance $\varepsilon$, and count the connected groups).
+When clusters are well separated, both give the same count over a wide range of $r$ or
+$\varepsilon$.
+
+% ======================================================================
 
 \end{document}
