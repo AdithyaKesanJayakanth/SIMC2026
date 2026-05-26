@@ -183,5 +183,47 @@ hence $\mathbf{1}\T\pp(t+1)=\mathbf{1}\T\Mx\,\pp(t)=\mathbf{1}\T\pp(t)$, i.e.\
 $S(t+1)=S(t)$.
 
 % ---------------------------------------------------------------------
+\subsection{(b) Eigenspectrum}
+
+The eigenvalues solve $\det(\Mx-\lambda \mathbf I)=0$:
+\[
+\det\!\begin{pmatrix}1-\varepsilon-\lambda & 0\\[2pt] \varepsilon & 1-\lambda\end{pmatrix}
+=(1-\varepsilon-\lambda)(1-\lambda)=0
+\quad\Longrightarrow\quad
+\boxed{\lambda_1=1,\qquad \lambda_2=1-\varepsilon.}
+\]
+(The matrix is lower-triangular, so the eigenvalues are simply its diagonal
+entries.) The eigenvectors come from $(\Mx-\lambda_i\mathbf I)\vv_i=\zero$.
+
+\textit{For $\lambda_1=1$:}\quad
+$\begin{pmatrix}-\varepsilon & 0\\ \varepsilon & 0\end{pmatrix}\!\begin{pmatrix}x\\ y\end{pmatrix}=\zero
+\Rightarrow -\varepsilon x=0\Rightarrow x=0$, $y$ free. Take
+$\displaystyle \vv_1=\begin{pmatrix}0\\1\end{pmatrix}.$
+
+\textit{For $\lambda_2=1-\varepsilon$:}\quad
+$\begin{pmatrix}0 & 0\\ \varepsilon & \varepsilon\end{pmatrix}\!\begin{pmatrix}x\\ y\end{pmatrix}=\zero
+\Rightarrow \varepsilon(x+y)=0\Rightarrow y=-x$. Take
+$\displaystyle \vv_2=\begin{pmatrix}1\\-1\end{pmatrix}.$
+
+% ---------------------------------------------------------------------
+\subsection{(c) Linear combination}
+
+Assume $p_1(0)=\tfrac12$. Write
+$\pp(0)=c_1\vv_1+c_2\vv_2=c_1\!\begin{pmatrix}0\\1\end{pmatrix}+c_2\!\begin{pmatrix}1\\-1\end{pmatrix}
+=\begin{pmatrix}c_2\\ c_1-c_2\end{pmatrix}.$
+Matching components,
+\[
+c_2=p_1(0)=\tfrac12,\qquad c_1-c_2=p_2(0)\ \Rightarrow\ c_1=p_2(0)+\tfrac12 .
+\]
+\fix{notes assumed $p_2(0)=\tfrac12$ without stating it.} If, as is natural for
+fractional populations, the totals are normalised so that
+$p_1(0)+p_2(0)=1$, then $p_2(0)=\tfrac12$ and $c_1=1$, giving
+\[
+\boxed{\ \pp(0)=\vv_1+\tfrac12\,\vv_2.\ }
+\]
+More generally $c_1=p_2(0)+\tfrac12$ and $c_2=\tfrac12$; note
+$c_1=p_1(0)+p_2(0)=S(0)$, the conserved total from part (a).
+
+% ---------------------------------------------------------------------
 
 \end{document}
