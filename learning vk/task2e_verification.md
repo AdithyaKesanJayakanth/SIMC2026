@@ -44,3 +44,59 @@ $$
 
 **The $\tfrac{1}{\sqrt2}$ is just a shrink factor that makes the arrow the right size — nothing more.**
 
+## What the verification is actually checking
+
+The SVD claims $\mathbb{X}$ has a special pair of directions glued together:
+
+- an **input** direction $\vec v_1$ (our $\tfrac{1}{\sqrt2}(1,1)$), and
+- an **output** direction $\vec u_1$.
+
+The claim, in words:
+
+> $\mathbb{X}$ takes the input arrow, **stretches it by $\sigma_1 = \sqrt3$**, and the result points
+> exactly along the output arrow. Its transpose $\mathbb{X}^\top$ does the **reverse trip**: it takes
+> the output arrow, stretches by the same $\sqrt3$, and lands back on the input arrow.
+
+We computed $\sigma_1$, $\vec v_1$, $\vec u_1$ by one route; the verification plugs them back in
+and confirms they obey this relationship.
+
+### Check 1 — the forward trip: $\mathbb{X}\vec v_1 = \sigma_1\vec u_1$
+
+$$
+\mathbb{X}\vec v_1 = \frac{1}{\sqrt2}\begin{pmatrix}1\\1\\2\end{pmatrix},
+\qquad
+\sigma_1\vec u_1 = \sqrt3\cdot\frac{1}{\sqrt6}\begin{pmatrix}1\\1\\2\end{pmatrix}
+= \frac{1}{\sqrt2}\begin{pmatrix}1\\1\\2\end{pmatrix}. \ \checkmark
+$$
+
+(using $\sqrt3/\sqrt6 = 1/\sqrt2$.)
+
+### Check 2 — the reverse trip: $\mathbb{X}^\top\vec u_1 = \sigma_1\vec v_1$
+
+Compute each side **independently**, then compare:
+
+$$
+\underbrace{\mathbb{X}^\top\vec u_1 = \frac{1}{\sqrt6}\begin{pmatrix}1+0+2\\0+1+2\end{pmatrix} = \frac{3}{\sqrt6}\begin{pmatrix}1\\1\end{pmatrix}}_{\text{arithmetic}}
+\qquad
+\underbrace{\sigma_1\vec v_1 = \sqrt3\cdot\frac{1}{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix} = \frac{\sqrt3}{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix}}_{\text{what the claim predicts}}
+$$
+
+## Why both sides are written as $\tfrac{3}{\sqrt6}$
+
+The two results *look* different — "$\sqrt3$ over $\sqrt2$" versus "$3$ over $\sqrt6$" — but they are
+the **same number in disguise**. Multiply the first top-and-bottom by $\sqrt3$:
+
+$$
+\frac{\sqrt3}{\sqrt2} = \frac{\sqrt3\cdot\sqrt3}{\sqrt2\cdot\sqrt3} = \frac{3}{\sqrt6}.
+$$
+
+The guide deliberately rewrites both sides in the identical $\tfrac{3}{\sqrt6}$ form so the match is
+visible **at a glance**, instead of forcing the reader to simplify a surd in their head. Once both
+sides read $\tfrac{3}{\sqrt6}(1,1)$, the equation is verified: the matrix really does behave the way
+the SVD says.
+
+## One-line takeaway
+
+You found $\sigma_1, \vec v_1, \vec u_1$ by one route, then confirmed they satisfy the defining SVD
+relationship by plugging them back in and watching **both sides land on the same vector**. The
+$\tfrac{1}{\sqrt2}$ is only there to keep $\vec v_1$ unit length.
