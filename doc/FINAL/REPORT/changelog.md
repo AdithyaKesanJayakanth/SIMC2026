@@ -26,3 +26,41 @@ standing record; keep them in sync with the coloured tags in the PDF.
 
 ---
 
+## 2. 🟥 MISSES — parts of Q1/Q2 not yet attempted in the notes
+
+| # | Part | Status | Placeholder in report |
+|---|------|--------|------------------------|
+| G1 | **Q1(f)** numerical validation of (d)/(e) | not started | Section 1(f): describes the check (iterate `M @ p`, compare to closed form, confirm limit `(0,1)`). **No numbers invented.** To implement in `src/task1.py`. |
+| G2 | **Q1(h)** numerical validation of (g) | not started | Section 1(h): same approach with $\varepsilon(t)=\varepsilon_0 e^{-t/t_0}$; check the residual $c_2\Pi_\infty$. To implement in `src/task1.py`. |
+| G3 | **Q2(c)(ii)** why vanishing gap is fundamental | marked "explanation" only | Written by me — see Extras E1. |
+| G4 | **Q2(c)(iii)** finite-precision risks when $|\lambda_2/\lambda_1|\approx1$ | marked "explanation" only | Written by me — see Extras E2. |
+
+> Q1(f), Q1(h) deliberately left as descriptive placeholders so the report
+> contains **no fabricated numerical results**. Fill them once `task1.py` runs.
+
+---
+
+## 3. 🟦 EXTRAS — content added beyond the notes (please verify)
+
+| # | Location | What I added | Risk |
+|---|----------|--------------|------|
+| E1 | **Q2(c)(ii)** | Full explanation: no "selection mechanism" when amplification factors are equal; oscillation vs degenerate-eigenspace cases. | Conceptual; standard. Low. |
+| E2 | **Q2(c)(iii)** | Full explanation: iteration count $\sim 1/(1-\lvert\lambda_2/\lambda_1\rvert)$; $10^{-16}$ rounding competes with the $\lvert\lambda_2/\lambda_1\rvert^k$ signal; ordering ambiguity. | Conceptual; matches the challenge's grey-box note. Low. |
+| E3 | **Q1(g)** | Qualitative consequence: the infinite product converges to a **positive** limit $\Pi_\infty$, so type-1 is **not** fully depleted (conversion "switches off"). | A genuine new claim. Mathematically sound (since $\sum\varepsilon(s)<\infty$). **Verify before using in Q&A.** |
+| E4 | **Q1(a)** | Added the column-stochastic one-line argument ($\mathbf 1^\top\mathbf M=\mathbf 1^\top$) alongside the induction proof. | Reinforces, doesn't replace. Low. |
+| E5 | **Q1(e)(ii)** | Made the limit explicit: $c_1\mathbf v_1=(0,\,p_1(0)+p_2(0))$ — all mass ends as type-2. | Follows directly from (a)+(c). Low. |
+
+---
+
+## 4. ✍️ ELABORATIONS — notes' steps expanded to full rigour (no new claims)
+
+- **Q1(a):** notes said "by deduction"; expanded to an explicit induction on $S(t)=S(t+1)$.
+- **Q1(b):** added the lower-triangular observation; wrote out both null-space solves in full.
+- **Q1(d):** added the line $\mathbf M^t\mathbf v_i=\lambda_i^t\mathbf v_i$ justifying the scalar powers.
+- **Q2(a):** restructured the notes' parallel/residual decomposition into a clean proof; made the requirement $a_1\ne0$ and $|\lambda_1|>|\lambda_2|$ explicit.
+- **Q2(b):** wrote the weighted-average bound $\sum\omega_i\lambda_i^2/\sum\omega_i\le\lambda_2^2$ explicitly.
+- **Q2(d)(ii):** added the $\mathbf X\mathbf v\ne\mathbf 0$ step (needed for the eigenvector to be valid) and the converse direction.
+- **Q2(e)(ii):** added the second verification $\mathbf X^\top\mathbf u_1=\sigma_1\mathbf v_1$ in full (notes showed mainly the first).
+
+---
+
