@@ -486,5 +486,82 @@ $\Xb\T\Xb$. Hence $\Xb\T\Xb$ and $\Xb\Xb\T$ have \emph{identical nonzero
 eigenvalues}, the shared values being $\sigma_i^{2}$.
 
 % ---------------------------------------------------------------------
+\subsection{(e) Power Method for the SVD: algorithm and worked example}
+
+\textbf{(i) Algorithm (language-agnostic pseudocode).} Input: an
+$N\times M$ matrix $\Xb$. Output: the top singular triplet
+$\sigma_1,\vv_1,\uu_1$.
+\begin{enumerate}[leftmargin=2.0em, itemsep=1pt, label=\arabic*.]
+  \item \textbf{Form the smaller symmetric matrix.}
+        If $N\ge M$, set $A\leftarrow\Xb\T\Xb$ (size $M\times M$);
+        otherwise set $A\leftarrow\Xb\Xb\T$ (size $N\times N$).
+  \item \textbf{Power iteration on $A$.} Choose a random unit vector $\xx$.
+        Repeat $\xx\leftarrow A\xx/\norm{A\xx}$ until
+        $\norm{A\xx/\norm{A\xx}-\xx}<\text{tol}$ (or a maximum iteration count).
+  \item \textbf{Read off the singular value.}
+        $\lambda_1\leftarrow \xx\T A\,\xx$ (Rayleigh quotient);
+        $\sigma_1\leftarrow\sqrt{\lambda_1}$.
+  \item \textbf{Recover the companion vector.}
+        If $A=\Xb\T\Xb$: set $\vv_1\leftarrow\xx\in\R^{M}$ and
+        $\uu_1\leftarrow \Xb\vv_1/\sigma_1\in\R^{N}$.
+        If $A=\Xb\Xb\T$: set $\uu_1\leftarrow\xx\in\R^{N}$ and
+        $\vv_1\leftarrow \Xb\T\uu_1/\sigma_1\in\R^{M}$.
+  \item \textbf{Return} $\sigma_1,\vv_1,\uu_1$.
+\end{enumerate}
+\textit{Choice of matrix.} $A$ is square of size $\min(N,M)$. When $N\ll M$ the
+$N\times N$ matrix $\Xb\Xb\T$ is far cheaper to store and to multiply, and when
+$M\ll N$ the $M\times M$ matrix $\Xb\T\Xb$ is cheaper -- always pick the smaller.
+\fix{the pseudocode text in the notes labelled this rule backwards (``if
+$N\gg M$ compute $\Xb\Xb\T$''), although the stated reason and the worked
+example below both use the smaller matrix. The consistent rule is given above.}
+
+\textbf{(ii) Worked example by hand.}
+\[
+\Xb=\begin{pmatrix}1&0\\0&1\\1&1\end{pmatrix}\quad(N=3,\ M=2).
+\]
+Here $N>M$, so use the $2\times2$ matrix
+\[
+\Xb\T\Xb=\begin{pmatrix}1&0&1\\0&1&1\end{pmatrix}
+\begin{pmatrix}1&0\\0&1\\1&1\end{pmatrix}
+=\begin{pmatrix}2&1\\1&2\end{pmatrix}.
+\]
+\emph{Eigenvalues:}\quad
+$\det\!\begin{pmatrix}2-\lambda&1\\1&2-\lambda\end{pmatrix}=(2-\lambda)^2-1
+=\lambda^2-4\lambda+3=(\lambda-1)(\lambda-3)=0,$
+so $\lambda=1$ or $\lambda=3$; the dominant one is $\lambda_1=3$.
+
+\emph{Eigenvector for $\lambda_1=3$:}\quad $(2-3)x+y=0\Rightarrow y=x$, giving the
+unit vector $\displaystyle\vv_1=\tfrac{1}{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix}.$
+
+\emph{Singular value:}\quad $\sigma_1=\sqrt{\lambda_1}=\sqrt3.$
+
+\emph{Left singular vector:}\quad
+\[
+\uu_1=\frac{\Xb\vv_1}{\sigma_1}
+=\frac{1}{\sqrt3}\cdot\frac{1}{\sqrt2}\begin{pmatrix}1&0\\0&1\\1&1\end{pmatrix}\!\begin{pmatrix}1\\1\end{pmatrix}
+=\frac{1}{\sqrt6}\begin{pmatrix}1\\1\\2\end{pmatrix}.
+\]
+
+\emph{Verification.}
+\[
+\Xb\vv_1=\tfrac{1}{\sqrt2}\begin{pmatrix}1\\1\\2\end{pmatrix},
+\qquad
+\sigma_1\uu_1=\sqrt3\cdot\tfrac{1}{\sqrt6}\begin{pmatrix}1\\1\\2\end{pmatrix}
+=\tfrac{1}{\sqrt2}\begin{pmatrix}1\\1\\2\end{pmatrix}
+\ \Rightarrow\ \Xb\vv_1=\sigma_1\uu_1.\ \checkmark
+\]
+\[
+\Xb\T\uu_1=\tfrac{1}{\sqrt6}\begin{pmatrix}1&0&1\\0&1&1\end{pmatrix}\!\begin{pmatrix}1\\1\\2\end{pmatrix}
+=\tfrac{1}{\sqrt6}\begin{pmatrix}3\\3\end{pmatrix}
+=\tfrac{3}{\sqrt6}\begin{pmatrix}1\\1\end{pmatrix},
+\qquad
+\sigma_1\vv_1=\sqrt3\cdot\tfrac{1}{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix}
+=\sqrt{\tfrac32}\begin{pmatrix}1\\1\end{pmatrix},
+\]
+and $\tfrac{3}{\sqrt6}=\sqrt{\tfrac32}$, so $\Xb\T\uu_1=\sigma_1\vv_1.$ \checkmark
+Both SVD relations hold, confirming $(\sigma_1,\vv_1,\uu_1)$.
+
+% =====================================================================
+% =====================================================================
 
 \end{document}
