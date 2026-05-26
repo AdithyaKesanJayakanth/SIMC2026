@@ -120,5 +120,33 @@ $\Var_j=\tfrac1N\sum_i(X_{ij}-\bar X_j)^2$. A large variance means the feature s
 between vials and is therefore informative; a near-zero variance means it is almost constant
 and tells us little.
 
+\subsection{The covariance matrix}
+The \textbf{covariance} of two features asks whether they move together. Collected for all
+pairs of the (mean-centred) features, the covariances form the \textbf{covariance matrix}
+\[
+  C \;=\; \tfrac1{\Nt}\,\Xt\T\Xt \;\in\;\R^{M\times M}, \qquad
+  C_{ij}=\tfrac1{\Nt}\sum_{k}\Xt_{ki}\Xt_{kj}.
+\]
+An off-diagonal entry is positive when two features rise and fall together, negative when one
+rises as the other falls. The diagonal entry $C_{jj}$ is the covariance of a feature with
+itself, which is exactly its variance. Crucially, $C$ is \emph{symmetric}: $C\T=C$.
+
+\subsection{Eigenvalues and eigenvectors}
+For a square matrix $C$, a non-zero vector $v$ is an \textbf{eigenvector} with
+\textbf{eigenvalue} $\lambda$ if
+\[
+  Cv=\lambda v,
+\]
+meaning that multiplying by $C$ only \emph{stretches} $v$ (by the factor $\lambda$) without
+rotating it. Eigenvectors are the special, ``natural'' directions of a matrix.
+
+\subsection{The spectral theorem and positive semi-definiteness}
+Two facts about our $C$ make everything well behaved. By the \textbf{spectral theorem}, a real
+symmetric matrix has only \emph{real} eigenvalues and a complete set of mutually perpendicular
+(\textbf{orthonormal}) eigenvectors --- a clean coordinate system. And $C$ is \textbf{positive
+semi-definite (PSD)}: for every vector $w$, $w\T C w\ge0$ (because, as we show later, it equals
+a sum of squares). A PSD matrix has all eigenvalues $\ge0$, so each eigenvalue is a genuine,
+non-negative variance.
+
 
 \end{document}
