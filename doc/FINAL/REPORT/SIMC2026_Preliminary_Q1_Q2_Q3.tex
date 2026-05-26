@@ -260,5 +260,26 @@ $\lambda_1=1$ carries the conserved steady state, while $\lambda_2=1-\varepsilon
 governs the decaying transient.
 
 % ---------------------------------------------------------------------
+\subsection{(f) Validation}
+
+\miss{flagged as not-attempted in the 26 May notes;} \verified{now implemented in
+\texttt{src/task1/task1.ipynb}.} The closed form
+$\pp(t)=c_1\vv_1+c_2(1-\varepsilon)^t\vv_2$ is checked against a direct numerical
+iteration of $\pp(t+1)=\Mx\pp(t)$ from $\pp(0)=(\tfrac12,\tfrac12)$ with
+$\varepsilon=0.1$ over $T=100$ generations. The two tracks agree to machine
+precision ($\max_t\norm{\pp_{\text{num}}(t)-\pp_{\text{closed}}(t)}\approx10^{-16}$),
+and $\pp(t)\to(0,1)$ as predicted by part (e). Figure~\ref{fig:t1f} shows the
+linear-scale convergence (Panel A) and the semi-log decay of $p_1(t)$ overlaid on
+$\tfrac12(1-\varepsilon)^t$, a straight line confirming the geometric rate (Panel B).
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.86\linewidth]{task1f_trajectories.png}
+\caption{(1f) Direct iteration vs the closed form for constant $\varepsilon=0.1$.
+Panel A: $p_1,p_2$ converge to $(0,1)$. Panel B: $p_1(t)$ (dots) lies exactly on
+$\tfrac12(1-\varepsilon)^t$ (line) on a semi-log axis --- geometric decay at rate
+$1-\varepsilon$, validating parts (d) and (e).}\label{fig:t1f}
+\end{figure}
+
+% ---------------------------------------------------------------------
 
 \end{document}
