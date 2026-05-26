@@ -338,5 +338,75 @@ the product formula and the residual claim of part (g).}\label{fig:t1h}
 
 % =====================================================================
 % =====================================================================
+\section{The Power Method and Singular Value Decomposition}
+
+\textbf{Setup.} $\Xb$ is a symmetric $n\times n$ matrix with eigenvalues
+$|\lambda_1|>|\lambda_2|\ge\cdots\ge|\lambda_n|$ and an orthonormal eigenbasis
+$\vv_1,\dots,\vv_n$. The Power Method starts from a unit vector $\xx_0$ and
+iterates
+\begin{equation}\label{eq:power}
+\xx_{k+1}=\frac{\Xb\,\xx_k}{\norm{\Xb\,\xx_k}},\qquad k=0,1,2,\dots
+\end{equation}
+
+% ---------------------------------------------------------------------
+\subsection{(a) The Power Method converges}
+
+\begin{claim}
+If $\xx_0$ has a nonzero component along $\vv_1$, then $\xx_k\to\pm\vv_1$.
+\end{claim}
+\begin{proof}
+Normalisation in \eqref{eq:power} only rescales, so $\xx_k$ has the same
+\emph{direction} as the unnormalised iterate
+$\yy_k:=\Xb^{k}\xx_0$. Expand $\xx_0$ in the orthonormal eigenbasis,
+\[
+\xx_0=\sum_{i=1}^{n} a_i\vv_i,\qquad a_i=\xx_0\T\vv_i,\qquad a_1\ne0 .
+\]
+Since $\Xb^{k}\vv_i=\lambda_i^{k}\vv_i$,
+\[
+\yy_k=\Xb^{k}\xx_0=\sum_{i=1}^{n} a_i\lambda_i^{k}\vv_i
+      =\underbrace{a_1\lambda_1^{k}\vv_1}_{\text{parallel to }\vv_1}
+      +\underbrace{\sum_{i=2}^{n} a_i\lambda_i^{k}\vv_i}_{=\ \rr_k\ \text{(residual)}} .
+\]
+By orthonormality the residual length is
+$\norm{\rr_k}^2=\sum_{i=2}^{n} a_i^2\lambda_i^{2k}$. Measure the residual
+relative to the parallel part:
+\[
+\rho_k:=\frac{\norm{\rr_k}}{|a_1|\,|\lambda_1|^{k}}
+       =\frac{1}{|a_1|}\sqrt{\sum_{i=2}^{n} a_i^2\Bigl(\tfrac{\lambda_i}{\lambda_1}\Bigr)^{2k}} .
+\]
+For every $i\ge2$ we have $|\lambda_i/\lambda_1|<1$, so each term
+$(\lambda_i/\lambda_1)^{2k}\to0$ and hence $\rho_k\to0$. Thus $\yy_k$ aligns
+with $\vv_1$, and after normalisation $\xx_k\to\pm\vv_1$ (the sign tracks
+$\operatorname{sign}(a_1\lambda_1^{k})$). \end{proof}
+
+% ---------------------------------------------------------------------
+\subsection{(b) Convergence rate and the spectral gap}
+
+\begin{claim}
+The residual ratio shrinks each step by at least $|\lambda_2/\lambda_1|$:
+$\ \rho_{k+1}/\rho_k\le |\lambda_2/\lambda_1|$.
+\end{claim}
+\begin{proof}
+From the definition of $\rho_k$,
+\[
+\frac{\rho_{k+1}}{\rho_k}
+=\frac{1}{|\lambda_1|}\,
+\sqrt{\frac{\sum_{i\ge2} a_i^2\lambda_i^{2k+2}}{\sum_{i\ge2} a_i^2\lambda_i^{2k}}}\, .
+\]
+Put $\omega_i:=a_i^2\lambda_i^{2k}\ge0$. The fraction under the root is the
+weighted average $\bigl(\sum_{i\ge2}\omega_i\lambda_i^{2}\bigr)\big/\bigl(\sum_{i\ge2}\omega_i\bigr)$
+of the numbers $\{\lambda_i^2:i\ge2\}$, which cannot exceed their maximum
+$\lambda_2^{2}$. Therefore
+\[
+\frac{\rho_{k+1}}{\rho_k}\le\frac{1}{|\lambda_1|}\sqrt{\lambda_2^{2}}
+=\Bigl|\tfrac{\lambda_2}{\lambda_1}\Bigr|<1 .
+\]
+\end{proof}
+Convergence is therefore \textbf{geometric} with rate $|\lambda_2/\lambda_1|$.
+The quantity $|\lambda_1|-|\lambda_2|$ (equivalently the ratio
+$|\lambda_2/\lambda_1|$) is the \textbf{spectral gap}: a large gap means fast,
+robust convergence; a small gap means slow convergence vulnerable to noise.
+
+% ---------------------------------------------------------------------
 
 \end{document}
