@@ -408,5 +408,83 @@ $|\lambda_2/\lambda_1|$) is the \textbf{spectral gap}: a large gap means fast,
 robust convergence; a small gap means slow convergence vulnerable to noise.
 
 % ---------------------------------------------------------------------
+\subsection{(c) When the spectral gap closes}
+
+\textbf{(i)}~Take $\displaystyle \Xb=\begin{pmatrix}1&0\\0&-1\end{pmatrix}$,
+with $\lambda_1=1,\ \lambda_2=-1$, so $|\lambda_1|=|\lambda_2|=1$ (no gap).
+For a generic start $\xx_0=(a,b)$ with $a,b\ne0$,
+\[
+\xx_1=\Xb\xx_0=\begin{pmatrix}a\\-b\end{pmatrix},\quad
+\xx_2=\begin{pmatrix}a\\ b\end{pmatrix},\quad
+\xx_3=\begin{pmatrix}a\\-b\end{pmatrix},\ \dots
+\quad\Longrightarrow\quad
+\Xb^{k}\xx_0=\begin{pmatrix}a\\ (-1)^{k}b\end{pmatrix}.
+\]
+The norm $\sqrt{a^2+b^2}$ is preserved, so after normalisation $\xx_k$
+oscillates forever between the two distinct directions
+$(a,b)$ and $(a,-b)$ and never converges to a single vector.
+
+\textbf{(ii)}~\extra{explanation not written in the notes.} A vanishing gap is
+a \emph{structural} obstruction, not merely slow convergence. The Power Method
+works by amplifying each eigencomponent by its own factor $\lambda_i^{k}$; the
+top direction wins only because $|\lambda_1|>|\lambda_i|$. When
+$|\lambda_1|=|\lambda_2|$ the leading components are amplified by the
+\emph{same} factor every step, so their relative weights never change: there is
+no selection mechanism. The iterate keeps whatever mixture it started with --
+oscillating (as above, when the eigenvalues differ in sign) or, in the
+degenerate case $\lambda_1=\lambda_2$, converging to an essentially arbitrary
+vector of the eigenspace rather than to a unique eigenvector. In the rate of
+part (b), $|\lambda_2/\lambda_1|=1$, so $\rho_k$ does not decay at all.
+
+\textbf{(iii)}~\extra{explanation not written in the notes.} When
+$|\lambda_2/\lambda_1|$ is close to (but below) $1$, two problems compound.
+First, the number of iterations needed scales like
+$1/\bigl(1-|\lambda_2/\lambda_1|\bigr)$, which blows up. Second, each step of
+double-precision arithmetic injects rounding error of order $10^{-16}$ into
+\emph{all} directions, including $\vv_2$. The useful per-step separation
+between $\vv_1$ and $\vv_2$ is only $\propto |\lambda_2/\lambda_1|^{k}$; once that
+signal falls to the level of the accumulated noise, the computed vector drifts
+within the near-degenerate $\{\vv_1,\vv_2\}$ subspace and the ordering of the
+two eigenvalues becomes numerically ambiguous.
+
+% ---------------------------------------------------------------------
+\subsection{(d) The two symmetric matrices $\Xb\T\Xb$ and $\Xb\Xb\T$}
+
+Let $\Xb$ be a general (rectangular) $m\times n$ matrix.
+
+\textbf{(i) Symmetric and positive semi-definite.}
+\[
+(\Xb\T\Xb)\T=\Xb\T(\Xb\T)\T=\Xb\T\Xb,\qquad
+(\Xb\Xb\T)\T=\Xb\Xb\T,
+\]
+so both products are symmetric. For positive semi-definiteness, take any real
+vector $\mathbf w$ of the appropriate size:
+\[
+\mathbf w\T(\Xb\T\Xb)\mathbf w=(\Xb\mathbf w)\T(\Xb\mathbf w)=\norm{\Xb\mathbf w}^2\ge0,
+\qquad
+\mathbf w\T(\Xb\Xb\T)\mathbf w=\norm{\Xb\T\mathbf w}^2\ge0 .
+\]
+\fix{the notes wrote $\norm{\Xb\T\mathbf w}^2$ for the $\Xb\T\Xb$ case; the correct
+quantity there is $\norm{\Xb\mathbf w}^2$.} Being symmetric (real eigenvalues, by
+the spectral theorem) and PSD ($\mathbf w\T A\mathbf w\ge0\Rightarrow$ eigenvalues
+$\ge0$), both matrices have \emph{real, non-negative} eigenvalues. Hence
+$\sigma_i:=\sqrt{\lambda_i}$ is well defined.
+
+\textbf{(ii) Same nonzero eigenvalues.}
+Suppose $\Xb\T\Xb\,\vv=\lambda\vv$ with $\lambda\ne0$ (so $\vv\ne\zero$).
+Left-multiplying by $\Xb$,
+\[
+\Xb(\Xb\T\Xb\,\vv)=\lambda\,\Xb\vv
+\quad\Longrightarrow\quad
+(\Xb\Xb\T)(\Xb\vv)=\lambda\,(\Xb\vv).
+\]
+Moreover $\Xb\vv\ne\zero$, since $\Xb\vv=\zero$ would give
+$\Xb\T\Xb\vv=\zero=\lambda\vv$, forcing $\lambda=0$. Thus $\Xb\vv$ is an
+eigenvector of $\Xb\Xb\T$ with the same eigenvalue $\lambda$. The same argument
+with $\Xb\T$ shows every nonzero eigenvalue of $\Xb\Xb\T$ is an eigenvalue of
+$\Xb\T\Xb$. Hence $\Xb\T\Xb$ and $\Xb\Xb\T$ have \emph{identical nonzero
+eigenvalues}, the shared values being $\sigma_i^{2}$.
+
+% ---------------------------------------------------------------------
 
 \end{document}
