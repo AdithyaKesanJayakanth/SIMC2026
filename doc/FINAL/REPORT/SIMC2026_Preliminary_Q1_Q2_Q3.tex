@@ -225,5 +225,40 @@ More generally $c_1=p_2(0)+\tfrac12$ and $c_2=\tfrac12$; note
 $c_1=p_1(0)+p_2(0)=S(0)$, the conserved total from part (a).
 
 % ---------------------------------------------------------------------
+\subsection{(d) Eigenvectors make time evolution easy}
+
+With $\pp(0)=c_1\vv_1+c_2\vv_2$, apply $\Mx$ repeatedly. Since
+$\Mx\vv_i=\lambda_i\vv_i$, we have $\Mx^{t}\vv_i=\lambda_i^{\,t}\vv_i$, so
+\[
+\pp(t)=\Mx^{t}\pp(0)=c_1\lambda_1^{\,t}\vv_1+c_2\lambda_2^{\,t}\vv_2
+\quad\Longrightarrow\quad
+\boxed{\ \pp(t)=c_1\,\vv_1+c_2\,(1-\varepsilon)^{t}\,\vv_2.\ }
+\]
+The eigenbasis turns repeated matrix multiplication into scalar powers: each
+mode evolves independently by its own factor $\lambda_i^{\,t}$.
+
+% ---------------------------------------------------------------------
+\subsection{(e) Long-time behaviour}
+
+\textbf{(i)}~Because $\varepsilon\in(0,1)$ we have $0<1-\varepsilon<1$, so
+$(1-\varepsilon)^{t}\to0$ as $t\to\infty$. Hence
+\[
+\pp(t)\ \xrightarrow{\ t\to\infty\ }\ c_1\vv_1,
+\]
+the eigenvector with the larger eigenvalue $\lambda_1=1>\lambda_2$.
+
+\textbf{(ii)}~The structure of $\Mx$ explains this. The second column
+$(0,1)\T$ means type-2 is \emph{absorbing}: nothing leaves it. Type-1 leaks
+into type-2 at rate $\varepsilon$ every step and never receives anything back.
+So all mass drains into type-2. Quantitatively the limit is
+\[
+c_1\vv_1=\begin{pmatrix}0\\ c_1\end{pmatrix}
+=\begin{pmatrix}0\\ p_1(0)+p_2(0)\end{pmatrix},
+\]
+i.e.\ the entire conserved population $S(0)$ ends up as type-2. The eigenvalue
+$\lambda_1=1$ carries the conserved steady state, while $\lambda_2=1-\varepsilon<1$
+governs the decaying transient.
+
+% ---------------------------------------------------------------------
 
 \end{document}
