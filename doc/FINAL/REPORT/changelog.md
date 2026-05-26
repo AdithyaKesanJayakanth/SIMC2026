@@ -64,3 +64,20 @@ standing record; keep them in sync with the coloured tags in the PDF.
 
 ---
 
+## 5. 🛠️ STRUCTURE / FORMATTING decisions
+
+- Based on `templates/SIMC2026_Preliminary_Detailed.tex` **preamble** (12pt Times via `mathptmx`, A4, 2 cm margins, `fancyhdr`). Trimmed the 24-section generic scaffold (literature, data provenance, sensitivity, etc.) — **not applicable** to two proof-only questions; will return for Q3.
+- Vectors set as bold lowercase ($\mathbf v$), matrices bold uppercase ($\mathbf M,\mathbf X$). Challenge used blackboard $\mathbb{M},\mathbb{X}$; switched to bold for readability — purely cosmetic, flag here in case you want to match the prompt exactly.
+- Added three review macros `\miss`, `\fix`, `\extra` that print coloured tags in the PDF, one per item above.
+- Kept the preamble minimal per the "keep LaTeX simple for now" instruction.
+
+---
+
+## 6. 🟩 VERIFIED — notes that were checked and are correct as-is
+
+- Q1(b) eigenpairs: $\lambda_1=1,\mathbf v_1=(0,1)$; $\lambda_2=1-\varepsilon,\mathbf v_2=(1,-1)$. ✔
+- Q2(c)(i): $\mathbf X^k\mathbf x_0=(a,(-1)^k b)$, oscillates, no convergence. ✔
+- Q2(e)(ii) worked example: $\mathbf X^\top\mathbf X=\begin{psmallmatrix}2&1\\1&2\end{psmallmatrix}$, $\lambda=1,3$; $\mathbf v_1=\tfrac1{\sqrt2}(1,1)$, $\sigma_1=\sqrt3$, $\mathbf u_1=\tfrac1{\sqrt6}(1,1,2)$. **Both** $\mathbf X\mathbf v_1=\sigma_1\mathbf u_1$ and $\mathbf X^\top\mathbf u_1=\sigma_1\mathbf v_1$ check out. ✔
+
+---
+
