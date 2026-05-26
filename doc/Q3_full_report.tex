@@ -84,5 +84,41 @@ comparison of those two approaches (\S\ref{sec:3g}), and the final count of uniq
 give a glossary and a table of all key numbers.
 
 % ======================================================================
+\section{Mathematical background, from scratch}\label{sec:background}
+
+\subsection{Vectors and the norm}
+A \textbf{vector} is just an ordered list of numbers, written as a column,
+$x=(x_1,x_2,\dots,x_M)$. Each number is a \emph{component}. For us a single spectrum is a
+vector of $M=3401$ absorbance values. The \textbf{(Euclidean) norm} of a vector measures its
+overall size,
+\[
+  \norm{x} \;=\; \sqrt{x_1^2 + x_2^2 + \dots + x_M^2}.
+\]
+Geometrically it is the length of the arrow from the origin to the point $x$. Because every
+component is squared before being summed, a few large values dominate the norm --- a fact we
+exploit in Section~\ref{sec:3a}.
+
+\subsection{Matrices, transpose, and products}
+A \textbf{matrix} is a rectangular grid of numbers. The \textbf{transpose} $A\T$ is obtained by
+swapping rows and columns, so $(A\T)_{ij}=A_{ji}$; a $p\times q$ matrix becomes $q\times p$.
+The \textbf{dot product} of two vectors, $a\cdot b=\sum_i a_ib_i$, multiplies matching
+components and adds them; it is large and positive when the two vectors point the same way,
+zero when they are perpendicular. Matrix multiplication generalises this: entry $(i,k)$ of
+$AB$ is the dot product of row $i$ of $A$ with column $k$ of $B$.
+
+\subsection{The design matrix}
+Our data is a \textbf{design matrix} $X\in\R^{N\times M}$ whose rows are \textbf{samples}
+(one vial each) and whose columns are \textbf{features} (one frequency each); the entry
+$X_{ij}$ is the absorbance of sample $i$ at frequency $j$. Here $N=1000$ and $M=3401$.
+
+\subsection{Mean, variance, and mean-centering}
+The \textbf{mean} of a feature is its average over the samples,
+$\bar X_j=\tfrac1N\sum_i X_{ij}$. \textbf{Mean-centering} subtracts this average from every
+entry of the column, producing $\Xt_{ij}=X_{ij}-\bar X_j$; afterwards every feature averages
+zero. The \textbf{variance} of a feature is the average squared distance from its mean,
+$\Var_j=\tfrac1N\sum_i(X_{ij}-\bar X_j)^2$. A large variance means the feature swings widely
+between vials and is therefore informative; a near-zero variance means it is almost constant
+and tells us little.
+
 
 \end{document}
