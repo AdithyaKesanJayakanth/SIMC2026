@@ -198,5 +198,88 @@ NaN/infinite entries.
 \end{remark}
 
 % ======================================================================
+\section{Part (a): cleaning the data}\label{sec:3a}
+Real measurements contain mistakes, and a sound analysis removes them first. Two distinct kinds
+of corrupted vial are present.
+
+\subsection{The first error: empty vials}
+A vial with no sample in it produces only faint background noise --- a nearly flat spectrum of
+small values. To detect these without inspecting all $3401$ numbers per vial, we reduce each
+spectrum to a single number, its row norm $\norm{x_i}$. A genuine spectrum has tall absorption
+peaks and hence a large norm; an empty vial carries only noise and hence a small norm.
+
+\textbf{A data-driven threshold.} Sorting the $1000$ norms reveals a clean gap
+(Figure~\ref{fig:clean}): about $40$ vials sit at $\norm{x}\approx1.6$, then there is a void
+until the genuine vials begin at $\norm{x}\approx4.3$. Rather than hard-coding a cut-off, we
+place the threshold in the \emph{middle of the largest gap}. This is robust --- a small change
+in the data does not move the decision --- and leaves no arbitrary constant to justify. Exactly
+$T=40$ vials fall below it; they turn out to be the last $40$ rows of the file, a hint that the
+corrupt rows were appended deliberately.
+
+\subsection{The other error: high-norm outliers}
+The problem warns of a second error. The \emph{upper} tail of the sorted norms holds another
+clearly detached group: $36$ vials at $\norm{x}\approx8.9$, separated from the bulk by a gap
+about five times wider than any internal gap and forming the contiguous block of rows
+$924$--$959$. We flag these as the second error. We are careful to note that such a coherent,
+high-magnitude group could instead be a genuinely strong (concentrated) drink rather than a
+mistake; we therefore (i) provide independent evidence below that they form one tight, isolated
+cluster, and (ii) keep their removal reversible. (This judgement is revisited in
+\S\ref{sec:3h}, where it matters for the final count.)
+
+\subsection{Selection by a Boolean mask}
+We build two Boolean (true/false) masks --- \emph{empty} and \emph{high} --- and keep a vial
+only if it is in neither, i.e. \emph{keep} $=\lnot$\,empty $\land\ \lnot$\,high. We then
+\emph{index} the data with this mask rather than deleting rows. This is (1) non-destructive ---
+the original matrix is never altered, so any decision can be undone; (2) composable --- two
+independent rules combine in a single step; and (3) index-preserving --- vial $193$ is still
+vial $193$ afterwards. The cleaned matrix has $\Nt=924$ rows.
+
+\subsection{Validation}
+Three independent checks confirm the removal. \emph{Visual:} removed spectra are flat noise
+while the kept spectra show sharp peaks (Figure~\ref{fig:clean}). \emph{Statistical:} the empty
+vials are $50.2\%$ exact zeros against $24.5\%$ for genuine spectra. \emph{Structural:}
+in the reduced picture of \S\ref{sec:3c}, the high-norm group forms one isolated cluster whose
+removal lowers the cluster count by exactly one.
+
+\begin{remark}[Why $50.2\%$ zeros for blanks but only $24.5\%$ for real spectra?]
+Both numbers follow from a single mechanism: \textbf{clipping}. A detector cannot report a
+negative absorbance, so any reading that would come out below zero is recorded as exactly
+$0.0$ --- the signal is \emph{rectified} at zero. The two fractions differ because the two
+kinds of vial spend different amounts of the frequency axis near zero.
+
+\emph{Empty vials: $50.2\%$.} A blank contains no sample, so at every one of its $3401$
+frequencies the detector sees only small electronic/thermal noise. That noise is symmetric
+about zero: at each frequency it is equally likely to land just above or just below $0$, so its
+true mean is $0$. Clipping converts every would-be-negative reading into an exact zero, and a
+zero-mean symmetric quantity is negative about half the time. Hence almost exactly half of a
+blank's readings --- measured at $50.2\%$ --- are exact zeros, while the other half keep their
+small positive noise value. (This is why the figure is so close to a clean $50\%$: it is just
+``how often is the noise negative?'')
+
+\emph{Genuine spectra: $24.5\%$.} A real drink absorbs strongly in the molecular bands --- the
+spiky regions of Figure~\ref{fig:var} --- which lift those readings well above zero, so there
+the noise never makes them negative and they are essentially never clipped. Only in the flat
+\emph{baseline} stretches \emph{between} the peaks does the true signal sit near zero; there the
+noise is again clipped to exact zeros, exactly as in a blank. Because a real spectrum is
+baseline over only part of the axis (roughly a quarter of it), its exact-zero fraction is about
+$24.5\%$ --- the same $\approx50\%$-of-the-baseline effect, but now applied to only the
+baseline portion rather than the whole spectrum.
+
+So the contrast $50.2\%$ vs.\ $24.5\%$ is a direct physical fingerprint: a blank is ``all
+baseline'' (half its channels clipped), whereas a real drink is baseline only between its peaks
+(only a quarter clipped). This is an independent confirmation of the row-norm test --- a vial
+flagged as empty by its small norm is also exactly the one whose readings are $\approx50\%$
+zeros.
+\end{remark}
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.78\linewidth]{q3a_part_i.png}\\[3pt]
+\includegraphics[width=0.55\linewidth]{q3a_part_ii_clusters.png}
+\caption{\emph{Top:} the row-norm distribution; $40$ empty vials sit below the gap (threshold
+marked). \emph{Bottom:} the $36$ high-norm vials form one tight, isolated cluster in the
+leading principal-component plane.}\label{fig:clean}
+\end{figure}
+
+% ======================================================================
 
 \end{document}
