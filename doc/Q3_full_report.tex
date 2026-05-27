@@ -448,5 +448,50 @@ steady state.
 \end{figure}
 
 % ======================================================================
+\section{Part (e): clustering in covariance (feature) space}\label{sec:3e}
+We now compress each vial to a handful of coordinates and look for groups. With
+$V_4=[\nu_1\,\nu_2\,\nu_3\,\nu_4]$ (the top four eigenvectors of $C$), the compressed
+coordinates are $Z=\Xt V_4\in\R^{\Nt\times4}$: row $z_i$ holds the four scores of vial $i$.
+This is \textbf{dimensionality reduction} from $3401$ numbers to $4$, retaining the dominant
+variation. We choose four because they lie within the eight signal directions of \S\ref{sec:3c}
+yet are few enough to inspect as the $\binom42=6$ pairwise scatter plots
+(Figure~\ref{fig:covscatter}), drawn with small, semi-transparent points so dense groups stay
+visible.
+
+The panels show many tight, well-separated blobs. Counting them by leader clustering (radius a
+few multiples of the median nearest-neighbour spacing) gives $25$ clusters, and the count is
+stable for radii from $6$ to $12$ times that spacing --- so it is a property of the data, not
+of the threshold. Each blob is a set of vials with nearly identical spectra, i.e.\ one
+concoction.
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.92\linewidth]{q3e_covariance_scatter.png}
+\caption{The six pairwise scatter plots of the top-4 covariance-space scores; each point is one
+vial. The data resolves into $\approx25$ well-separated clusters.}\label{fig:covscatter}
+\end{figure}
+
+% ======================================================================
+\section{Part (f): clustering in Gram (sample) space}\label{sec:3f}
+The \textbf{Gram matrix} $G=\tfrac1{\Nt}\Xt\Xt\T$ is the $\Nt\times\Nt$ companion of $C$; its
+entry $G_{ij}$ is the similarity between vials $i$ and $j$. Diagonalising $G$ confirms it shares
+the nonzero eigenvalues of $C$ exactly (the top eight match to all printed digits), as Question
+2d predicts. Its eigenvectors are already $\Nt$-dimensional, so \emph{each component is directly
+a vial's coordinate} --- no projection of $\Xt$ is required. Scaling the eigenvectors by
+$\sqrt{\Nt\lambda}=\sigma$ puts them in the same units as the covariance-space scores of
+\S\ref{sec:3e}.
+
+The same six scatter plots (Figure~\ref{fig:gramscatter}) and the same leader-clustering rule
+again give $25$ clusters, stable over the same range of radii. The two scatter pictures
+reproduce one another up to per-axis sign flips, because eigenvectors are defined only up to a
+sign. We make this precise in the next section.
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.92\linewidth]{q3f_gram_scatter.png}
+\caption{The six pairwise scatter plots of the top-4 Gram-space coordinates. They reproduce the
+covariance-space scatter of Figure~\ref{fig:covscatter} up to reflections, and again show
+$\approx25$ clusters.}\label{fig:gramscatter}
+\end{figure}
+
+% ======================================================================
 
 \end{document}
