@@ -650,5 +650,94 @@ $j^\star=910$ is dashed. Variance lives in a few bands, not the baseline.}\label
 \end{figure}
 
 % ---------------------------------------------------------------------
+\subsection{(c) The eigenspectrum (PCA)}
+
+\begin{prop}
+For a unit vector $\mathbf w$, the variance of the data along $\mathbf w$ is
+$\mathbf w\T\Cc\mathbf w$; if $\Cc\nuv=\lambda\nuv$ with $\norm{\nuv}=1$ then
+$\nuv\T\Cc\nuv=\lambda$. Moreover $\Cc$ is PSD, so every $\lambda_i\ge0$.
+\end{prop}
+\begin{proof}
+The projections $z_i=\xt_i\!\cdot\mathbf w$ have variance $\tfrac1\Nt\sum_i z_i^2=
+\mathbf w\T\Cc\mathbf w=\tfrac1\Nt\norm{\Xt\mathbf w}^2\ge0$; substituting an eigenvector gives
+$\lambda=\nuv\T\Cc\nuv\ge0$. \end{proof}
+
+By the spectral theorem $\Cc$ has real eigenvalues and an orthonormal eigenbasis. We use
+\texttt{numpy.linalg.eigh} (the symmetric solver: real eigenvalues, orthonormal
+eigenvectors, faster and stabler than \texttt{eig}), sort decreasingly, and clip
+rounding-level negatives to $0$.
+
+\begin{table}[h]\centering\small
+\begin{tabular}{lccccccccc}
+\toprule
+$k$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9\\
+$\lambda_k$ & 2.492 & 0.705 & 0.590 & 0.254 & 0.123 & 0.105 & 0.078 & 0.039 & 0.0093\\
+\bottomrule
+\end{tabular}
+\caption{Leading eigenvalues. The drop $\lambda_8/\lambda_9\approx4.1$ is the largest in the
+spectrum.}\label{tab:q3eig}
+\end{table}
+
+\textbf{(i)} the dominance ratio is $\lambda_1/\lambda_2\approx3.53$, and $\lambda_1$ alone
+explains $\approx31\%$ of the total variance. \textbf{(iv)} a large ratio means one
+direction dominates the sample-to-sample variation: the data has a strong principal axis and
+is effectively low-dimensional (and, echoing Q2, the wide spectral gap would make the Power
+Method converge quickly here). \textbf{(iii) the elbow.} The elbow is the largest
+multiplicative drop between consecutive eigenvalues (a ratio, because the signal/noise
+boundary is multiplicative on the log scale): $\lambda_8/\lambda_9\approx4.1$ gives
+$k^\star=8$. On the log plot (Figure~\ref{fig:q3c}) the first eight eigenvalues fall steeply,
+then flatten into a noise floor of $\approx900$ near-equal values. This matches the
+$\sim10$ dominant molecules referenced in part (h).
+
+\extra{the ``keep $95\%$ of variance'' rule is misleading here and the elbow is the honest
+measure.} The $8$ signal components explain only $\approx55\%$ of the variance; reaching
+$95\%$ needs $k=667$ components (Table~\ref{tab:q3cum}), because the noise floor, though
+individually tiny, is spread over hundreds of dimensions that sum to a large fraction. A
+$95\%$ cut would pull in $\approx660$ noise directions and badly overstate the
+dimensionality.
+
+\begin{table}[h]\centering\small
+\begin{tabular}{lccccc}
+\toprule
+cumulative variance & $50\%$ & $80\%$ & $90\%$ & $95\%$ & $99\%$\\
+components $k$ & 4 & 309 & 516 & 667 & 850\\
+\bottomrule
+\end{tabular}
+\caption{Components needed to reach each variance threshold: contrast the $8$ signal
+components ($\approx55\%$) with the $667$ required for $95\%$.}\label{tab:q3cum}
+\end{table}
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.82\linewidth]{q3c_spectrum.png}\\[2pt]
+\includegraphics[width=0.66\linewidth]{q3c_cvarr.png}
+\caption{(3c) Top: eigenvalue spectrum (linear and log) with the sharp elbow at $k^\star=8$.
+Bottom: cumulative variance --- $8$ components reach only $\approx55\%$; $95\%$ needs
+$\approx667$.}\label{fig:q3c}
+\end{figure}
+
+% ---------------------------------------------------------------------
+\subsection{(d) The leading eigenvector}
+
+$\nuv_1\in\R^M$ (feature space) gives each frequency a \emph{loading}; the \emph{scores}
+$z_i=\xt_i\!\cdot\nuv_1$ are the maximally-spread one-dimensional summaries. Eigenvectors are
+sign-ambiguous, so we fix the largest loading positive. \textbf{(i)} the loadings are
+supported on two narrow bands ($j\approx900$--$960$ and $3150$--$3260$) with $\approx27\%$
+negative entries, so $\nuv_1$ is a \emph{contrast} direction (the balance of absorption
+between bands), not overall intensity. \textbf{(ii)} with cosine similarity
+$\cos(\mathbf a,\mathbf b)=\frac{\mathbf a\cdot\mathbf b}{\norm{\mathbf a}\norm{\mathbf b}}$,
+$\nuv_1$ matches a \emph{centred} spectrum at $\cos\approx0.92$, but only $0.67$ against the
+raw spectrum and $0.03$ against the mean spectrum. Living in the centred space by
+construction, $\nuv_1$ is $\approx$orthogonal to the shared mean and is a
+\emph{difference-spectrum} (Figure~\ref{fig:q3d}) --- it looks like a real measurement's
+deviation from average, not the average itself. This is exactly what mean-centring buys, and
+it echoes Q1's dominant-eigenvector steady state.
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.80\linewidth]{q3d_v1_vs_row.png}
+\caption{(3d) $\nuv_1$ (green) overlaid with the best-matching centred spectrum
+($\cos\approx0.92$): a difference-spectrum supported on two molecular bands.}\label{fig:q3d}
+\end{figure}
+
+% ---------------------------------------------------------------------
 
 \end{document}
