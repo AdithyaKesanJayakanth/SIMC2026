@@ -412,5 +412,41 @@ $\approx55\%$; the $95\%$ mark (green) is not attained until $k=667$.}\label{fig
 \end{figure}
 
 % ======================================================================
+\section{Part (d): the leading eigenvector}\label{sec:3d}
+The leading eigenvector $\nu_1\in\R^M$ is the single direction of greatest variation. It lives
+in \emph{feature space} and assigns a weight (a \textbf{loading}) to each frequency. Its
+practical importance: among all directions, the one-number summary $z_i=\xt_i\cdot\nu_1$ (the
+\textbf{score}) is the most information-preserving way to describe a vial, because its scores
+have the largest possible variance (Prop.~\ref{prop:rayleigh}).
+
+Two technical points. \emph{Loadings vs.\ scores:} the loadings are the entries of $\nu_1$
+(how each frequency contributes to the pattern), while the scores place each sample along it.
+\emph{Sign:} an eigenvector is defined only up to an overall sign (if $C\nu=\lambda\nu$ then
+$C(-\nu)=\lambda(-\nu)$), so we flip $\nu_1$ to make its largest loading positive; this changes
+nothing mathematically.
+
+Figure~\ref{fig:lead} (top) shows that $\nu_1$ is supported on two narrow bands
+($j\approx900$--$960$ and $j\approx3150$--$3260$) and takes \emph{both signs} (about $27\%$ of
+its loadings are negative). A mixed-sign direction is a \textbf{contrast}: it separates vials by
+the \emph{balance} of absorption between two groups of frequencies, not by overall brightness.
+
+Does $\nu_1$ resemble a real measurement? Using cosine similarity, it matches the \emph{centred}
+spectrum of vial $193$ at $\cos\approx0.92$, but only $0.67$ against that vial's \emph{raw}
+spectrum and $\approx0.03$ against the mean spectrum (Figure~\ref{fig:lead}, bottom). The
+explanation is exactly the mean-centering of part (b): $\nu_1$ lives in the centred space and
+is essentially orthogonal to the average spectrum, which dominates the raw spectra. So $\nu_1$
+is a \emph{difference-spectrum} --- the way the most-deviated concoction differs from the
+average --- mirroring Question 1, where the dominant eigenvector was the system's long-time
+steady state.
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.84\linewidth]{q3d_v1.png}\\[3pt]
+\includegraphics[width=0.84\linewidth]{q3d_v1_vs_row.png}
+\caption{\emph{Top:} loadings of $\nu_1$, concentrated on two molecular bands with mixed signs
+(a contrast direction). \emph{Bottom:} $\nu_1$ overlaid on the best-matching centred spectrum
+($\cos\approx0.92$).}\label{fig:lead}
+\end{figure}
+
+% ======================================================================
 
 \end{document}
