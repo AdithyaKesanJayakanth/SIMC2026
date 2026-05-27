@@ -94,3 +94,48 @@ So PC1 captures 80% of variance, PC2 captures 20%. PC1 lies along `(1,1)/√2` �
 
 ---
 
+## 4. Eigendecomposition meaning
+
+`C = V Λ Vᵀ`, with Λ diagonal of eigenvalues.
+
+- Columns of V = orthonormal **principal axes** in feature space.
+- `λ_k` = **variance** of data projected onto axis k.
+- `Σ λ_k = trace(C)` = total variance.
+- Sign of `V[:,k]` is ambiguous (flip it and nothing changes).
+
+---
+
+## 5. PCA in code
+
+**From-scratch (correct, slow on huge N):**
+```python
+Xc      = X - X.mean(axis=0)
+C       = (Xc.T @ Xc) / (X.shape[0] - 1)
+lam, V  = np.linalg.eigh(C)                # ASCENDING order!
+lam, V  = lam[::-1], V[:, ::-1]             # → descending
+scores  = Xc @ V[:, :r]                     # (M, r)
+evr     = lam / lam.sum()
+```
+
+**SVD variant (preferred when N >> M, e.g. IR spectra):**
+```python
+Xc            = X - X.mean(axis=0)
+U, s, Vt      = np.linalg.svd(Xc, full_matrices=False)
+lam           = s**2 / (M - 1)              # eigenvalues of C
+V             = Vt.T                         # principal axes as columns
+scores        = U[:, :r] * s[:r]             # = Xc @ V[:, :r]
+```
+
+**Sklearn (most concise, auto-centers):**
+```python
+from sklearn.decomposition import PCA
+pca    = PCA(n_components=r).fit(X)
+scores = pca.transform(X)
+evr    = pca.explained_variance_ratio_
+V      = pca.components_                     # (r, N)  — rows are PCs, NOT cols
+```
+
+> ⚠️ sklearn's `pca.components_` has PCs as **rows**; from-scratch `V` has them as **columns**. Don't mix conventions.
+
+---
+
