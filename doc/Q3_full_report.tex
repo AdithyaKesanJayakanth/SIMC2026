@@ -327,5 +327,90 @@ red line marks the maximal-variance feature $j^\star=910$.}\label{fig:var}
 \end{figure}
 
 % ======================================================================
+\section{Part (c): the eigenspectrum (PCA)}\label{sec:3c}
+We now diagonalise $C$. The eigenvectors are the principal directions; the eigenvalues rank
+them by importance.
+
+\begin{proposition}[Eigenvalues are variances; $C$ is PSD]\label{prop:rayleigh}
+For a unit vector $w$, the variance of the data projected onto $w$ is $w\T C w$. If
+$C\nu=\lambda\nu$ with $\norm{\nu}=1$ then $\nu\T C\nu=\lambda$. Moreover $w\T C w\ge0$ for all
+$w$, so every $\lambda_i\ge0$.
+\end{proposition}
+\begin{proof}
+The projection of sample $\xt_i$ onto $w$ is the scalar $z_i=\xt_i\cdot w$, with mean zero;
+its variance is $\tfrac1{\Nt}\sum_i z_i^2=\tfrac1{\Nt}w\T\Xt\T\Xt w=w\T C w$. Substituting an
+eigenvector gives $\nu\T C\nu=\lambda\norm{\nu}^2=\lambda$. Finally
+$w\T C w=\tfrac1{\Nt}\norm{\Xt w}^2\ge0$, so $\lambda=\nu\T C\nu\ge0$.
+\end{proof}
+
+By the spectral theorem $C$ has real eigenvalues and an orthonormal eigenbasis. We compute the
+decomposition with \texttt{numpy.linalg.eigh}, the routine specialised for symmetric matrices:
+it guarantees real eigenvalues and orthonormal eigenvectors and is faster and more stable than
+the general \texttt{eig}. We sort the eigenvalues in decreasing order and clip rounding-level
+negatives (of order $10^{-17}$) up to zero, which is legitimate because $C$ is PSD
+(Prop.~\ref{prop:rayleigh}).
+
+\subsection{The dominance ratio and the elbow}
+Table~\ref{tab:ratios} lists the leading eigenvalues. The \textbf{dominance ratio} is
+$\lambda_1/\lambda_2\approx3.53$: one direction captures far more variance than any other, so
+the data has a strong principal axis. (Equivalently the \emph{spectral gap} $\lambda_1-\lambda_2$
+is wide, which is exactly the condition that makes the Power Method of Question 2 converge
+quickly.)
+
+We locate the \textbf{elbow} $k^\star$ --- the boundary between meaningful ``signal''
+eigenvalues and the flat ``noise'' floor --- as the largest \emph{multiplicative} drop between
+consecutive eigenvalues. (We use a ratio, not a difference, because the signal/noise transition
+is multiplicative on the logarithmic scale of Figure~\ref{fig:scree}; a difference would simply
+track the huge $\lambda_1$.) The largest drop is $\lambda_8/\lambda_9\approx4.1$
+(Table~\ref{tab:ratios}), giving $\boxed{k^\star=8}$. It is not $7$, because $\lambda_8$ still
+sits about $4\times$ above the floor (genuine signal); it is not $9$, because $\lambda_9$
+already lies on the flat floor (noise). Pleasingly, $8$ is close to the $\sim10$ dominant
+molecules named in the problem: a mixture of a few chemical components spans only a few
+independent directions.
+
+\begin{table}[h]\centering\small
+\begin{tabular}{rrrrr}
+\toprule
+$k$ & $\lambda_k$ & $\lambda_k/\lambda_{k+1}$ & variance \% & cumulative \% \\
+\midrule
+1 & 2.4918 & 3.53 & 31.5 & 31.5 \\
+2 & 0.7052 & 1.20 & 8.9  & 40.5 \\
+3 & 0.5899 & 2.33 & 7.5  & 47.9 \\
+4 & 0.2535 & 2.06 & 3.2  & 51.1 \\
+5 & 0.1232 & 1.18 & 1.6  & 52.7 \\
+6 & 0.1045 & 1.35 & 1.3  & 54.0 \\
+7 & 0.0775 & 2.01 & 1.0  & 55.0 \\
+\textbf{8} & \textbf{0.0386} & \textbf{4.13} & 0.5 & 55.5 \\
+9 & 0.0093 & 1.00 & 0.1  & 55.6 \\
+\bottomrule
+\end{tabular}
+\caption{The leading eigenvalues, the consecutive ratio (whose largest value, $4.13$, marks the
+elbow at $k^\star=8$), and the per-component and cumulative share of total variance. The full
+table for $k=1\dots9$ is also saved as a loadable CSV alongside the notebook.}\label{tab:ratios}
+\end{table}
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.84\linewidth]{q3c_spectrum.png}
+\caption{The eigenvalue spectrum on linear (left) and logarithmic (right) scales. The log plot
+shows a sharp elbow at $k^\star=8$, after which the eigenvalues flatten onto a noise floor.}
+\label{fig:scree}
+\end{figure}
+
+\subsection{Cumulative variance: a cautionary tale}
+A popular rule keeps enough components to explain $95\%$ of the variance. Here that rule is
+badly misleading. The $8$ signal components explain only $\approx55\%$ of the total variance,
+and reaching $95\%$ would require $k=667$ components (Figure~\ref{fig:cumvar}). The reason is
+that the tiny noise floor, though negligible per component, is spread over $\approx900$
+dimensions (the rank of $\Xt$ is at most $\Nt-1$), so its contributions accumulate. The honest
+measure of dimensionality is therefore the elbow ($8$), not the $95\%$ threshold ($667$). As a
+final check, $\sum_i\lambda_i\approx\tr(C)\approx7.90$, confirming Prop.~\ref{prop:trace}.
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.9\linewidth]{q3c_cvarr.png}
+\caption{Cumulative variance versus the number of components. The elbow (red) reaches only
+$\approx55\%$; the $95\%$ mark (green) is not attained until $k=667$.}\label{fig:cumvar}
+\end{figure}
+
+% ======================================================================
 
 \end{document}
