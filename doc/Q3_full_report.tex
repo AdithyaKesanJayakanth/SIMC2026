@@ -585,5 +585,24 @@ project-then-cluster pipeline.
 \end{itemize}
 
 % ======================================================================
+\section{Conclusion}\label{sec:conclusion}
+Starting from a raw $1000\times3401$ table, a short chain of linear-algebra tools recovered the
+hidden structure of the experiment. We removed $40$ blank vials and $36$ anomalous ones
+($\Nt=924$); found a total variance of $\tr(C)\approx7.90$ concentrated in a few molecular
+bands; established by PCA that the data is strongly low-dimensional
+($\lambda_1/\lambda_2\approx3.53$, an eight-dimensional signal subspace); interpreted the
+leading direction as a chemical contrast; and, by clustering the genuine vials two
+mathematically equivalent ways, determined that they comprise \textbf{$26$ unique food
+samples}, each measured about $37$ times.
+
+The same principle threads through all three questions of the challenge: a high-dimensional
+system is governed by a small number of special directions. In Question 1 the dominant
+eigenvector was a Markov chain's long-time steady state; in Question 2 the Power Method found
+that direction by iteration, at a speed set by the spectral gap; and here in Question 3 the few
+leading eigenvectors of the covariance (equivalently the Gram) matrix compressed $3401$-dimensional
+spectra into a picture clear enough to count the drinks.
+
+\appendix
+% ======================================================================
 
 \end{document}
