@@ -879,6 +879,198 @@ c-16-25.333-24-45-24-59z"></path></svg></span></span></span></span></span></span
 </section>
 
 <!-- T2 S7 — It works, by hand (2e-ii) -->
+<section class="slide" data-screen-label="07g T2S7 Sanity" data-om-validate="no_overflowing_text,no_overlapping_text,slide_sized_text" data-deck-slide="12">
+  <div class="cn-letterbox top"></div>
+  <div class="cn-letterbox bot"></div>
+  <div class="cn-bg"></div>
+  <div class="cn-grain"></div>
+
+  <div class="cn-frame">
+    <div class="cn-top">
+      <div class="cn-corner"><span class="rec">REC</span><span>T2 S7 / WORKED EXAMPLE</span></div>
+      <div class="cn-corner"><span class="accent">T2.7 / 16</span></div>
+    </div>
+
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0;">
+      <h2 class="cn-h2">End-to-end on a 3×2 matrix</h2>
+      <p class="cn-sub" style="margin-top:24px;">Both SVD relations check out.</p>
+
+      <div style="margin-top:36px; text-align:center;">
+        <div class="cn-prose" style="font-size:22px;">
+          $X = \begin{pmatrix} 1 & 0 \\ 0 & 1 \\ 1 & 1 \end{pmatrix} \to X^T X = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix} \to \lambda = 3$
+        </div>
+        <div class="cn-prose" style="font-size:22px; margin-top:16px; color:var(--ink);">
+          $\sigma_1 = \sqrt{3}, \quad v_1 = \tfrac{1}{\sqrt{2}}(1,1), \quad u_1 = \tfrac{1}{\sqrt{6}}(1,1,2)$
+        </div>
+        <div class="cn-prose" style="font-size:20px; margin-top:24px; color:var(--crit);"><b>✓</b> $Xv_1 = \sigma_1 u_1$ &nbsp; &nbsp; <b>✓</b> $X^T u_1 = \sigma_1 v_1$</div>
+      </div>
+    </div>
+
+    <div class="cn-bot">
+      <div class="cn-corner">SIMC 10 · DEFENSE</div>
+      <div class="cn-progress" style="--p:63%;"></div>
+      <div class="cn-corner">T2.7 / 16</div>
+    </div>
+  </div>
+  <aside class="notes">Quick sanity check that the recipe actually produces a valid triplet. Keep it 20 s.</aside>
+</section>
+
+<!-- T2 S8 — The big payoff (2 is 3's engine) ★ -->
+<section class="slide" data-screen-label="07h T2S8 Payoff" data-om-validate="no_overflowing_text,no_overlapping_text,slide_sized_text" data-deck-slide="13">
+  <div class="cn-letterbox top"></div>
+  <div class="cn-letterbox bot"></div>
+  <div class="cn-bg"></div>
+  <div class="cn-grain"></div>
+
+  <div class="cn-frame">
+    <div class="cn-top">
+      <div class="cn-corner"><span class="rec">REC</span><span>T2 S8 / PAYOFF</span></div>
+      <div class="cn-corner"><span class="accent">T2.8 / 16</span></div>
+    </div>
+
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0;">
+      <h2 class="cn-h2">Everything in Task 3 is Task 2 in disguise</h2>
+
+      <div style="margin-top:40px; display:flex; flex-direction:column; gap:28px;">
+        <div style="display:grid; grid-template-columns:200px 1fr; gap:20px; align-items:start;">
+          <p class="cn-kicker" style="margin:0;">2d duality</p>
+          <p class="cn-prose">Covariance & Gram give the <b>same clusters</b></p>
+        </div>
+        <div style="display:grid; grid-template-columns:200px 1fr; gap:20px; align-items:start;">
+          <p class="cn-kicker" style="margin:0;">2b wide gap</p>
+          <p class="cn-prose">Power method converges <b>fast</b> on our spectra</p>
+        </div>
+        <div style="display:grid; grid-template-columns:200px 1fr; gap:20px; align-items:start;">
+          <p class="cn-kicker" style="margin:0;">2e smaller square</p>
+          <p class="cn-prose">Why we took the <b>Gram route</b> (924² not 3401²)</p>
+        </div>
+      </div>
+
+      <p class="cn-prose" style="margin-top:32px; border-left:3px solid var(--crit); padding-left:16px; color:var(--ink);"><b>This is why Task 2 isn't abstract</b> — each result underwrites a specific choice in Q3.</p>
+    </div>
+
+    <div class="cn-bot">
+      <div class="cn-corner">SIMC 10 · DEFENSE</div>
+      <div class="cn-progress" style="--p:66%;"></div>
+      <div class="cn-corner">T2.8 / 16</div>
+    </div>
+  </div>
+  <aside class="notes">This is why Task 2 isn't abstract — the duality, the gap, and the cost choice each underwrite a specific number in our Q3 pipeline. Strong closer; sets up Q&A toward your prepared ground.</p>
+</section>
+
+<!-- T2 S9 — Takeaways (optional) -->
+<section class="slide" data-screen-label="07i T2S9 Summary" data-om-validate="no_overflowing_text,no_overlapping_text,slide_sized_text" data-deck-slide="14">
+  <div class="cn-letterbox top"></div>
+  <div class="cn-letterbox bot"></div>
+  <div class="cn-bg"></div>
+  <div class="cn-grain"></div>
+
+  <div class="cn-frame">
+    <div class="cn-top">
+      <div class="cn-corner"><span class="rec">REC</span><span>T2 S9 / CHOICES</span></div>
+      <div class="cn-corner"><span class="accent">T2.9 / 16</span></div>
+    </div>
+
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0;">
+      <h2 class="cn-h2">The choices we'd stand behind</h2>
+
+      <ul class="cn-list" style="margin-top:40px;">
+        <li>Smaller square → $O(d^2)$ per step, choose $d = \min(N,M)$</li>
+        <li>Spectral gap $= |\lambda_2/\lambda_1|$ sets the rate, not average</li>
+        <li>Structural vs <i>numerical</i> gap failure — floating point matters</li>
+        <li>Covariance & Gram share <b>nonzero</b> eigenvalues (not all)</li>
+      </ul>
+    </div>
+
+    <div class="cn-bot">
+      <div class="cn-corner">SIMC 10 · DEFENSE</div>
+      <div class="cn-progress" style="--p:69%;"></div>
+      <div class="cn-corner">T2.9 / 16</div>
+    </div>
+  </div>
+  <aside class="notes">Q&A bait — invite the questions you've already prepped in the deep notes.</aside>
+</section>
+
+<!-- T2 Transition back to Task 3 -->
+<section class="slide" data-screen-label="07j T2S10 Transition" data-om-validate="no_overflowing_text,no_overlapping_text,slide_sized_text" data-deck-slide="15">
+  <div class="cn-letterbox top"></div>
+  <div class="cn-letterbox bot"></div>
+  <div class="cn-bg dim"></div>
+  <div class="cn-grain"></div>
+
+  <div class="cn-frame">
+    <div class="cn-top">
+      <div class="cn-corner"><span class="rec">REC</span><span>TRANSITION / BACK TO PIPELINE</span></div>
+      <div class="cn-corner"><span class="accent">— · — / 16</span></div>
+    </div>
+
+    <div class="cn-hero center">
+      <h1 class="cn-h1">Now to <span class="crit">Task 3</span></h1>
+      <p class="cn-sub" style="margin-top:32px; max-width:1200px;">Apply Power Method + SVD to real data: 924 IR spectra, 3401 frequency channels.</p>
+    </div>
+
+    <div class="cn-bot">
+      <div class="cn-corner">SIMC 10 · DEFENSE</div>
+      <div class="cn-progress" style="--p:72%;"></div>
+      <div class="cn-corner">TASK 3</div>
+    </div>
+  </div>
+  <aside class="notes">Task 2 → Task 3 handoff.</aside>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- S7 — Task 3(d) Leading eigenvector · q3d figure                       -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="08 S7 v1" data-om-id="642f6ffb:293" data-om-validate="no_overflowing_text,no_overlapping_text,slide_sized_text" data-deck-slide="7">
+  <div class="cn-letterbox top" data-om-id="642f6ffb:294"></div>
+  <div class="cn-letterbox bot" data-om-id="642f6ffb:295"></div>
+  <div class="cn-bg" data-om-id="642f6ffb:296"></div>
+  <div class="cn-grain" data-om-id="642f6ffb:297"></div>
+
+  <div class="cn-frame" data-om-id="642f6ffb:298">
+    <div class="cn-top" data-om-id="642f6ffb:299">
+      <div class="cn-corner" data-om-id="642f6ffb:300"><span class="rec" data-om-id="642f6ffb:301">REC</span><span data-om-id="642f6ffb:302">T3.D / LEADING EIGENVECTOR</span></div>
+      <div class="cn-corner" data-om-id="642f6ffb:303"><span class="accent" data-om-id="642f6ffb:304">REEL S7 / 10</span></div>
+    </div>
+
+    <div class="cn-hero top" data-om-id="642f6ffb:305">
+      <div class="cn-kicker" data-om-id="642f6ffb:306">Re-entry — Same Lens, 924 Spectra</div>
+      <h1 class="cn-h1" data-om-id="642f6ffb:307">What does <span class="crit" data-om-id="642f6ffb:308"><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">v_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 0.5806em; vertical-align: -0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right: 0.0359em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height: 0.3011em;"><span class="" style="top: -2.55em; margin-left: -0.0359em; margin-right: 0.05em;"><span class="pstrut" style="height: 2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height: 0.15em;"><span class=""></span></span></span></span></span></span></span></span></span></span></span> actually look like?</h1>
+
+      <div class="cn-body-2col" style="margin-top:30px;" data-om-id="642f6ffb:309">
+        <div data-om-id="642f6ffb:310">
+          <ul class="cn-list" data-om-id="642f6ffb:311">
+            <li data-om-id="642f6ffb:312"><b data-om-id="642f6ffb:313">Not flat.</b> Weight piles up on <span class="crit" data-om-id="642f6ffb:314">two molecular bands</span> — channels <b data-om-id="642f6ffb:315">900–960</b> and <b data-om-id="642f6ffb:316">3150–3260</b>. The baseline in between gets almost no weight.</li>
+            <li data-om-id="642f6ffb:317"><b data-om-id="642f6ffb:318">Mixed sign — ~27% negative.</b> <span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">v_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 0.5806em; vertical-align: -0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right: 0.0359em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height: 0.3011em;"><span class="" style="top: -2.55em; margin-left: -0.0359em; margin-right: 0.05em;"><span class="pstrut" style="height: 2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height: 0.15em;"><span class=""></span></span></span></span></span></span></span></span></span></span> is a <span class="crit" data-om-id="642f6ffb:319">contrast</span>, not brightness. A vial's score tells you which side of the chemical contrast it falls on.</li>
+            <li data-om-id="642f6ffb:320"><b data-om-id="642f6ffb:321">Matches a centred spectrum.</b> <span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>cos</mi><mo>⁡</mo><mo>=</mo><mn>0.92</mn></mrow><annotation encoding="application/x-tex">\cos = 0.92</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 0.4306em;"></span><span class="mop">cos</span><span class="mspace" style="margin-right: 0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right: 0.2778em;"></span></span><span class="base"><span class="strut" style="height: 0.6444em;"></span><span class="mord">0.92</span></span></span></span></span> to vial #193 centred · <span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>cos</mi><mo>⁡</mo><mo>=</mo><mn>0.03</mn></mrow><annotation encoding="application/x-tex">\cos = 0.03</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 0.4306em;"></span><span class="mop">cos</span><span class="mspace" style="margin-right: 0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right: 0.2778em;"></span></span><span class="base"><span class="strut" style="height: 0.6444em;"></span><span class="mord">0.03</span></span></span></span></span> to the mean spectrum ⇒ a <span class="crit" data-om-id="642f6ffb:322">difference-spectrum</span>.</li>
+          </ul>
+
+          <div class="cn-stat-row" data-om-id="642f6ffb:323">
+            <div class="cn-stat" data-om-id="642f6ffb:324"><div class="lbl" data-om-id="642f6ffb:325">cos · centred</div><div class="val" data-om-id="642f6ffb:326">0.92</div></div>
+            <div class="cn-stat" data-om-id="642f6ffb:327"><div class="lbl" data-om-id="642f6ffb:328">cos · mean</div><div class="val" data-om-id="642f6ffb:329">0.03</div></div>
+            <div class="cn-stat" data-om-id="642f6ffb:330"><div class="lbl" data-om-id="642f6ffb:331">% negative</div><div class="val" data-om-id="642f6ffb:332">27<span class="unit" data-om-id="642f6ffb:333">%</span></div></div>
+          </div>
+        </div>
+
+        <div class="cn-fig" data-om-id="642f6ffb:334">
+          <div class="cn-fig-head" data-om-id="642f6ffb:335"><span data-om-id="642f6ffb:336">Task 3d · v₁ vs best-matching centred spectrum</span><span class="crit" data-om-id="642f6ffb:337">FIG. S7 · cos 0.92</span></div>
+          <div class="cn-fig-body" data-om-id="642f6ffb:338"><img src="figures/q3d_v1_vs_row.png" alt="v1 vs centered measurement #193" data-om-id="642f6ffb:339"></div>
+          <div class="cn-fig-foot" data-om-id="642f6ffb:340"><b data-om-id="642f6ffb:341">Green:</b> <span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">v_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 0.5806em; vertical-align: -0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right: 0.0359em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height: 0.3011em;"><span class="" style="top: -2.55em; margin-left: -0.0359em; margin-right: 0.05em;"><span class="pstrut" style="height: 2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height: 0.15em;"><span class=""></span></span></span></span></span></span></span></span></span></span> &nbsp;·&nbsp; <b data-om-id="642f6ffb:342">Yellow:</b> centred measurement #193, unit norm. Mass concentrates at the two molecular-band regions; baseline in between is near zero.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cn-bot" data-om-id="642f6ffb:343">
+      <div class="cn-corner" data-om-id="642f6ffb:344">SIMC 10 · T3 · YOU</div>
+      <div class="cn-progress" style="--p:70%;" data-om-id="642f6ffb:345"></div>
+      <div class="cn-corner" data-om-id="642f6ffb:346">S7 / 10</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- S8 — Task 3(f) Gram matrix · q3f figure                                -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
 
 </deck-stage>
 
