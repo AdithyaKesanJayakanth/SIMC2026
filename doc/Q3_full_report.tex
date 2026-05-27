@@ -493,5 +493,48 @@ $\approx25$ clusters.}\label{fig:gramscatter}
 \end{figure}
 
 % ======================================================================
+\section{Part (g): comparing the two approaches}\label{sec:3g}
+\subsection{Do the two methods give the same number of clusters? Yes --- necessarily.}
+Both routes return $25$ clusters, and this is forced by the algebra. The mathematical link: if
+$C\nu=\lambda\nu$ then $\Xt\nu$ is an eigenvector of $G$ with the same eigenvalue $\lambda$, so
+$C$ and $G$ share their nonzero eigenvalues. More strongly, with the SVD $\Xt=U\Sigma V\T$ the
+covariance-space scores are $Z=\Xt V=U\Sigma$, while the (scaled) Gram coordinates are
+$Z_g=U\sqrt{\Nt\lambda}=U\Sigma$. \textbf{Both coordinate sets are the same matrix $U\Sigma$},
+identical up to the arbitrary sign of each eigenvector.
+
+We verify this directly by correlating the two coordinate sets component by component
+(Figure~\ref{fig:compare}): every matching component is perfectly correlated
+($|\mathrm{corr}|=1.000$), all cross-correlations are $0$, and $|Z|=|Z_g|$ to machine
+precision. Because the two point clouds are identical up to reflecting individual axes, the
+clusters --- and hence their number --- must coincide. (In general the two pictures can differ
+slightly when one matrix is numerically better conditioned, but here the structure is clean
+enough that they agree exactly.)
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.86\linewidth]{q3g_compare.png}
+\caption{Comparison of the covariance-space (3e) and Gram-space (3f) coordinates: matching
+principal components are perfectly correlated ($|\mathrm{corr}|=1$) and distinct ones are
+uncorrelated, so the two scatter pictures are the same up to per-axis sign.}\label{fig:compare}
+\end{figure}
+
+\subsection{What does cluster membership \emph{mean} in each space?}
+\textbf{Covariance space (3e).} A vial's coordinates are the projections of its centred
+spectrum onto the top feature-space eigenvectors. Each coordinate says how strongly the vial
+expresses one dominant \emph{pattern of spectral variation} (a weighted combination of
+frequencies). Two vials are close when they express these patterns to the same degree, i.e.\
+their spectra are similar mixtures along the directions where samples differ most. Covariance
+space answers ``\emph{which mixture of frequencies does this vial express?}''
+
+\textbf{Gram space (3f).} A vial's coordinates are the components of the top sample-space
+eigenvectors of $G$. Since $G_{ij}$ is the similarity between vials $i$ and $j$, each Gram
+eigenvector is a pattern over the $924$ vials, and a vial's coordinate is its loading in that
+pattern --- a compressed summary of how similar it is to every other vial. Gram space answers
+``\emph{which other vials does this one resemble?}''
+
+Both place vials with near-identical spectra at the same point, so proximity in either
+coordinate system means the underlying vials hold the same chemical concoction --- which is why
+the two routes agree.
+
+% ======================================================================
 
 \end{document}
