@@ -536,5 +536,54 @@ coordinate system means the underlying vials hold the same chemical concoction -
 the two routes agree.
 
 % ======================================================================
+\section{Part (h): how many unique food samples are there?}\label{sec:3h}
+Finally we count the genuine concoctions. We use all $960$ genuine vials --- the $40$ empty
+blanks removed, but the $36$ high-norm vials \emph{kept}, because part (h) tells us the samples
+are real fermented drinks, so that coherent, strongly-absorbing group is a genuine concentrated
+concoction, not an error. (This is exactly why the removal in \S\ref{sec:3a} was kept
+reversible.) We cluster in the top-$8$ signal subspace (the elbow of \S\ref{sec:3c}), which
+denoises the data so that the groups separate cleanly.
+
+Single-linkage connected components give \textbf{$26$ clusters}, and the count is completely
+stable: it is $26$ for every threshold $\varepsilon$ from $0.25$ to $0.40$, and the leader
+clustering of \S\ref{sec:3e}--\ref{sec:3f} agrees. The decisive evidence is the
+\emph{replicate structure} (Figure~\ref{fig:sizes}): the clusters have sizes
+$24\times37+2\times36=960$ --- about $37$ repeat measurements of each of $26$ distinct samples.
+That clean, near-constant group size is the fingerprint of a designed experiment with $26$
+unique concoctions, comfortably below the ``fewer than $100$'' stated in the prompt.
+
+\begin{remark}
+The covariance/Gram clusterings of \S\ref{sec:3e}--\ref{sec:3f} reported $25$ because they were
+run on the $924$-vial set that \emph{excluded} the high-norm group. Restoring that one genuine
+concoction gives $26$. This is the practical pay-off of having kept the cleaning decision
+reversible.
+\end{remark}
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.92\linewidth]{q3h_clusters.png}
+\caption{Cluster sizes for the $960$ genuine vials in the top-8 subspace: $26$ clusters of about
+$37$ replicates each ($24\times37+2\times36=960$). The flat profile is the signature of a
+designed $26$-sample experiment.}\label{fig:sizes}
+\end{figure}
+
+\subsection{Which earlier parts were useful?}
+\begin{itemize}
+\item \textbf{Part (a), cleaning.} Removing the $40$ empties was essential: left in, they would
+form a spurious extra ``cluster'' of pure noise. Recognising the $36$ high-norm vials as a
+\emph{real} sample (and keeping the removal reversible) is what turns $25$ into the correct
+$26$.
+\item \textbf{Part (c), the elbow.} $k^\star=8$ tells us the signal lives in $\sim8$ dimensions,
+so we cluster in the top-$8$ principal components rather than the noisy $3401$. This denoising
+is what makes the $26$ groups cleanly separable; clustering the raw spectra would be swamped by
+noise. ($k^\star\approx8$ also echoes the $\sim10$ dominant molecules.)
+\item \textbf{Parts (e), (f), (g).} These supply the cluster count, and the fact that the
+covariance and Gram routes agree (g) shows the count is a real property of the data, not an
+artefact of one method.
+\item \textbf{Parts (b), (d).} These established that the data is low-dimensional and that the
+leading directions are chemically meaningful contrasts, which justifies the
+project-then-cluster pipeline.
+\end{itemize}
+
+% ======================================================================
 
 \end{document}
