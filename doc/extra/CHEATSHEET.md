@@ -139,3 +139,78 @@ V      = pca.components_                     # (r, N)  — rows are PCs, NOT col
 
 ---
 
+## 6. Power method (top eigenvector of C)
+
+```
+v ← random unit vector
+for K iterations:
+    w ← C @ v
+    v ← w / ||w||
+λ₁ ≈ vᵀ C v                  ← Rayleigh quotient
+```
+
+- Converges geometrically with rate `(λ₂/λ₁)ᵏ`. Fast when leading eigenvalue dominates (typical for low-rank signal).
+- For **PC2**: deflate, then repeat: `C ← C − λ₁ · v₁ v₁ᵀ`.
+- Use this when you want only the top few PCs of a giant matrix without paying for a full `eigh`.
+
+---
+
+## 7. Reading the eigenspectrum
+
+- **Scree plot**: λ_k vs k. **Always use a log y-axis** — linear hides the tail.
+- "**Elbow**" position ≈ intrinsic dimension d̂.
+- **Cumulative explained variance**: smallest r with `cumsum(evr)[r] ≥ 0.95` is a standard cutoff.
+- **Participation ratio** (a continuous "effective dim"):
+  ```
+  PR = (Σ λ_k)² / Σ λ_k²
+  ```
+- **Flat tail** at level σ² = isotropic noise floor.
+- **Marčenko–Pastur edges** for pure noise (M samples, N features, σ² variance):
+  ```
+  λ ∈ [σ²(1 − √(N/M))², σ²(1 + √(N/M))²]
+  ```
+  A real signal must exceed the upper edge to be detectable.
+
+For IR spectra of mixtures, # significant PCs ≈ # pure components.
+
+---
+
+## 8. Curse of dimensionality — the four facts
+
+1. **Shell concentration**: in a unit N-ball, the fraction of volume within ε of the boundary is `1 − (1−ε)ᴺ → 1`. The inside is empty.
+2. **Distance concentration**: for i.i.d. points, `(max d − min d) / min d → 0`. Nearest-neighbor becomes meaningless.
+3. **Volume of unit N-ball**: `V_N = πᴺᐟ² / Γ(N/2 + 1) → 0` as N→∞ (peaks at N=5).
+4. **Sample density**: to maintain density you need `~kᴺ` samples. Exponential.
+
+**Implication**: raw Euclidean KNN on full-D IR spectra (N=1000+) is unreliable. Reduce first (PCA → 10–20 dims), then KNN.
+
+---
+
+## 9. Manifold hypothesis
+
+Real high-D data concentrates near a d-dim manifold M ⊂ Rᴺ with d ≪ N.
+
+- **Linear PCA** finds the best affine M (an r-plane through the mean).
+- **Nonlinear**: Isomap (geodesics), UMAP (probabilistic graph), t-SNE (KL-div on neighborhood probs), diffusion maps.
+- **Intrinsic-dim estimators**: PCA elbow, Levina–Bickel MLE, correlation dim, ID-via-kNN-distance ratios.
+- For IR + Beer-Lambert: mixing is linear → manifold is flat → PCA is enough; intrinsic dim ≈ # of pure components.
+
+---
+
+## 10. IR spectroscopy preprocessing
+
+Apply **in this order**:
+
+1. **Baseline correction** (asymmetric least squares "ALS", or rolling minimum) — removes drift.
+2. (Optional) **Savitzky–Golay** smoothing, or 1st/2nd derivative spectrum (sharpens peaks, kills baselines).
+3. **SNV** (standard normal variate) per spectrum:
+   ```
+   x_i ← (x_i − mean(x_i)) / std(x_i)
+   ```
+   Removes pathlength / scattering effects. Guard against `std == 0`.
+4. **Column mean-center** across samples — this is the PCA centering.
+
+> Do NOT z-score per column unless features are on wildly different physical scales. IR absorbances are already comparable.
+
+---
+
