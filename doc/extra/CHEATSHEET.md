@@ -214,3 +214,72 @@ Apply **in this order**:
 
 ---
 
+## 11. Diagnostic IR bands (cm⁻¹)
+
+| Band | Mode | Tells you |
+|---|---|---|
+| 3200–3600 | O–H, N–H stretch | alcohols, water, amines (broad) |
+| 3000–3100 | =C–H, aromatic C–H | unsaturation, ring |
+| 2850–3000 | aliphatic C–H | most organics |
+| 2200–2260 | C≡N | nitriles |
+| 2100–2260 | C≡C | alkynes |
+| 1650–1750 | C=O | ester ~1735, ketone ~1715, amide ~1650 |
+| 1600–1680 | C=C, aromatic ring | conjugation |
+| 1500–1600 | N=O | nitro |
+| < 1500 | "fingerprint" | molecular identity |
+
+IR plots are conventionally drawn with **wavenumber decreasing left→right** (`ax.invert_xaxis()`).
+
+---
+
+## 12. Sanity checks (run after every step)
+
+- `np.allclose(Xc.mean(axis=0), 0)`  ← centering worked
+- `np.allclose(C, C.T)`               ← symmetric
+- `(lam >= -1e-10).all()`             ← PSD
+- `np.isclose(lam.sum(), C.trace())`  ← eigenvalues sum to trace
+- `np.allclose(scores @ V[:, :r].T + X.mean(axis=0), X_reconstructed)`
+- `np.isclose(evr.sum(), 1.0)` if r = N
+- Eigenvector sign ambiguity: `V[:,k]` and `−V[:,k]` are both valid.
+
+---
+
+## 13. Common bugs
+
+| Bug | Symptom | Fix |
+|---|---|---|
+| Forgot to center | PC1 points toward mean | Subtract `X.mean(axis=0)` |
+| Divided by M not M−1 | Off by `M/(M−1)`; eigvecs OK | Use M−1 (Bessel) |
+| Used `eig` not `eigh` | Unsorted, possibly complex | Always `eigh` for symmetric |
+| Didn't flip eigh order | Top PC last instead of first | `lam[::-1], V[:, ::-1]` |
+| Linear scree | Tail looks like zero | Use `semilogy` |
+| SNV on flat row | NaN from /0 | Guard `std == 0` |
+| KNN on raw high-D | Distances all ≈ equal | PCA first, then KNN |
+| Mixed sklearn / from-scratch V | Off-by-transpose | sklearn = rows; from-scratch = cols |
+
+---
+
+## 14. Numerical sketch (memorize the shape)
+
+For `X` shape `(M=200, N=500)` with **rank-3** signal + isotropic Gaussian noise σ:
+
+- `λ₁, λ₂, λ₃` ≈ the three signal variances (large).
+- `λ₄, …, λ_{min(M,N)}` ≈ σ² (the noise floor).
+- Upper Marčenko–Pastur edge: `σ²·(1 + √(N/M))² ≈ σ²·(1+√2.5)² ≈ 6.6·σ²`.
+- A signal eigenvalue must exceed this edge to be detectable.
+
+If your scree plot shows a flat plateau at `≈ σ²` everywhere → no low-d structure, or your data is pure noise.
+
+---
+
+## 15. What to do in the first 10 minutes of the challenge
+
+1. Load data; print shape, dtype, any NaNs.
+2. Look at a few raw spectra (`plot_scatter` or just `plt.plot(X[:5].T)`).
+3. Mean-center; check `Xc.mean(axis=0)` ≈ 0.
+4. SVD: `U, s, Vt = np.linalg.svd(Xc, full_matrices=False)`.
+5. Plot scree on log scale; spot the elbow.
+6. Project to 2-D: `scores = U[:, :2] * s[:2]`. Scatter. Do you see clusters?
+7. *Now* decide preprocessing (SNV? derivative?) and re-run.
+
+Do not optimize before you've eyeballed the data.
