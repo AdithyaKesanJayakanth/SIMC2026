@@ -665,6 +665,220 @@ c-16-25.333-24-45-24-59z"></path></svg></span></span></span></span></span></span
 <!-- ════════════════════════════════════════════════════════════════════ -->
 
 <!-- T2 S1 — Title / the arc -->
+<section class="slide" data-screen-label="07a T2S1 Title" data-om-validate="no_overflowing_text,no_overlapping_text,slide_sized_text" data-deck-slide="6">
+  <div class="cn-letterbox top"></div>
+  <div class="cn-letterbox bot"></div>
+  <div class="cn-bg"></div>
+  <div class="cn-grain"></div>
+
+  <div class="cn-frame">
+    <div class="cn-top">
+      <div class="cn-corner"><span class="rec">REC</span><span>T2 S1 / TITLE & ARC</span></div>
+      <div class="cn-corner"><span class="accent">T2.1 / 16</span></div>
+    </div>
+
+    <div class="cn-hero center">
+      <h1 class="cn-h1">The Power Method <span class="crit">&</span> SVD</h1>
+      <p class="cn-sub" style="margin-top:32px; max-width:1200px;">Finding the one direction that matters, without the full eigendecomposition.</p>
+      <p class="cn-prose" style="margin-top:60px; max-width:1200px;">Four beats — it works, how fast, when it breaks, and how we stretch it to <i>any</i> rectangular matrix.</p>
+    </div>
+
+    <div class="cn-bot">
+      <div class="cn-corner">SIMC 10 · DEFENSE</div>
+      <div class="cn-progress" style="--p:45%;"></div>
+      <div class="cn-corner">TASK 2</div>
+    </div>
+  </div>
+  <aside class="notes">Task 2 builds the engine behind PCA, PageRank and recommenders. Four beats — it works, how fast, when it breaks, and how we stretch it to *any* rectangular matrix, which is the SVD. Plant the four-beat arc; everything else pays it off.</aside>
+</section>
+
+<!-- T2 S2 — The Power Method (2a) -->
+<section class="slide" data-screen-label="07b T2S2 Power" data-om-validate="no_overflowing_text,no_overlapping_text,slide_sized_text" data-deck-slide="7">
+  <div class="cn-letterbox top"></div>
+  <div class="cn-letterbox bot"></div>
+  <div class="cn-bg"></div>
+  <div class="cn-grain"></div>
+
+  <div class="cn-frame">
+    <div class="cn-top">
+      <div class="cn-corner"><span class="rec">REC</span><span>T2 S2 / POWER METHOD</span></div>
+      <div class="cn-corner"><span class="accent">T2.2 / 16</span></div>
+    </div>
+
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0;">
+      <h2 class="cn-h2">Multiply repeatedly and normalise</h2>
+      <p class="cn-sub" style="margin-top:24px;">The loudest eigenvalue takes over.</p>
+
+      <div style="margin-top:40px; display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center;">
+        <div>
+          <p class="cn-prose"><b>Each step</b> scales component $i$ by $\lambda_i^k$. The biggest magnitude wins; normalising keeps it visible.</p>
+          <p class="cn-prose" style="margin-top:20px;"><b>Converges to the line through</b> $v_1$ — the $\pm$ matters if $\lambda_1 < 0$.</p>
+        </div>
+        <div class="cn-eq huge center">$x_{k+1} = \frac{Xx_k}{\lVert Xx_k \rVert} \to \pm v_1$</div>
+      </div>
+    </div>
+
+    <div class="cn-bot">
+      <div class="cn-corner">SIMC 10 · DEFENSE</div>
+      <div class="cn-progress" style="--p:48%;"></div>
+      <div class="cn-corner">T2.2 / 16</div>
+    </div>
+  </div>
+  <aside class="notes">Each step scales component i by λᵢᵏ; the biggest magnitude wins, normalising keeps it visible. It converges to the line through v₁ — the ± matters if λ₁ < 0. Don't derive — one sentence: the off-axis part dies like (λᵢ/λ₁)ᵏ.</aside>
+</section>
+
+<!-- T2 S3 — Convergence rate (2b) ★ -->
+<section class="slide" data-screen-label="07c T2S3 Rate" data-om-validate="no_overflowing_text,no_overlapping_text,slide_sized_text" data-deck-slide="8">
+  <div class="cn-letterbox top"></div>
+  <div class="cn-letterbox bot"></div>
+  <div class="cn-bg"></div>
+  <div class="cn-grain"></div>
+
+  <div class="cn-frame">
+    <div class="cn-top">
+      <div class="cn-corner"><span class="rec">REC</span><span>T2 S3 / CONVERGENCE RATE</span></div>
+      <div class="cn-corner"><span class="accent">T2.3 / 16</span></div>
+    </div>
+
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0;">
+      <h2 class="cn-h2">Speed is set by your <i>closest rival</i></h2>
+      <p class="cn-sub" style="margin-top:24px;">The rate is the spectral gap $|\lambda_2 / \lambda_1|$.</p>
+
+      <div style="margin-top:40px;">
+        <div class="cn-eq huge center">$\rho_{k+1} / \rho_k \le |\lambda_2 / \lambda_1|$</div>
+        <div style="margin-top:36px;">
+          <p class="cn-prose"><span class="crit"><b>Wide gap</b></span> → fast and noise-robust; <span class="crit"><b>narrow gap</b></span> → slow and fragile.</p>
+          <p class="cn-prose" style="margin-top:16px;">On Q3 data: $\lambda_1/\lambda_2 \approx 3.5$ → converges in a handful of steps.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cn-bot">
+      <div class="cn-corner">SIMC 10 · DEFENSE</div>
+      <div class="cn-progress" style="--p:51%;"></div>
+      <div class="cn-corner">T2.3 / 16</div>
+    </div>
+  </div>
+  <aside class="notes">Not the average, not the smallest mode — the *second* eigenvalue. Wide gap → fast and noise-robust; narrow gap → slow and fragile. On our Q3 data λ₁/λ₂ ≈ 3.5, so it converges in a handful of steps. ★ non-obvious insight — dwell here.</aside>
+</section>
+
+<!-- T2 S4 — When it breaks (2c) ★ -->
+<section class="slide" data-screen-label="07d T2S4 Breaks" data-om-validate="no_overflowing_text,no_overlapping_text,slide_sized_text" data-deck-slide="9">
+  <div class="cn-letterbox top"></div>
+  <div class="cn-letterbox bot"></div>
+  <div class="cn-bg"></div>
+  <div class="cn-grain"></div>
+
+  <div class="cn-frame">
+    <div class="cn-top">
+      <div class="cn-corner"><span class="rec">REC</span><span>T2 S4 / WHEN IT BREAKS</span></div>
+      <div class="cn-corner"><span class="accent">T2.4 / 16</span></div>
+    </div>
+
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0;">
+      <h2 class="cn-h2">No gap, no winner</h2>
+      <p class="cn-sub" style="margin-top:24px;">A vanishing gap is a <i>structural</i> failure, not slow convergence.</p>
+
+      <div style="margin-top:40px; display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;">
+        <div>
+          <div class="cn-eq huge center">$X = \text{diag}(1, -1)$</div>
+          <p class="cn-prose" style="margin-top:20px; text-align:center; color:var(--mute);">Vector flip-flops between $(a,b)$ and $(a,-b)$ forever</p>
+        </div>
+        <div>
+          <p class="cn-prose"><span class="crit"><b>Oscillates</b></span> · <span class="crit"><b>structural ≠ slow</b></span> · <span class="crit"><b>finite precision</b></span> turns a small gap into a dead gap.</p>
+          <p class="cn-prose" style="margin-top:16px;">Any gap finer than ~$10^{-16}$ is invisible — behaves like a dead one.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cn-bot">
+      <div class="cn-corner">SIMC 10 · DEFENSE</div>
+      <div class="cn-progress" style="--p:54%;"></div>
+      <div class="cn-corner">T2.4 / 16</div>
+    </div>
+  </div>
+  <aside class="notes">Equal magnitudes → the ratios never decay → nothing to converge to. More iterations can't fix the *absence* of a target. And in floating point, any gap finer than ~10⁻¹⁶ is invisible — a small gap behaves like a dead one. ★ shows you understand failure modes — judge magnet.</aside>
+</section>
+
+<!-- T2 S5 — The SVD bridge (2d) ★ -->
+<section class="slide" data-screen-label="07e T2S5 SVD" data-om-validate="no_overflowing_text,no_overlapping_text,slide_sized_text" data-deck-slide="10">
+  <div class="cn-letterbox top"></div>
+  <div class="cn-letterbox bot"></div>
+  <div class="cn-bg"></div>
+  <div class="cn-grain"></div>
+
+  <div class="cn-frame">
+    <div class="cn-top">
+      <div class="cn-corner"><span class="rec">REC</span><span>T2 S5 / SVD BRIDGE</span></div>
+      <div class="cn-corner"><span class="accent">T2.5 / 16</span></div>
+    </div>
+
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0;">
+      <h2 class="cn-h2">Rectangular data splits into two symmetric matrices</h2>
+      <p class="cn-sub" style="margin-top:24px;">Both share the same nonzero eigenvalues (= $\sigma_i^2$).</p>
+
+      <div style="margin-top:36px; display:grid; grid-template-columns:1fr 1.2fr; gap:40px; align-items:center;">
+        <div class="cn-prose">
+          <p><span class="crit"><b>$X^T X$</b></span> — covariance / feature space ($M \times M$)</p>
+          <p style="margin-top:12px;"><span class="crit"><b>$XX^T$</b></span> — Gram / sample space ($N \times N$)</p>
+          <p style="margin-top:12px; color:var(--ink); font-weight:600;">Shared $\sigma_i^2$ bridges them.</p>
+        </div>
+        <div class="cn-eq huge center">$X$ ($N \times M$)<br><br>↓<br><br>PSD → $\sigma = \sqrt{\lambda}$ <b class="crit">real</b></div>
+      </div>
+
+      <p class="cn-prose" style="margin-top:24px;"><b>One symmetric fact, two views:</b> same nonzero spectrum. This is what all of Task 3 rides on.</p>
+    </div>
+
+    <div class="cn-bot">
+      <div class="cn-corner">SIMC 10 · DEFENSE</div>
+      <div class="cn-progress" style="--p:57%;"></div>
+      <div class="cn-corner">T2.5 / 16</div>
+    </div>
+  </div>
+  <aside class="notes">A rectangle has no eigenvalues, so we square it. PSD makes σ = √λ real, and the two squares are two *views of the same structure* — same nonzero spectrum. This single fact is what all of Task 3 rides on. ★ emphasise: this is the load-bearing result.</aside>
+</section>
+
+<!-- T2 S6 — Algorithm + the smart choice (2e-i) ★★ -->
+<section class="slide" data-screen-label="07f T2S6 Choice" data-om-validate="no_overflowing_text,no_overlapping_text,slide_sized_text" data-deck-slide="11">
+  <div class="cn-letterbox top"></div>
+  <div class="cn-letterbox bot"></div>
+  <div class="cn-bg"></div>
+  <div class="cn-grain"></div>
+
+  <div class="cn-frame">
+    <div class="cn-top">
+      <div class="cn-corner"><span class="rec">REC</span><span>T2 S6 / ALGORITHM CHOICE</span></div>
+      <div class="cn-corner"><span class="accent">T2.6 / 16</span></div>
+    </div>
+
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0;">
+      <h2 class="cn-h2">Power-iterate the <i>smaller</i> square</h2>
+      <p class="cn-sub" style="margin-top:24px;">13.5× cheaper on our data.</p>
+
+      <div style="margin-top:36px;">
+        <div style="border:1px solid var(--line); background:rgba(255,255,255,0.02); padding:24px; margin-bottom:24px;">
+          <p class="cn-prose" style="color:var(--ink);"><b>Pseudocode:</b> Power iterate on the smaller square, then $u_1 = Xv_1 / \sigma_1$</p>
+        </div>
+
+        <div class="cn-stat" style="margin-top:12px;">
+          <div class="lbl">Optimal choice</div>
+          <div class="val">$d = \min(N, M)$</div>
+        </div>
+
+        <p class="cn-prose" style="margin-top:24px;"><span class="crit"><b>On our data:</b></span> $N=924 \ll M=3401$ → iterate $XX^T$ (924²), not $X^T X$ (3401²).</p>
+      </div>
+    </div>
+
+    <div class="cn-bot">
+      <div class="cn-corner">SIMC 10 · DEFENSE</div>
+      <div class="cn-progress" style="--p:60%;"></div>
+      <div class="cn-corner">T2.6 / 16</div>
+    </div>
+  </div>
+  <aside class="notes">Each step costs O(d²), so we pick d = min(N,M) — the smaller square. Then one extra product gives the partner vector, u₁ = Xv₁/σ₁. This is the non-obvious choice in our solution. ★★ the rubric explicitly rewards this — name it as *your* decision.</aside>
+</section>
+
+<!-- T2 S7 — It works, by hand (2e-ii) -->
 
 </deck-stage>
 
