@@ -604,5 +604,50 @@ spectra into a picture clear enough to count the drinks.
 
 \appendix
 % ======================================================================
+\section{Glossary}\label{app:glossary}
+\begin{description}[leftmargin=0pt,style=nextline]
+\item[Sample / feature] a sample is one vial (a row of $X$); a feature is one frequency (a column).
+\item[Norm $\norm{x}$] the length $\sqrt{\sum_j x_j^2}$ of a vector; a one-number measure of size.
+\item[Transpose $X\T$] the matrix with rows and columns swapped.
+\item[Mean-centering] subtracting each feature's average so every column averages zero.
+\item[Variance] mean squared deviation from the mean; how much a feature varies across samples.
+\item[Covariance matrix $C$] $\tfrac1{\Nt}\Xt\T\Xt$ ($M\times M$, feature space); diagonal = variances.
+\item[Gram matrix $G$] $\tfrac1{\Nt}\Xt\Xt\T$ ($\Nt\times\Nt$, sample space); $G_{ij}$ = similarity of vials $i,j$.
+\item[Trace] sum of the diagonal; for $C$ it is the total variance $=\sum\lambda_i$.
+\item[Eigenvector / eigenvalue] a direction $v$ with $Cv=\lambda v$; $\lambda$ = variance along $v$.
+\item[Spectral theorem] a real symmetric matrix has real eigenvalues and orthonormal eigenvectors.
+\item[Positive semi-definite (PSD)] $w\T C w\ge0$ for all $w$; forces all $\lambda_i\ge0$.
+\item[PCA] eigendecomposition of $C$; finds the directions of greatest variance.
+\item[SVD] the factorisation $\Xt=U\Sigma V\T$; links $C$ ($V$) and $G$ ($U$) via $\sigma_i$.
+\item[Scree plot / elbow] sorted eigenvalues; the elbow $k^\star$ separates signal from the noise floor.
+\item[Spectral gap] $\lambda_1-\lambda_2$ (or $\lambda_1/\lambda_2$); a wide gap = one dominant direction.
+\item[Score / projection] $z_i=\xt_i\cdot\nu$, a sample's coordinate along an eigenvector.
+\item[Cosine similarity] $(a\cdot b)/(\norm a\norm b)$; scale-invariant comparison of direction.
+\item[Cluster] a tight, well-separated group of points; here, vials of one concoction.
+\end{description}
+
+\section{Summary of key numerical results}\label{app:numbers}
+\begin{center}\small
+\begin{tabular}{ll}
+\toprule
+Quantity & Value \\
+\midrule
+File shape (as stored) & $(3401,1000)$; transposed, $M=3401$ (text says $3041$) \\
+Empty vials removed (3a-i) & $40$ (rows $960$--$999$) \\
+High-norm vials removed (3a-ii) & $36$ (rows $924$--$959$) \\
+Cleaned samples $\Nt$ & $924$ \\
+Exact-zero fraction (empty / real) & $50.2\%$ / $24.5\%$ \\
+Max-variance feature $j^\star$ (3b) & $910$ (variance $\approx0.0199$) \\
+Total variance $\tr(C)$ (3b) & $\approx7.90$ \\
+Dominance ratio $\lambda_1/\lambda_2$ (3c) & $\approx3.53$ \\
+Elbow $k^\star$ (3c) & $8$ (largest drop $\lambda_8/\lambda_9\approx4.1$) \\
+Components for $95\%$ variance (3c) & $667$ \\
+$\nu_1$ vs centred / raw / mean spectrum (3d) & $\cos\approx0.92$ / $0.67$ / $0.03$ \\
+Clusters in covariance / Gram space (3e/3f) & $25$ / $25$ (on the $924$ set) \\
+Cross-method correlation (3g) & $|\mathrm{corr}|=1$ matched, $0$ otherwise \\
+\textbf{Unique food samples (3h)} & $\mathbf{26}$ ($\approx37$ replicates each) \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \end{document}
