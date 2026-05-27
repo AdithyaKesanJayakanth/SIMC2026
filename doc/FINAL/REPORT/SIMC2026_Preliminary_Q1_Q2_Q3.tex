@@ -781,5 +781,73 @@ the covariance projection, up to sign.}\label{fig:q3f}
 \end{figure}
 
 % ---------------------------------------------------------------------
+\subsection{(g) Comparing the covariance (3e) and Gram (3f) clusterings}
+
+\extra{this comparison is new to this report.}
+\textbf{(i) Same number of clusters --- and necessarily so.} If $\nuv$ is an eigenvector of
+$\Cc=\tfrac1\Nt\Xt\T\Xt$ with eigenvalue $\lambda$, then $\Xt\nuv$ is an eigenvector of
+$\Gg=\tfrac1\Nt\Xt\Xt\T$ with the same $\lambda$, so $\Cc$ and $\Gg$ share their nonzero
+spectrum. More strongly, write the SVD $\Xt=\mathbf U\Sigma\mathbf V\T$: the covariance scores
+are $\mathbf Z=\Xt\mathbf V=\mathbf U\Sigma$, and the Gram coordinates, scaled by
+$\sqrt{\Nt\lambda}=\sigma$, are $\mathbf Z_{\mathrm g}=\mathbf U\sigma=\mathbf U\Sigma$.
+\emph{Both coordinate sets are the same matrix $\mathbf U\Sigma$}, identical up to the
+arbitrary sign of each eigenvector.
+\verified{the $4\times4$ correlation matrix of $\mathbf Z$ vs $\mathbf Z_{\mathrm g}$ has
+$|\text{corr}|=1$ on the diagonal and $0$ off it, and $|\mathbf Z|=|\mathbf Z_{\mathrm g}|$ to
+$\approx10^{-14}$; here PC1 and PC4 came out sign-flipped.} Because the two point clouds are
+the same up to reflecting individual axes, the clusters --- and their count --- must be
+identical, which is why both routes return $25$ (Figure~\ref{fig:q3g}).
+
+\textbf{(ii) What cluster membership means in each space.} In \emph{covariance} space a
+vial's coordinates are the projections of its centred spectrum onto the top-4 feature-space
+eigenvectors, $z_i=(\xt_i\!\cdot\nuv_1,\dots,\xt_i\!\cdot\nuv_4)$: each coordinate measures
+how strongly the vial expresses one dominant pattern of spectral variation. In \emph{Gram}
+space a vial's coordinates are its loadings in the top-4 sample-space eigenvectors, a
+compressed summary of how similar the vial is to every other vial. Covariance space asks
+``which mixture of frequencies does this vial express?''; Gram space asks ``which other vials
+does this one resemble?'' Both place near-identical spectra at the same point, so proximity in
+either system means the same chemical concoction --- hence the agreement on $25$ clusters.
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.98\linewidth]{q3g_compare.png}
+\caption{(3g) Left: the $|\text{correlation}|$ matrix of the 3e and 3f scores ($1$ on the
+diagonal, $0$ off). Right: the six PC-pair scatters with the covariance scores (blue circles)
+and sign-aligned Gram scores (orange dots) overlaid --- they coincide point-for-point, so the
+two methods recover the identical $25$ clusters.}\label{fig:q3g}
+\end{figure}
+
+% ---------------------------------------------------------------------
+\subsection{(h) The forgetful taste tester: how many unique samples?}
+
+\extra{this is the synthesis part; it pulls together every preceding result and is the largest
+single part of Q3 (6 points).} The data come from $1000$ vials in a blind taste test whose
+ground-truth labels were lost. The brief tells us there were fewer than $100$ unique samples (one
+per vial), that the samples were fermented caffeinated drinks (kombucha, cocoa drinks, coffee
+liqueurs, Chinese tea), and that ten molecules dominate --- water, ethanol, methanol, caffeine,
+propionic acid, formic acid, lactic acid, glycerol, acetaldehyde, and acetic acid --- which the
+infrared spectroscopy was designed to fingerprint.
+
+\textbf{(i) How many unique samples were there?} \verified{the pipeline gives $\approx 25$.} After
+removing the $40$ empty vials and the $36$ corrupted high-norm vials, the $\Nt=924$ genuine spectra
+fall into $25$ tight clusters (parts (e) and (f)), each cluster a group of near-identical spectra,
+that is, one recipe. The estimate is stable rather than fitted: it is invariant for clustering radii
+across $[6,12]\times$ the median neighbour spacing, and the covariance and Gram routes return the
+same $25$ (part (g)), which by the Q2(d) duality is a genuine cross-check rather than a coincidence.
+It sits comfortably below the stated bound of $100$. The ten dominant molecules manifest as the
+$k^\star=8$ signal eigenvalues of part (c): each spectrum is a non-negative mixture of about ten
+absorption signatures, so the mean-centred data spans only $\sim 8$--$10$ independent directions,
+which PCA recovers as the components above the noise floor. The $36$ high-norm vials are a
+measurement fault established in part (a), not a $26$th recipe.
+
+\textbf{(ii) Which earlier parts were useful?} Almost all of them, which is the real point of the
+question. Cleaning (a) was a precondition, since the empties and especially the outliers would
+otherwise have manufactured spurious clusters and inflated the variance. Mean-centring and the
+covariance matrix (b), then its eigenspectrum (c), compress $3401$ noisy features to the eight that
+carry signal, without which the clusters are invisible. The projection and clustering of (e) produce
+the count, the Gram route (f) reproduces it, and the comparison (g) turns that agreement into a
+cross-check, resting on the $\Xb\T\Xb$ / $\Xb\Xb\T$ duality proved in Q2(d). Even Q1 contributes the
+governing intuition: the leading eigenvector of the right matrix carries the structure a system
+settles into. The figure of $25$ unique samples is therefore not a single measurement but the
+consistent reading of the entire pipeline.
 
 \end{document}
