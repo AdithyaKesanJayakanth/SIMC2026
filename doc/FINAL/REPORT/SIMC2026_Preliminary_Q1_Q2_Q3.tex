@@ -739,5 +739,47 @@ it echoes Q1's dominant-eigenvector steady state.
 \end{figure}
 
 % ---------------------------------------------------------------------
+\subsection{(e) Clustering in covariance space}
+
+With $\mathbf V_4=[\nuv_1\,\nuv_2\,\nuv_3\,\nuv_4]$, the compressed coordinates
+$\mathbf Z=\Xt\mathbf V_4\in\R^{\Nt\times4}$ give each vial four scores; the
+$\binom42=6$ pairwise scatters (Figure~\ref{fig:q3e}) show many tight, well-separated blobs.
+\textbf{(ii)} counting by leader clustering (a numpy-only threshold method) gives $25$
+clusters, \verified{stable for radii in $[6,12]\times$ the median nearest-neighbour spacing
+--- a property of the data, not the threshold.} Each blob is a group of near-identical
+spectra, i.e.\ one chemical concoction, so the $924$ vials form $\approx25$ recipes, well
+under the ``fewer than $100$'' of part (h). Although $\nuv_1,\dots,\nuv_4$ live in feature
+space, projecting samples onto them exposes sample-space structure, since similar spectra get
+similar scores.
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.82\linewidth]{q3e_covariance_scatter.png}
+\caption{(3e) The six pairwise scatters of the top-4 covariance PC scores; each point is one
+vial. The data resolves into $\approx25$ clusters.}\label{fig:q3e}
+\end{figure}
+
+% ---------------------------------------------------------------------
+\subsection{(f) Clustering via the Gram matrix}
+
+\extra{written up here for the first time (not in the earlier Q3 draft).} The Gram matrix
+$\Gg=\tfrac1\Nt\Xt\Xt\T\in\R^{\Nt\times\Nt}$ lives in \emph{sample} space; entry $\Gg_{ij}$
+is the dot-product similarity between vials $i$ and $j$. By the result of Q2(d), $\Gg$ shares
+the nonzero eigenvalues of $\Cc$.
+\verified{the top-8 Gram eigenvalues equal the top-8 covariance eigenvalues to
+$10^{-6}$ (\texttt{numpy.allclose}).}
+A Gram eigenvector's components \emph{are} the sample coordinates (no projection of $\Xt$ is
+needed); scaling by $\sqrt{\Nt\lambda}$ matches the covariance-space units, i.e.\
+$\mathbf U\sqrt{\Nt\lambda}=\Xt\mathbf V$. The six Gram-space scatters
+(Figure~\ref{fig:q3f}) reproduce those of part (e) up to per-axis sign flips, and leader
+clustering again gives \textbf{$25$ clusters}, identical to part (e). The detailed comparison
+is part (g).
+
+\begin{figure}[h]\centering
+\includegraphics[width=0.82\linewidth]{q3f_gram_scatter.png}
+\caption{(3f) The six pairwise scatters of the top-4 Gram eigenvectors. Same $25$ clusters as
+the covariance projection, up to sign.}\label{fig:q3f}
+\end{figure}
+
+% ---------------------------------------------------------------------
 
 \end{document}
