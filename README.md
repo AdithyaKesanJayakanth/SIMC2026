@@ -1,6 +1,6 @@
 # SIMC 2026 — Endeavour Challenge
 
-Working repository for the **Singapore International Mathematics Challenge 2026**, Endeavour
+Working repository for the **Singapore International Mathematical and Computational Challenge (SIMC 2.0) 2026**, Endeavour
 problem. Team: **K. Vishnu Kumar · Adithya Kesan Jayakanth · Adithya Anand**.
 
 The challenge has three linked questions. One idea runs through all of them: a
