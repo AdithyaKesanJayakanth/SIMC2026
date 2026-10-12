@@ -37,13 +37,12 @@ high-dimensional system is governed by a small number of special directions.
 | (d) Leading eigenvector | A chemical contrast: close to a centred measurement (cos ≈ 0.92) and nothing like the mean spectrum (cos ≈ 0.03) |
 | (e)/(f) Clustering | 25 clusters in covariance space and 25 in Gram space |
 | (g) Comparison | The two clusterings match exactly (\|corr\| = 1 for matched clusters, 0 otherwise), as the SVD duality says they must |
-| (h) Unique samples | **26**, about 37 repeat measurements each (24 × 37 + 2 × 36 = 960) |
+| (h) Unique samples | **25**: PCA narrowed about 1,000 samples in 3,401 dimensions to 25, about 37 repeat measurements each (24 × 37 + 36 = 924) |
 
-The 26th sample was hiding in the cleaning step. The 36 high-norm vials looked anomalous, but
-part (h) reveals the samples are real fermented drinks, and those 36 form a coherent,
-strongly absorbing group: a genuine concentrated drink. Because removing them was kept
-reversible, putting them back gave the right count. That count stays at 26 for every
-clustering threshold from 0.25 to 0.40.
+Our submitted answer: about 25 unique samples. After the 40 empty and 36 corrupted vials are
+removed, the 924 genuine spectra form 25 tight clusters of about 37 replicate vials each. The
+count is stable across a factor-of-two range of clustering radii, and the covariance and Gram
+routes both return 25.
 
 ---
 
