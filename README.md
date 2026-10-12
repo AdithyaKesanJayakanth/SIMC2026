@@ -37,7 +37,7 @@ high-dimensional system is governed by a small number of special directions.
 | (d) Leading eigenvector | A chemical contrast: close to a centred measurement (cos ≈ 0.92) and nothing like the mean spectrum (cos ≈ 0.03) |
 | (e)/(f) Clustering | 25 clusters in covariance space and 25 in Gram space |
 | (g) Comparison | The two clusterings match exactly (\|corr\| = 1 for matched clusters, 0 otherwise), as the SVD duality says they must |
-| (h) Unique samples | **25**: PCA narrowed about 1,000 samples in 3,401 dimensions to 25, about 37 repeat measurements each (24 × 37 + 36 = 924) |
+| (h) Unique samples | **25**: PCA narrowed 1,000 samples with 3,401 dimensions to 25, about 37 repeat measurements each (24 × 37 + 36 = 924) |
 
 Our submitted answer: about 25 unique samples. After the 40 empty and 36 corrupted vials are
 removed, the 924 genuine spectra form 25 tight clusters of about 37 replicate vials each. The
